@@ -1,0 +1,342 @@
+﻿/**********************************************************************\
+
+ Spark IV
+ Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+\**********************************************************************/
+
+namespace SparkIV
+{
+    partial class MainForm
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            this.tvDir = new System.Windows.Forms.TreeView();
+            this.tsContainer = new System.Windows.Forms.ToolStripContainer();
+            this.splitContainer = new System.Windows.Forms.SplitContainer();
+            this.lvFiles = new System.Windows.Forms.ListView();
+            this.lvcName = new System.Windows.Forms.ColumnHeader();
+            this.lvcSize = new System.Windows.Forms.ColumnHeader();
+            this.lvcResource = new System.Windows.Forms.ColumnHeader();
+            this.tsToolbar = new System.Windows.Forms.ToolStrip();
+            this.tsbBrowseGame = new System.Windows.Forms.ToolStripButton();
+            this.tsbOpen = new System.Windows.Forms.ToolStripButton();
+            this.tsbSave = new System.Windows.Forms.ToolStripButton();
+            this.tsbRebuild = new System.Windows.Forms.ToolStripButton();
+            this.tss1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbExportSelected = new System.Windows.Forms.ToolStripButton();
+            this.tsbExportAll = new System.Windows.Forms.ToolStripButton();
+            this.tsbImport = new System.Windows.Forms.ToolStripButton();
+            this.tslAbout = new System.Windows.Forms.ToolStripLabel();
+            this.tss2 = new System.Windows.Forms.ToolStripSeparator();
+            this.tslFilter = new System.Windows.Forms.ToolStripLabel();
+            this.tstFilterBox = new System.Windows.Forms.ToolStripTextBox();
+            this.tsContainer.ContentPanel.SuspendLayout();
+            this.tsContainer.TopToolStripPanel.SuspendLayout();
+            this.tsContainer.SuspendLayout();
+            this.splitContainer.Panel1.SuspendLayout();
+            this.splitContainer.Panel2.SuspendLayout();
+            this.splitContainer.SuspendLayout();
+            this.tsToolbar.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // tvDir
+            // 
+            this.tvDir.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tvDir.HideSelection = false;
+            this.tvDir.Location = new System.Drawing.Point(0, 0);
+            this.tvDir.Name = "tvDir";
+            this.tvDir.Size = new System.Drawing.Size(192, 100);
+            this.tvDir.TabIndex = 0;
+            this.tvDir.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvDir_AfterSelect);
+            // 
+            // tsContainer
+            // 
+            // 
+            // tsContainer.ContentPanel
+            // 
+            this.tsContainer.ContentPanel.Controls.Add(this.splitContainer);
+            this.tsContainer.ContentPanel.Size = new System.Drawing.Size(683, 434);
+            this.tsContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tsContainer.Location = new System.Drawing.Point(0, 0);
+            this.tsContainer.Name = "tsContainer";
+            this.tsContainer.Size = new System.Drawing.Size(683, 480);
+            this.tsContainer.TabIndex = 1;
+            this.tsContainer.Text = "toolStripContainer1";
+            // 
+            // tsContainer.TopToolStripPanel
+            // 
+            this.tsContainer.TopToolStripPanel.Controls.Add(this.tsToolbar);
+            // 
+            // splitContainer
+            // 
+            this.splitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer.Name = "splitContainer";
+            // 
+            // splitContainer.Panel1
+            // 
+            this.splitContainer.Panel1.Controls.Add(this.tvDir);
+            this.splitContainer.Panel1Collapsed = true;
+            // 
+            // splitContainer.Panel2
+            // 
+            this.splitContainer.Panel2.Controls.Add(this.lvFiles);
+            this.splitContainer.Size = new System.Drawing.Size(683, 434);
+            this.splitContainer.SplitterDistance = 192;
+            this.splitContainer.TabIndex = 2;
+            // 
+            // lvFiles
+            // 
+            this.lvFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.lvcName,
+            this.lvcSize,
+            this.lvcResource});
+            this.lvFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvFiles.FullRowSelect = true;
+            this.lvFiles.HideSelection = false;
+            this.lvFiles.Location = new System.Drawing.Point(0, 0);
+            this.lvFiles.Name = "lvFiles";
+            this.lvFiles.Size = new System.Drawing.Size(683, 434);
+            this.lvFiles.TabIndex = 1;
+            this.lvFiles.UseCompatibleStateImageBehavior = false;
+            this.lvFiles.View = System.Windows.Forms.View.Details;
+            this.lvFiles.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lvFiles_MouseDoubleClick);
+            this.lvFiles.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvFiles_ColumnClick);
+            this.lvFiles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvFiles_KeyDown);
+            // 
+            // lvcName
+            // 
+            this.lvcName.Text = "Name";
+            this.lvcName.Width = 280;
+            // 
+            // lvcSize
+            // 
+            this.lvcSize.Text = "Size";
+            this.lvcSize.Width = 80;
+            // 
+            // lvcResource
+            // 
+            this.lvcResource.Text = "Resource";
+            this.lvcResource.Width = 100;
+            // 
+            // tsToolbar
+            // 
+            this.tsToolbar.CanOverflow = false;
+            this.tsToolbar.Dock = System.Windows.Forms.DockStyle.None;
+            this.tsToolbar.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.tsToolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsbBrowseGame,
+            this.tsbOpen,
+            this.tsbSave,
+            this.tsbRebuild,
+            this.tss1,
+            this.tsbExportSelected,
+            this.tsbExportAll,
+            this.tsbImport,
+            this.tslAbout,
+            this.tss2,
+            this.tslFilter,
+            this.tstFilterBox});
+            this.tsToolbar.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            this.tsToolbar.Location = new System.Drawing.Point(0, 0);
+            this.tsToolbar.Name = "tsToolbar";
+            this.tsToolbar.Size = new System.Drawing.Size(683, 46);
+            this.tsToolbar.Stretch = true;
+            this.tsToolbar.TabIndex = 0;
+            // 
+            // tsbBrowseGame
+            // 
+            this.tsbBrowseGame.Image = ((System.Drawing.Image)(resources.GetObject("tsbBrowseGame.Image")));
+            this.tsbBrowseGame.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbBrowseGame.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbBrowseGame.Name = "tsbBrowseGame";
+            this.tsbBrowseGame.Size = new System.Drawing.Size(49, 43);
+            this.tsbBrowseGame.Text = "&Browse";
+            this.tsbBrowseGame.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbBrowseGame.Click += new System.EventHandler(this.tsbBrowseGame_Click);
+            // 
+            // tsbOpen
+            // 
+            this.tsbOpen.Image = ((System.Drawing.Image)(resources.GetObject("tsbOpen.Image")));
+            this.tsbOpen.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbOpen.Name = "tsbOpen";
+            this.tsbOpen.Size = new System.Drawing.Size(40, 43);
+            this.tsbOpen.Text = "&Open";
+            this.tsbOpen.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbOpen.Click += new System.EventHandler(this.tsbOpen_Click);
+            // 
+            // tsbSave
+            // 
+            this.tsbSave.Image = ((System.Drawing.Image)(resources.GetObject("tsbSave.Image")));
+            this.tsbSave.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbSave.Name = "tsbSave";
+            this.tsbSave.Size = new System.Drawing.Size(35, 43);
+            this.tsbSave.Text = "&Save";
+            this.tsbSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbSave.Click += new System.EventHandler(this.tsbSave_Click);
+            // 
+            // tsbRebuild
+            // 
+            this.tsbRebuild.Image = ((System.Drawing.Image)(resources.GetObject("tsbRebuild.Image")));
+            this.tsbRebuild.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbRebuild.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbRebuild.Name = "tsbRebuild";
+            this.tsbRebuild.Size = new System.Drawing.Size(51, 43);
+            this.tsbRebuild.Text = "&Rebuild";
+            this.tsbRebuild.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbRebuild.Click += new System.EventHandler(this.tsbRebuild_Click);
+            // 
+            // tss1
+            // 
+            this.tss1.Name = "tss1";
+            this.tss1.Size = new System.Drawing.Size(6, 46);
+            // 
+            // tsbExportSelected
+            // 
+            this.tsbExportSelected.Image = ((System.Drawing.Image)(resources.GetObject("tsbExportSelected.Image")));
+            this.tsbExportSelected.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbExportSelected.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbExportSelected.Name = "tsbExportSelected";
+            this.tsbExportSelected.Size = new System.Drawing.Size(44, 43);
+            this.tsbExportSelected.Text = "&Export";
+            this.tsbExportSelected.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbExportSelected.Click += new System.EventHandler(this.tsbExportSelected_Click);
+            // 
+            // tsbExportAll
+            // 
+            this.tsbExportAll.Image = ((System.Drawing.Image)(resources.GetObject("tsbExportAll.Image")));
+            this.tsbExportAll.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbExportAll.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbExportAll.Name = "tsbExportAll";
+            this.tsbExportAll.Size = new System.Drawing.Size(61, 43);
+            this.tsbExportAll.Text = "Export &All";
+            this.tsbExportAll.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbExportAll.Click += new System.EventHandler(this.tsbExportAll_Click);
+            // 
+            // tsbImport
+            // 
+            this.tsbImport.Image = ((System.Drawing.Image)(resources.GetObject("tsbImport.Image")));
+            this.tsbImport.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbImport.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbImport.Name = "tsbImport";
+            this.tsbImport.Size = new System.Drawing.Size(47, 43);
+            this.tsbImport.Text = "&Import";
+            this.tsbImport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbImport.Click += new System.EventHandler(this.tsbImport_Click);
+            // 
+            // tslAbout
+            // 
+            this.tslAbout.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tslAbout.BackColor = System.Drawing.SystemColors.Control;
+            this.tslAbout.ForeColor = System.Drawing.Color.SlateGray;
+            this.tslAbout.Name = "tslAbout";
+            this.tslAbout.Size = new System.Drawing.Size(49, 43);
+            this.tslAbout.Text = "Spark IV";
+            // 
+            // tss2
+            // 
+            this.tss2.Name = "tss2";
+            this.tss2.Size = new System.Drawing.Size(6, 46);
+            // 
+            // tslFilter
+            // 
+            this.tslFilter.Name = "tslFilter";
+            this.tslFilter.Size = new System.Drawing.Size(36, 43);
+            this.tslFilter.Text = "Fil&ter:";
+            // 
+            // tstFilterBox
+            // 
+            this.tstFilterBox.Name = "tstFilterBox";
+            this.tstFilterBox.Size = new System.Drawing.Size(100, 46);
+            this.tstFilterBox.TextChanged += new System.EventHandler(this.tstFilterBox_TextChanged);
+            // 
+            // MainForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(683, 480);
+            this.Controls.Add(this.tsContainer);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Spark IV";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
+            this.tsContainer.ContentPanel.ResumeLayout(false);
+            this.tsContainer.TopToolStripPanel.ResumeLayout(false);
+            this.tsContainer.TopToolStripPanel.PerformLayout();
+            this.tsContainer.ResumeLayout(false);
+            this.tsContainer.PerformLayout();
+            this.splitContainer.Panel1.ResumeLayout(false);
+            this.splitContainer.Panel2.ResumeLayout(false);
+            this.splitContainer.ResumeLayout(false);
+            this.tsToolbar.ResumeLayout(false);
+            this.tsToolbar.PerformLayout();
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.TreeView tvDir;
+        private System.Windows.Forms.ToolStripContainer tsContainer;
+        private System.Windows.Forms.ToolStrip tsToolbar;
+        private System.Windows.Forms.ToolStripButton tsbOpen;
+        private System.Windows.Forms.ToolStripLabel tslAbout;
+        private System.Windows.Forms.ToolStripButton tsbExportSelected;
+        private System.Windows.Forms.ToolStripButton tsbExportAll;
+        private System.Windows.Forms.SplitContainer splitContainer;
+        private System.Windows.Forms.ListView lvFiles;
+        private System.Windows.Forms.ColumnHeader lvcName;
+        private System.Windows.Forms.ColumnHeader lvcSize;
+        private System.Windows.Forms.ColumnHeader lvcResource;
+        private System.Windows.Forms.ToolStripButton tsbImport;
+        private System.Windows.Forms.ToolStripButton tsbSave;
+        private System.Windows.Forms.ToolStripButton tsbRebuild;
+        private System.Windows.Forms.ToolStripSeparator tss1;
+        private System.Windows.Forms.ToolStripSeparator tss2;
+        private System.Windows.Forms.ToolStripTextBox tstFilterBox;
+        private System.Windows.Forms.ToolStripLabel tslFilter;
+        private System.Windows.Forms.ToolStripButton tsbBrowseGame;
+    }
+}
