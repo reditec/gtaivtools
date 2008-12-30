@@ -27,6 +27,7 @@ using System.Text;
 using System.Windows.Forms;
 using RageLib.FileSystem;
 using RageLib.FileSystem.Common;
+using SparkIV.Editor;
 using SparkIV.Viewer;
 using Directory=RageLib.FileSystem.Common.Directory;
 using File=RageLib.FileSystem.Common.File;
@@ -221,30 +222,39 @@ namespace SparkIV
             }
         }
 
+        private void EditFile(File file)
+        {
+            if (Editors.HasEditor(file))
+            {
+                Editors.LaunchEditor(_fs, file);
+                PopulateListView();
+            }
+        }
+
         private void PreviewFile(File file)
         {
-            string fileName = file.Name;
-            string extension = fileName.Substring(fileName.LastIndexOf('.') + 1);
-
-            if (_fs is RealFileSystem && (extension == "img" || extension == "rpf"))
+            if (Viewers.HasViewer(file))
             {
-                var form = new MainForm();
-                form.Show();
-
-                DirectoryInfo parent = new DirectoryInfo(Program.GTAPath).Parent;
-                string archiveFilename = parent == null ? file.FullName : Path.Combine(parent.FullName, file.FullName);
-                form.OpenFile(archiveFilename , null);
-            }
-            else
-            {
-                Control viewerControl = Viewers.Get(file);
+                Control viewerControl = Viewers.GetControl(file);
                 if (viewerControl != null)
                 {
                     var form = new ViewerForm();
-                    form.SetFilename(fileName);
+                    form.SetFilename(file.Name);
                     form.SetControl(viewerControl);
                     form.ShowDialog();
-                }
+                }                
+            }
+        }
+
+        private void PreviewOrEditFile(File file)
+        {
+            if (Editors.HasEditor(file))
+            {
+                EditFile(file);
+            }
+            else
+            {
+                PreviewFile(file);
             }
 
         }
@@ -315,7 +325,7 @@ namespace SparkIV
 
         }
 
-        private void OpenFile(string filename, FileSystem fs)
+        public void OpenFile(string filename, FileSystem fs)
         {
             if (fs == null)
             {
@@ -571,7 +581,7 @@ namespace SparkIV
             {
                 var file = hitTest.Item.Tag as File;
 
-                PreviewFile(file);
+                PreviewOrEditFile(file);
             }
         }
 
@@ -582,7 +592,7 @@ namespace SparkIV
                 if (lvFiles.SelectedItems.Count > 0)
                 {
                     var file = lvFiles.SelectedItems[0].Tag as File;
-                    PreviewFile(file);
+                    PreviewOrEditFile(file);
                 }
             }
         }

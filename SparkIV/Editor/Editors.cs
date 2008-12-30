@@ -20,61 +20,75 @@
 
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using RageLib.FileSystem.Common;
 using SparkIV.Config;
 
-namespace SparkIV.Viewer
+namespace SparkIV.Editor
 {
-    static class Viewers
+    class Editors
     {
-        static readonly Dictionary<string, IViewer> _viewers = new Dictionary<string, IViewer>();
+        static readonly Dictionary<string, IEditor> _editors = new Dictionary<string, IEditor>();
 
-        static Viewers()
+        static Editors()
         {
-            foreach (var viewer in SparkIVConfig.Instance.Viewers)
+            foreach (var editor in SparkIVConfig.Instance.Editors)
             {
-                var viewerType = Type.GetType(viewer.Type);
-                if (viewerType != null)
+                var editorType = Type.GetType(editor.Type);
+                if (editorType != null)
                 {
-                    var viewerObject = Activator.CreateInstance(viewerType);
+                    var editorObject = Activator.CreateInstance(editorType);
 
-                    if (viewerObject is IViewer)
+                    if (editorObject is IEditor)
                     {
-                        var extensions = viewer.Extension.Split(',');
+                        var extensions = editor.Extension.Split(',');
 
                         foreach (var s in extensions)
                         {
-                            _viewers.Add(s, viewerObject as IViewer);
+                            _editors.Add(s, editorObject as IEditor);
                         }
                     }
                 }
             }
         }
 
-        public static bool HasViewer(File file)
+        public static bool HasEditor(File file)
         {
             var fileName = file.Name;
             var extension = fileName.Substring(fileName.LastIndexOf('.') + 1);
+            
+            bool hasEditor = _editors.ContainsKey(extension);
 
-            return _viewers.ContainsKey(extension);
-        }
-
-        public static Control GetControl(File file)
-        {
-            var fileName = file.Name;
-            var extension = fileName.Substring(fileName.LastIndexOf('.') + 1);
-
-            if (_viewers.ContainsKey(extension))
+            if (!hasEditor && _editors.ContainsKey(""))
             {
-                var control = _viewers[extension].GetView(file);
-                if (control != null)
+                var dynamicEditor = _editors[""] as IDynamicEditor;
+                if (dynamicEditor != null)
                 {
-                    return control;
+                    hasEditor = dynamicEditor.SupportsExtension(extension);
                 }
             }
 
-            return null;
+            return hasEditor;
         }
+
+        public static void LaunchEditor(FileSystem fs, File file)
+        {
+            var fileName = file.Name;
+            var extension = fileName.Substring(fileName.LastIndexOf('.') + 1);
+
+            if (_editors.ContainsKey(extension))
+            {
+                var editor = _editors[extension];
+                editor.LaunchEditor(fs, file);
+            }
+            else
+            {
+                var editor = _editors[""];
+                if (editor != null)
+                {
+                    editor.LaunchEditor(fs, file);
+                }
+            }
+        }
+
     }
 }

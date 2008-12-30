@@ -29,11 +29,6 @@ namespace SparkIV.Viewer.Xml
 {
     class XmlViewer : IViewer
     {
-        public bool SupportsExtension(string extension)
-        {
-            return (extension == "xml");
-        }
-
         public Control GetView(RageLib.FileSystem.Common.File file)
         {
             var data = file.GetData();

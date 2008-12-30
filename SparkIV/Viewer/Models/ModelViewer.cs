@@ -57,11 +57,6 @@ namespace SparkIV.Viewer.Models
 
         #region Implementation of IViewer
 
-        public virtual bool SupportsExtension(string extension)
-        {
-            return extension == "wdr";
-        }
-
         public virtual Control GetView(File file)
         {
             var data = file.GetData();

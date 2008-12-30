@@ -26,11 +26,6 @@ namespace SparkIV.Viewer.Script
 {
     class ScriptViewer : IViewer
     {
-        public bool SupportsExtension(string extension)
-        {
-            return (extension == "sco");
-        }
-
         public Control GetView(RageLib.FileSystem.Common.File file)
         {
             var data = file.GetData();

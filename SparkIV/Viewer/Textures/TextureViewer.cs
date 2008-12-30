@@ -26,11 +26,6 @@ namespace SparkIV.Viewer.Textures
 {
     class TextureViewer : IViewer
     {
-        public bool SupportsExtension(string extension)
-        {
-            return extension == "wtd";
-        }
-
         public Control GetView(RageLib.FileSystem.Common.File file)
         {
             var data = file.GetData();

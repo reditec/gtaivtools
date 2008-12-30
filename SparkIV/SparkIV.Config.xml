@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SparkIV>
+  <Viewers>
+    <Viewer Extension="dat,txt,ide,ipl,ped,cmb,csv,ini,list,dcl,sps" Type="SparkIV.Viewer.TextViewer, SparkIV" />
+    <Viewer Extension="xml" Type="SparkIV.Viewer.Xml.XmlViewer, SparkIV" />
+    <Viewer Extension="sco" Type="SparkIV.Viewer.Script.ScriptViewer, SparkIV" />
+    <Viewer Extension="wtd" Type="SparkIV.Viewer.Textures.TextureViewer, SparkIV" />
+    <Viewer Extension="wdr" Type="SparkIV.Viewer.Models.ModelViewer, SparkIV" />
+    <Viewer Extension="wdd" Type="SparkIV.Viewer.Models.ModelDictionaryViewer, SparkIV" />
+  </Viewers>
+  <Editors>
+    <Editor Extension="img,rpf" Type="SparkIV.Editor.SparkIVEditor, SparkIV" />
+    <Editor Extension="" Type="SparkIV.Editor.ExternalEditor, SparkIV" />
+  </Editors>
+</SparkIV>

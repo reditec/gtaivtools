@@ -1,4 +1,4 @@
-﻿/**********************************************************************\
+/**********************************************************************\
 
  Spark IV
  Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
@@ -18,13 +18,20 @@
 
 \**********************************************************************/
 
-using System.Windows.Forms;
-using RageLib.FileSystem.Common;
+using System;
+using System.Xml.Serialization;
 
-namespace SparkIV.Viewer
+namespace SparkIV.Config.Value
 {
-    interface IViewer
+    [XmlRoot("SparkIV"), Serializable]
+    public class Config
     {
-        Control GetView(File file);
+        [XmlArray("Viewers")]
+        [XmlArrayItem("Viewer", typeof(ExtensionType))]
+        public ExtensionType[] Viewers { get; set; }
+
+        [XmlArray("Editors")]
+        [XmlArrayItem("Editor", typeof(ExtensionType))]
+        public ExtensionType[] Editors { get; set; }
     }
 }

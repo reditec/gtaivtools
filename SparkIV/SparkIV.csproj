@@ -60,6 +60,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\SparkIVConfig.cs" />
+    <Compile Include="Config\Value\Config.cs" />
+    <Compile Include="Config\Value\ExtensionType.cs" />
+    <Compile Include="Config\XmlPersister.cs" />
+    <Compile Include="Editor\Editors.cs" />
+    <Compile Include="Editor\ExternalEditor.cs" />
+    <Compile Include="Editor\IDynamicEditor.cs" />
+    <Compile Include="Editor\IEditor.cs" />
+    <Compile Include="Editor\SparkIVEditor.cs" />
     <Compile Include="ListViewItemComparer.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -131,6 +140,11 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Viewer\Xml\defaultss.xslt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SparkIV.Config.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

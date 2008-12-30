@@ -18,30 +18,27 @@
 
 \**********************************************************************/
 
-using System.Windows.Forms;
-using System.Text;
-using System.Drawing;
+using System.IO;
+using RageLib.FileSystem;
 using RageLib.FileSystem.Common;
+using File=RageLib.FileSystem.Common.File;
 
-namespace SparkIV.Viewer
+namespace SparkIV.Editor
 {
-    class TextViewer : IViewer
+    class SparkIVEditor : IEditor
     {
-        public Control GetView(File file)
+        public void LaunchEditor(FileSystem fs, File file)
         {
-            var data = file.GetData();
+            if (fs is RealFileSystem)
+            {
+                var form = new MainForm();
+                form.Show();
 
-            TextBox textBox = new TextBox();
-            textBox.Font = new Font("Courier New", 10);
-            textBox.ReadOnly = true;
-            textBox.BackColor = SystemColors.Window;
-            textBox.Text = Encoding.ASCII.GetString(data);
-            textBox.Multiline = true;
-            textBox.ScrollBars = ScrollBars.Both;
-            textBox.SelectionStart = 0;
-            textBox.SelectionLength = 0;
-            textBox.WordWrap = false;
-            return textBox;
+                DirectoryInfo parent = new DirectoryInfo(Program.GTAPath).Parent;
+                string archiveFilename = parent == null ? file.FullName : Path.Combine(parent.FullName, file.FullName);
+                form.OpenFile(archiveFilename, null);
+            }
+
         }
     }
 }

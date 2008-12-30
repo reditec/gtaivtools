@@ -18,30 +18,15 @@
 
 \**********************************************************************/
 
-using System.Windows.Forms;
-using System.Text;
-using System.Drawing;
-using RageLib.FileSystem.Common;
-
-namespace SparkIV.Viewer
+namespace SparkIV.Config
 {
-    class TextViewer : IViewer
+    static class SparkIVConfig
     {
-        public Control GetView(File file)
-        {
-            var data = file.GetData();
+        public static readonly Value.Config Instance;
 
-            TextBox textBox = new TextBox();
-            textBox.Font = new Font("Courier New", 10);
-            textBox.ReadOnly = true;
-            textBox.BackColor = SystemColors.Window;
-            textBox.Text = Encoding.ASCII.GetString(data);
-            textBox.Multiline = true;
-            textBox.ScrollBars = ScrollBars.Both;
-            textBox.SelectionStart = 0;
-            textBox.SelectionLength = 0;
-            textBox.WordWrap = false;
-            return textBox;
+        static SparkIVConfig()
+        {
+            Instance = XmlPersister.Load<Value.Config>("SparkIV.Config.xml");
         }
     }
 }

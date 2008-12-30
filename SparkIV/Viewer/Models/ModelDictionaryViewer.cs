@@ -28,11 +28,6 @@ namespace SparkIV.Viewer.Models
     {
         #region Implementation of IViewer
 
-        public override bool SupportsExtension(string extension)
-        {
-            return extension == "wdd";
-        }
-
         public override Control GetView(RageLib.FileSystem.Common.File file)
         {
             var data = file.GetData();

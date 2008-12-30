@@ -18,30 +18,10 @@
 
 \**********************************************************************/
 
-using System.Windows.Forms;
-using System.Text;
-using System.Drawing;
-using RageLib.FileSystem.Common;
-
-namespace SparkIV.Viewer
+namespace SparkIV.Editor
 {
-    class TextViewer : IViewer
+    interface IDynamicEditor
     {
-        public Control GetView(File file)
-        {
-            var data = file.GetData();
-
-            TextBox textBox = new TextBox();
-            textBox.Font = new Font("Courier New", 10);
-            textBox.ReadOnly = true;
-            textBox.BackColor = SystemColors.Window;
-            textBox.Text = Encoding.ASCII.GetString(data);
-            textBox.Multiline = true;
-            textBox.ScrollBars = ScrollBars.Both;
-            textBox.SelectionStart = 0;
-            textBox.SelectionLength = 0;
-            textBox.WordWrap = false;
-            return textBox;
-        }
+        bool SupportsExtension(string extension);
     }
 }
