@@ -40,6 +40,18 @@ namespace RageLib.FileSystem.IMG
         public short UsedBlocks { get; set; }
         public short Flags { get; set; }
 
+        public int PaddingCount
+        {
+            get
+            {
+                return Flags & 0x7FF;
+            }
+            set
+            {
+                Flags = (short)((Flags & ~0x7FF) | value);
+            }
+        }
+
         public bool IsResourceFile { get; set; }
 
         public TOC TOC { get; set; }
@@ -58,15 +70,17 @@ namespace RageLib.FileSystem.IMG
 
                 if ((data.Length % BlockSize) != 0)
                 {
-                    int fullDataLength = data.Length + (BlockSize - data.Length%BlockSize);
+                    int padding = (BlockSize - data.Length%BlockSize);
+                    int fullDataLength = data.Length + padding;
                     var newData = new byte[fullDataLength];
                     data.CopyTo(newData, 0);
                     data = newData;
 
-                    if (IsResourceFile)
-                    {
-                        Size = data.Length;
-                    }
+                    PaddingCount = padding;
+                }
+                else
+                {
+                    PaddingCount = 0;
                 }
 
                 CustomData = data;
@@ -111,7 +125,7 @@ namespace RageLib.FileSystem.IMG
 
             if (IsResourceFile)
             {
-                Size = UsedBlocks*0x800;
+                Size = UsedBlocks*0x800 - PaddingCount;
             }
 
             // Uses 0x4000 on Flags to determine if its old style resources

@@ -47,7 +47,7 @@ namespace RageLib.Common.Resources
             // gfx = a << (b + 8)
             // minimum representable is block of 0x100 bytes
 
-            const int maxA = 0x1F;
+            const int maxA = 0x3F;
 
             int sysA = systemMemSize >> 8;
             int sysB = 0;
