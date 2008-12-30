@@ -105,11 +105,11 @@ namespace RageLib.Common.Resources
 
             ms.Seek(0, SeekOrigin.Begin);
 
-            SystemMemData = new byte[SystemMemSize];
-            ms.Read(SystemMemData, 0, SystemMemSize);
+            _systemMemData = new byte[SystemMemSize];
+            ms.Read(_systemMemData, 0, SystemMemSize);
 
-            GraphicsMemData = new byte[GraphicsMemSize];
-            ms.Read(GraphicsMemData, 0, GraphicsMemSize);
+            _graphicsMemData = new byte[GraphicsMemSize];
+            ms.Read(_graphicsMemData, 0, GraphicsMemSize);
 
             ms.Close();
         }
@@ -117,14 +117,19 @@ namespace RageLib.Common.Resources
         public void Write(Stream data)
         {
             var bw = new BinaryWriter(data);
-            _header.SetMemSizes( SystemMemSize, GraphicsMemSize );
+            
+            if (SystemMemSize != _systemMemData.Length || GraphicsMemSize != _graphicsMemData.Length)
+            {
+                _header.SetMemSizes(SystemMemSize, GraphicsMemSize);
+            }
+
             _header.Write( bw );
 
             var ms = new MemoryStream();
-            ms.Write( SystemMemData, 0, SystemMemData.Length );
-            ms.Write(new byte[SystemMemSize - SystemMemData.Length], 0, SystemMemSize - SystemMemData.Length);
-            ms.Write( GraphicsMemData, 0, GraphicsMemData.Length );
-            ms.Write(new byte[GraphicsMemSize - GraphicsMemData.Length], 0, GraphicsMemSize - GraphicsMemData.Length);
+            ms.Write(_systemMemData, 0, _systemMemData.Length);
+            ms.Write(new byte[SystemMemSize - _systemMemData.Length], 0, SystemMemSize - _systemMemData.Length);
+            ms.Write(_graphicsMemData, 0, _graphicsMemData.Length);
+            ms.Write(new byte[GraphicsMemSize - _graphicsMemData.Length], 0, GraphicsMemSize - _graphicsMemData.Length);
 
             ms.Seek(0, SeekOrigin.Begin);
 
