@@ -47,7 +47,7 @@ namespace RageLib.Textures.Resource
 
         private ushort Unknown5 { get; set; } // 0x100
         private byte Type { get; set; }   // 0 = normal, 1 = cube, 3 = volume
-        private byte Levels { get; set; } // MipMap levels
+        public byte Levels { get; set; } // MipMap levels
 
         private float UnknownFloat1 { get; set; } // 1.0f
         private float UnknownFloat2 { get; set; } // 1.0f

@@ -1,6 +1,6 @@
 ﻿/**********************************************************************\
 
- Spark IV
+ RageLib - Textures
  Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
@@ -18,34 +18,12 @@
 
 \**********************************************************************/
 
-using System.IO;
-using System.Windows.Forms;
-using RageLib.Textures;
+using System.Drawing;
 
-namespace SparkIV.Viewer.Textures
+namespace RageLib.Textures.Filter
 {
-    class TextureViewer : IViewer
+    interface IFilter
     {
-        public Control GetView(RageLib.FileSystem.Common.File file)
-        {
-            var data = file.GetData();
-
-            var ms = new MemoryStream(data);
-            var textureFile = new TextureFile();
-            try
-            {
-                textureFile.Open(ms);
-            }
-            finally
-            {
-                ms.Close();
-            }
-
-            var view = new TexturePreviewView();
-            var controller = new TexturePreviewController(view);
-            controller.TextureFile = textureFile;
-
-            return view;
-        }
+        void Apply(Image image);
     }
 }

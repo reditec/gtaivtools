@@ -1,6 +1,6 @@
 ﻿/**********************************************************************\
 
- RageLib
+ RageLib - Textures
  Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
@@ -26,12 +26,11 @@ namespace RageLib.Textures.Decoder
 {
     internal class TextureDecoder
     {
-        internal static Image Decode(Texture texture)
+        internal static Image Decode(Texture texture, int level)
         {
-            uint width = texture.Info.Width;
-            uint height = texture.Info.Height;
-
-            byte[] data = texture.TextureData;
+            uint width = texture.GetWidth(level);
+            uint height = texture.GetHeight(level);
+            byte[] data = texture.GetTextureData(level);
             
             switch(texture.TextureType)
             {
@@ -57,18 +56,6 @@ namespace RageLib.Textures.Decoder
             bmp.UnlockBits(bmpdata);
 
             return bmp;
-
-            /*
-            
-            // For the XBOX360, we had to use a larger surface to do the decoding... so crop it to the real size.
-             
-            Bitmap croppedBitmap = new Bitmap((int)texture.Width, (int)texture.Height);
-            Graphics g = Graphics.FromImage(croppedBitmap);
-            Rectangle croppedRect = new Rectangle(0, 0, (int) texture.Width, (int) texture.Height);
-            g.DrawImage(bmp, croppedRect, croppedRect, GraphicsUnit.Pixel);
-
-            return croppedBitmap;
-             */
         }
     }
 }

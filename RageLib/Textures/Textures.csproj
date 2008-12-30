@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -43,6 +44,9 @@
     </Compile>
     <Compile Include="Decoder\DXTDecoder.cs" />
     <Compile Include="Decoder\TextureDecoder.cs" />
+    <Compile Include="Filter\ChannelFilter.cs" />
+    <Compile Include="Filter\IFilter.cs" />
+    <Compile Include="Filter\ImageChannel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resource\D3DFormat.cs" />
     <Compile Include="Resource\File.cs">
@@ -52,6 +56,13 @@
     <Compile Include="Resource\TextureInfo.cs" />
     <Compile Include="Texture.cs" />
     <Compile Include="TextureFile.cs" />
+    <Compile Include="TexturePreviewController.cs" />
+    <Compile Include="TexturePreviewView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TexturePreviewView.Designer.cs">
+      <DependentUpon>TexturePreviewView.cs</DependentUpon>
+    </Compile>
     <Compile Include="TextureType.cs" />
     <Compile Include="TextureView.cs">
       <SubType>UserControl</SubType>
@@ -59,8 +70,13 @@
     <Compile Include="TextureView.Designer.cs">
       <DependentUpon>TextureView.cs</DependentUpon>
     </Compile>
+    <Compile Include="TextureViewController.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="TexturePreviewView.resx">
+      <DependentUpon>TexturePreviewView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="TextureView.resx">
       <DependentUpon>TextureView.cs</DependentUpon>
       <SubType>Designer</SubType>

@@ -1,6 +1,6 @@
 ﻿/**********************************************************************\
 
- RageLib
+ RageLib - Textures
  Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
@@ -53,23 +53,25 @@ namespace RageLib.Textures
             this.picPreview = new System.Windows.Forms.PictureBox();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.listTextures = new System.Windows.Forms.ListBox();
-            this.tsContainer = new System.Windows.Forms.ToolStripContainer();
-            this.tsToolbar = new System.Windows.Forms.ToolStrip();
-            this.tsbSave = new System.Windows.Forms.ToolStripButton();
-            this.tsbSaveAll = new System.Windows.Forms.ToolStripButton();
-            this.tssStatus = new System.Windows.Forms.StatusStrip();
-            this.tslTexturesInfo = new System.Windows.Forms.ToolStripStatusLabel();
+            this.panelInfo = new System.Windows.Forms.Panel();
+            this.panelInfoControls = new System.Windows.Forms.Panel();
+            this.lblMipMap = new System.Windows.Forms.Label();
+            this.cboMipMaps = new System.Windows.Forms.ComboBox();
+            this.radioChannelA = new System.Windows.Forms.RadioButton();
+            this.radioChannelB = new System.Windows.Forms.RadioButton();
+            this.radioChannelG = new System.Windows.Forms.RadioButton();
+            this.radioChannelR = new System.Windows.Forms.RadioButton();
+            this.radioChannelFull = new System.Windows.Forms.RadioButton();
+            this.lblTextureFormat = new System.Windows.Forms.Label();
+            this.lblTextureDims = new System.Windows.Forms.Label();
+            this.lblTextureName = new System.Windows.Forms.Label();
             this.panelPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picPreview)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
             this.splitContainer.SuspendLayout();
-            this.tsContainer.BottomToolStripPanel.SuspendLayout();
-            this.tsContainer.ContentPanel.SuspendLayout();
-            this.tsContainer.TopToolStripPanel.SuspendLayout();
-            this.tsContainer.SuspendLayout();
-            this.tsToolbar.SuspendLayout();
-            this.tssStatus.SuspendLayout();
+            this.panelInfo.SuspendLayout();
+            this.panelInfoControls.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelPreview
@@ -82,7 +84,7 @@ namespace RageLib.Textures
             this.panelPreview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelPreview.Location = new System.Drawing.Point(0, 0);
             this.panelPreview.Name = "panelPreview";
-            this.panelPreview.Size = new System.Drawing.Size(459, 440);
+            this.panelPreview.Size = new System.Drawing.Size(459, 431);
             this.panelPreview.TabIndex = 1;
             // 
             // picPreview
@@ -110,7 +112,8 @@ namespace RageLib.Textures
             // splitContainer.Panel2
             // 
             this.splitContainer.Panel2.Controls.Add(this.panelPreview);
-            this.splitContainer.Size = new System.Drawing.Size(633, 440);
+            this.splitContainer.Panel2.Controls.Add(this.panelInfo);
+            this.splitContainer.Size = new System.Drawing.Size(633, 487);
             this.splitContainer.SplitterDistance = 170;
             this.splitContainer.TabIndex = 2;
             // 
@@ -121,85 +124,157 @@ namespace RageLib.Textures
             this.listTextures.FormattingEnabled = true;
             this.listTextures.Location = new System.Drawing.Point(0, 0);
             this.listTextures.Name = "listTextures";
-            this.listTextures.Size = new System.Drawing.Size(170, 440);
+            this.listTextures.Size = new System.Drawing.Size(170, 487);
             this.listTextures.TabIndex = 0;
             this.listTextures.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listTextures_DrawItem);
             this.listTextures.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.listTextures_MeasureItem);
-            this.listTextures.SelectedIndexChanged += new System.EventHandler(this.listTextures_SelectedIndexChanged);
             // 
-            // tsContainer
+            // panelInfo
             // 
+            this.panelInfo.Controls.Add(this.panelInfoControls);
+            this.panelInfo.Controls.Add(this.lblTextureFormat);
+            this.panelInfo.Controls.Add(this.lblTextureDims);
+            this.panelInfo.Controls.Add(this.lblTextureName);
+            this.panelInfo.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panelInfo.Enabled = false;
+            this.panelInfo.Location = new System.Drawing.Point(0, 431);
+            this.panelInfo.Name = "panelInfo";
+            this.panelInfo.Size = new System.Drawing.Size(459, 56);
+            this.panelInfo.TabIndex = 2;
             // 
-            // tsContainer.BottomToolStripPanel
+            // panelInfoControls
             // 
-            this.tsContainer.BottomToolStripPanel.Controls.Add(this.tssStatus);
+            this.panelInfoControls.Controls.Add(this.lblMipMap);
+            this.panelInfoControls.Controls.Add(this.cboMipMaps);
+            this.panelInfoControls.Controls.Add(this.radioChannelA);
+            this.panelInfoControls.Controls.Add(this.radioChannelB);
+            this.panelInfoControls.Controls.Add(this.radioChannelG);
+            this.panelInfoControls.Controls.Add(this.radioChannelR);
+            this.panelInfoControls.Controls.Add(this.radioChannelFull);
+            this.panelInfoControls.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panelInfoControls.Location = new System.Drawing.Point(309, 0);
+            this.panelInfoControls.Name = "panelInfoControls";
+            this.panelInfoControls.Size = new System.Drawing.Size(150, 56);
+            this.panelInfoControls.TabIndex = 4;
             // 
-            // tsContainer.ContentPanel
+            // lblMipMap
             // 
-            this.tsContainer.ContentPanel.Controls.Add(this.splitContainer);
-            this.tsContainer.ContentPanel.Size = new System.Drawing.Size(633, 440);
-            this.tsContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tsContainer.Location = new System.Drawing.Point(0, 0);
-            this.tsContainer.Name = "tsContainer";
-            this.tsContainer.Size = new System.Drawing.Size(633, 487);
-            this.tsContainer.TabIndex = 3;
-            this.tsContainer.Text = "toolStripContainer1";
+            this.lblMipMap.AutoSize = true;
+            this.lblMipMap.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMipMap.Location = new System.Drawing.Point(3, 33);
+            this.lblMipMap.Name = "lblMipMap";
+            this.lblMipMap.Size = new System.Drawing.Size(48, 13);
+            this.lblMipMap.TabIndex = 6;
+            this.lblMipMap.Text = "MipMap:";
             // 
-            // tsContainer.TopToolStripPanel
+            // cboMipMaps
             // 
-            this.tsContainer.TopToolStripPanel.Controls.Add(this.tsToolbar);
+            this.cboMipMaps.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboMipMaps.FormattingEnabled = true;
+            this.cboMipMaps.Location = new System.Drawing.Point(57, 30);
+            this.cboMipMaps.Name = "cboMipMaps";
+            this.cboMipMaps.Size = new System.Drawing.Size(89, 21);
+            this.cboMipMaps.TabIndex = 5;
             // 
-            // tsToolbar
+            // radioChannelA
             // 
-            this.tsToolbar.Dock = System.Windows.Forms.DockStyle.None;
-            this.tsToolbar.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.tsToolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbSave,
-            this.tsbSaveAll});
-            this.tsToolbar.Location = new System.Drawing.Point(0, 0);
-            this.tsToolbar.Name = "tsToolbar";
-            this.tsToolbar.Size = new System.Drawing.Size(633, 25);
-            this.tsToolbar.Stretch = true;
-            this.tsToolbar.TabIndex = 0;
+            this.radioChannelA.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioChannelA.AutoSize = true;
+            this.radioChannelA.Location = new System.Drawing.Point(122, 3);
+            this.radioChannelA.Name = "radioChannelA";
+            this.radioChannelA.Size = new System.Drawing.Size(24, 23);
+            this.radioChannelA.TabIndex = 4;
+            this.radioChannelA.Text = "A";
+            this.radioChannelA.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.radioChannelA.UseVisualStyleBackColor = true;
+            this.radioChannelA.CheckedChanged += new System.EventHandler(this.view_ImageChannelChecked);
             // 
-            // tsbSave
+            // radioChannelB
             // 
-            this.tsbSave.Image = ((System.Drawing.Image)(resources.GetObject("tsbSave.Image")));
-            this.tsbSave.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbSave.Name = "tsbSave";
-            this.tsbSave.Size = new System.Drawing.Size(93, 22);
-            this.tsbSave.Text = "Save Texture";
-            this.tsbSave.Click += new System.EventHandler(this.tsbSave_Click);
+            this.radioChannelB.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioChannelB.AutoSize = true;
+            this.radioChannelB.Location = new System.Drawing.Point(96, 3);
+            this.radioChannelB.Name = "radioChannelB";
+            this.radioChannelB.Size = new System.Drawing.Size(24, 23);
+            this.radioChannelB.TabIndex = 3;
+            this.radioChannelB.Text = "B";
+            this.radioChannelB.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.radioChannelB.UseVisualStyleBackColor = true;
+            this.radioChannelB.CheckedChanged += new System.EventHandler(this.view_ImageChannelChecked);
             // 
-            // tsbSaveAll
+            // radioChannelG
             // 
-            this.tsbSaveAll.Image = ((System.Drawing.Image)(resources.GetObject("tsbSaveAll.Image")));
-            this.tsbSaveAll.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbSaveAll.Name = "tsbSaveAll";
-            this.tsbSaveAll.Size = new System.Drawing.Size(115, 22);
-            this.tsbSaveAll.Text = "Save All Textures";
-            this.tsbSaveAll.Click += new System.EventHandler(this.tsbSaveAll_Click);
+            this.radioChannelG.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioChannelG.AutoSize = true;
+            this.radioChannelG.Location = new System.Drawing.Point(69, 3);
+            this.radioChannelG.Name = "radioChannelG";
+            this.radioChannelG.Size = new System.Drawing.Size(25, 23);
+            this.radioChannelG.TabIndex = 2;
+            this.radioChannelG.Text = "G";
+            this.radioChannelG.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.radioChannelG.UseVisualStyleBackColor = true;
+            this.radioChannelG.CheckedChanged += new System.EventHandler(this.view_ImageChannelChecked);
             // 
-            // tssStatus
+            // radioChannelR
             // 
-            this.tssStatus.Dock = System.Windows.Forms.DockStyle.None;
-            this.tssStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tslTexturesInfo});
-            this.tssStatus.Location = new System.Drawing.Point(0, 0);
-            this.tssStatus.Name = "tssStatus";
-            this.tssStatus.Size = new System.Drawing.Size(633, 22);
-            this.tssStatus.TabIndex = 0;
+            this.radioChannelR.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioChannelR.AutoSize = true;
+            this.radioChannelR.Location = new System.Drawing.Point(42, 3);
+            this.radioChannelR.Name = "radioChannelR";
+            this.radioChannelR.Size = new System.Drawing.Size(25, 23);
+            this.radioChannelR.TabIndex = 1;
+            this.radioChannelR.Text = "R";
+            this.radioChannelR.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.radioChannelR.UseVisualStyleBackColor = true;
+            this.radioChannelR.CheckedChanged += new System.EventHandler(this.view_ImageChannelChecked);
             // 
-            // tslTexturesInfo
+            // radioChannelFull
             // 
-            this.tslTexturesInfo.Name = "tslTexturesInfo";
-            this.tslTexturesInfo.Size = new System.Drawing.Size(0, 17);
+            this.radioChannelFull.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioChannelFull.AutoSize = true;
+            this.radioChannelFull.Checked = true;
+            this.radioChannelFull.Location = new System.Drawing.Point(3, 3);
+            this.radioChannelFull.Name = "radioChannelFull";
+            this.radioChannelFull.Size = new System.Drawing.Size(33, 23);
+            this.radioChannelFull.TabIndex = 0;
+            this.radioChannelFull.TabStop = true;
+            this.radioChannelFull.Text = "Full";
+            this.radioChannelFull.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.radioChannelFull.UseVisualStyleBackColor = true;
+            this.radioChannelFull.CheckedChanged += new System.EventHandler(this.view_ImageChannelChecked);
+            // 
+            // lblTextureFormat
+            // 
+            this.lblTextureFormat.AutoSize = true;
+            this.lblTextureFormat.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTextureFormat.Location = new System.Drawing.Point(4, 33);
+            this.lblTextureFormat.Name = "lblTextureFormat";
+            this.lblTextureFormat.Size = new System.Drawing.Size(0, 13);
+            this.lblTextureFormat.TabIndex = 2;
+            // 
+            // lblTextureDims
+            // 
+            this.lblTextureDims.AutoSize = true;
+            this.lblTextureDims.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTextureDims.Location = new System.Drawing.Point(4, 20);
+            this.lblTextureDims.Name = "lblTextureDims";
+            this.lblTextureDims.Size = new System.Drawing.Size(0, 13);
+            this.lblTextureDims.TabIndex = 1;
+            // 
+            // lblTextureName
+            // 
+            this.lblTextureName.AutoSize = true;
+            this.lblTextureName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTextureName.Location = new System.Drawing.Point(4, 7);
+            this.lblTextureName.Name = "lblTextureName";
+            this.lblTextureName.Size = new System.Drawing.Size(0, 13);
+            this.lblTextureName.TabIndex = 0;
             // 
             // TextureView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.tsContainer);
+            this.Controls.Add(this.splitContainer);
             this.Name = "TextureView";
             this.Size = new System.Drawing.Size(633, 487);
             this.panelPreview.ResumeLayout(false);
@@ -208,17 +283,10 @@ namespace RageLib.Textures
             this.splitContainer.Panel1.ResumeLayout(false);
             this.splitContainer.Panel2.ResumeLayout(false);
             this.splitContainer.ResumeLayout(false);
-            this.tsContainer.BottomToolStripPanel.ResumeLayout(false);
-            this.tsContainer.BottomToolStripPanel.PerformLayout();
-            this.tsContainer.ContentPanel.ResumeLayout(false);
-            this.tsContainer.TopToolStripPanel.ResumeLayout(false);
-            this.tsContainer.TopToolStripPanel.PerformLayout();
-            this.tsContainer.ResumeLayout(false);
-            this.tsContainer.PerformLayout();
-            this.tsToolbar.ResumeLayout(false);
-            this.tsToolbar.PerformLayout();
-            this.tssStatus.ResumeLayout(false);
-            this.tssStatus.PerformLayout();
+            this.panelInfo.ResumeLayout(false);
+            this.panelInfo.PerformLayout();
+            this.panelInfoControls.ResumeLayout(false);
+            this.panelInfoControls.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -229,11 +297,17 @@ namespace RageLib.Textures
         private System.Windows.Forms.PictureBox picPreview;
         private System.Windows.Forms.SplitContainer splitContainer;
         private System.Windows.Forms.ListBox listTextures;
-        private System.Windows.Forms.ToolStripContainer tsContainer;
-        private System.Windows.Forms.ToolStrip tsToolbar;
-        private System.Windows.Forms.ToolStripButton tsbSave;
-        private System.Windows.Forms.ToolStripButton tsbSaveAll;
-        private System.Windows.Forms.StatusStrip tssStatus;
-        private System.Windows.Forms.ToolStripStatusLabel tslTexturesInfo;
+        private System.Windows.Forms.Panel panelInfo;
+        private System.Windows.Forms.Label lblTextureName;
+        private System.Windows.Forms.Label lblTextureFormat;
+        private System.Windows.Forms.Label lblTextureDims;
+        private System.Windows.Forms.Panel panelInfoControls;
+        private System.Windows.Forms.RadioButton radioChannelFull;
+        private System.Windows.Forms.RadioButton radioChannelA;
+        private System.Windows.Forms.RadioButton radioChannelB;
+        private System.Windows.Forms.RadioButton radioChannelG;
+        private System.Windows.Forms.RadioButton radioChannelR;
+        private System.Windows.Forms.Label lblMipMap;
+        private System.Windows.Forms.ComboBox cboMipMaps;
     }
 }

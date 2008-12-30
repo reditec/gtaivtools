@@ -1,6 +1,6 @@
 ﻿/**********************************************************************\
 
- RageLib
+ RageLib - Textures
  Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,6 @@ namespace RageLib.Textures
     {
         public const int ThumbnailSize = 32;
         private Image _thumbnailCache;
-
         internal Texture(TextureInfo info)
         {
             Name = info.Name;
@@ -52,6 +51,7 @@ namespace RageLib.Textures
             }
 
             TextureData = info.TextureData;
+            Levels = info.Levels;
             Info = info;
         }
 
@@ -62,6 +62,8 @@ namespace RageLib.Textures
         public TextureType TextureType { get; private set; }
         public byte[] TextureData { get; private set; }
         public string Name { get; private set; }
+        public int Levels { get; private set; }
+
 
         public string TitleName
         { 
@@ -105,12 +107,17 @@ namespace RageLib.Textures
 
         public Image Decode()
         {
-            return TextureDecoder.Decode(this);
+            return Decode(0);
+        }
+
+        public Image Decode(int level)
+        {
+            return TextureDecoder.Decode(this, level);
         }
 
         public override string ToString()
         {
-            string format = "";
+            string format;
             switch (TextureType)
             {
                 case TextureType.DXT1:
@@ -126,6 +133,46 @@ namespace RageLib.Textures
                     throw new ArgumentOutOfRangeException();
             }
             return string.Format("{0} ({1}x{2} {3})", Name.Substring(6), Width, Height, format);
+        }
+
+        public uint GetTextureDataSize(int level)
+        {
+            var width = GetWidth(level);
+            var height = GetHeight(level);
+            var blockSize = TextureType == TextureType.DXT1 ? 8 : 16;
+            return (uint)((width/4)*(height/4)*blockSize);
+        }
+
+        public uint GetWidth(int level)
+        {
+            return Width/(uint)Math.Pow(2, level);
+        }
+
+        public uint GetHeight(int level)
+        {
+            return Height / (uint)Math.Pow(2, level);
+        }
+
+        public byte[] GetTextureData(int level)
+        {
+            byte[] data;
+            if (level == 0)
+            {
+                data = TextureData;
+            }
+            else
+            {
+                uint offset = 0;
+                for(int i=0; i<level; i++)
+                {
+                    offset += GetTextureDataSize(i);
+                }
+                uint size = GetTextureDataSize(level);
+
+                data = new byte[size];
+                Array.Copy(TextureData, offset, data, 0, size);
+            }
+            return data;
         }
     }
 }

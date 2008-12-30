@@ -1,6 +1,6 @@
 ﻿/**********************************************************************\
 
- RageLib
+ RageLib - Textures
  Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
@@ -21,9 +21,8 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Windows.Forms;
+using RageLib.Textures.Filter;
 using Brush=System.Drawing.Brush;
 using FontStyle=System.Drawing.FontStyle;
 using Graphics=System.Drawing.Graphics;
@@ -33,56 +32,125 @@ namespace RageLib.Textures
 {
     public partial class TextureView : UserControl
     {
-        private string _lastSaveDirectory;
-
-        private TextureFile _textureFile;
         private const int TextureListIconPadding = 2;
         private const int TextureListIconSize = Texture.ThumbnailSize;
+
+        public event EventHandler ImageChannelChanged;
 
         public TextureView()
         {
             InitializeComponent();
+
+            ClearTextures();
         }
 
-        public TextureFile TextureFile
+        public event EventHandler SelectedTextureChanged
         {
-            get
-            {
-                return _textureFile;
-            }
-            set
-            {
-                _textureFile = value;
-                UpdateView();
-            }
+            add { listTextures.SelectedIndexChanged += value; }
+            remove { listTextures.SelectedIndexChanged -= value; }
         }
 
-        private void UpdateView()
+        public event EventHandler SelectedMipMapChanged
+        {
+            add { cboMipMaps.SelectedIndexChanged += value; }
+            remove { cboMipMaps.SelectedIndexChanged -= value; }
+        }
+
+        public Texture SelectedTexture
+        {
+            get { return listTextures.SelectedItem as Texture; }
+            set { listTextures.SelectedItem = value; }
+        }
+
+        public void ClearTextures()
         {
             listTextures.Items.Clear();
             picPreview.Image = null;
             picPreview.Size = new Size(1, 1);
-            if (_textureFile != null)
-            {
-                foreach (var texture in _textureFile)
-                {
-                    listTextures.Items.Add(texture);
-                }
-                if (listTextures.Items.Count > 0)
-                {
-                    listTextures.SelectedIndex = 0;
-                }
+        }
 
-                tslTexturesInfo.Text = _textureFile.Count + " Textures";
+        public void AddTexture(Texture texture)
+        {
+            listTextures.Items.Add(texture);
+        }
+
+        public Image PreviewImage
+        {
+            get { return picPreview.Image; }
+            set { picPreview.Image = value; }
+        }
+
+        public bool InfoPanelEnabled
+        {
+            get { return panelInfo.Enabled; }
+            set { panelInfo.Enabled = value; }
+        }
+
+        internal void SetTextureInfo(string name, TextureType type, uint width, uint height, int levels)
+        {
+            lblTextureName.Text = name;
+            lblTextureFormat.Text = type.ToString();
+            lblTextureDims.Text = string.Format("{0}x{1}", width, height);
+
+            cboMipMaps.Items.Clear();
+            for(int i=0; i<levels; i++)
+            {
+                string levelText = string.Format("{0}x{1}", width, height);
+                cboMipMaps.Items.Add(levelText);
+
+                width /= 2;
+                height /= 2;
+            }
+
+            cboMipMaps.SelectedIndex = 0;
+        }
+
+        public int SelectedMipMap
+        {
+            get { return cboMipMaps.SelectedIndex; }
+        }
+
+        internal ImageChannel SelectedImageChannel
+        {
+            get
+            {
+                var channel = ImageChannel.All;
+                channel = (radioChannelR.Checked) ? ImageChannel.Red : channel;
+                channel = (radioChannelG.Checked) ? ImageChannel.Green : channel;
+                channel = (radioChannelB.Checked) ? ImageChannel.Blue : channel;
+                channel = (radioChannelA.Checked) ? ImageChannel.Alpha : channel;
+                return channel;
+            }
+            set
+            {
+                switch(value)
+                {
+                    case ImageChannel.All:
+                        radioChannelFull.Checked = true;
+                        break;
+                    case ImageChannel.Red:
+                        radioChannelR.Checked = true;
+                        break;
+                    case ImageChannel.Green:
+                        radioChannelG.Checked = true;
+                        break;
+                    case ImageChannel.Blue:
+                        radioChannelB.Checked = true;
+                        break;
+                    case ImageChannel.Alpha:
+                        radioChannelA.Checked = true;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException("value");
+                }
             }
         }
 
-        private void listTextures_SelectedIndexChanged(object sender, EventArgs e)
+        private void view_ImageChannelChecked(object sender, EventArgs e)
         {
-            var texture = listTextures.SelectedItem as Texture;
-            if (texture != null)
+            if (ImageChannelChanged != null)
             {
-                picPreview.Image = texture.Decode();
+                ImageChannelChanged(this, null);
             }
         }
 
@@ -103,23 +171,8 @@ namespace RageLib.Textures
             if (texture == null)
                 return;
 
-            string format;
-            switch(texture.TextureType)
-            {
-                case TextureType.DXT1:
-                    format = "DXT1";
-                    break;
-                case TextureType.DXT3:
-                    format = "DXT3";
-                    break;
-                case TextureType.DXT5:
-                    format = "DXT5";
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            string textMain = texture.Name.Substring(6);        // skip the pack:/
+            string format = texture.TextureType.ToString();
+            string textMain = texture.TitleName;
             string textSub = texture.Width + "x" + texture.Height + " (" + format + ")";
             Font fontNormal = listTextures.Font;
             Font fontBold = new Font(fontNormal, FontStyle.Bold);
@@ -162,59 +215,6 @@ namespace RageLib.Textures
 
         }
 
-        private void tsbSave_Click(object sender, EventArgs e)
-        {
-            var texture = listTextures.SelectedItem as Texture;
-            if (texture != null)
-            {
-                var sfd = new SaveFileDialog
-                              {
-                                  AddExtension = true,
-                                  OverwritePrompt = true,
-                                  Title = "Save Texture",
-                                  Filter = "Portable Network Graphics (*.png)|*.png|JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg",
-                                  InitialDirectory = _lastSaveDirectory,
-                              };
-
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    var image = texture.Decode();
-
-                    var format = ImageFormat.Png;
-                    if (sfd.FileName.EndsWith(".jpg") || sfd.FileName.EndsWith(".jpeg"))
-                    {
-                        format = ImageFormat.Jpeg;
-                    }
-
-                    image.Save(sfd.FileName, format);
-
-                    _lastSaveDirectory = new FileInfo(sfd.FileName).Directory.FullName;
-
-                    MessageBox.Show("Texture saved.", "Save Texture", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
-        }
-
-        private void tsbSaveAll_Click(object sender, EventArgs e)
-        {
-            var fbd = new FolderBrowserDialog
-                          {
-                              Description = "Select path to save textures to...",
-                              SelectedPath = _lastSaveDirectory,
-                              ShowNewFolderButton = true
-                          };
-
-            if (fbd.ShowDialog() == DialogResult.OK)
-            {
-                foreach (var texture in _textureFile)
-                {
-                    var image = texture.Decode();
-                    image.Save(Path.Combine(fbd.SelectedPath, texture.TitleName + ".png"), ImageFormat.Png);
-                }
-
-                MessageBox.Show("Textures saved.", "Save All Textures", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
 
     }
 }
