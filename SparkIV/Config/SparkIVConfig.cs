@@ -18,6 +18,9 @@
 
 \**********************************************************************/
 
+using System.IO;
+using System.Windows.Forms;
+
 namespace SparkIV.Config
 {
     static class SparkIVConfig
@@ -26,7 +29,8 @@ namespace SparkIV.Config
 
         static SparkIVConfig()
         {
-            Instance = XmlPersister.Load<Value.Config>("SparkIV.Config.xml");
+            var appPath = Path.GetDirectoryName(Application.ExecutablePath);
+            Instance = XmlPersister.Load<Value.Config>(Path.Combine(appPath, "SparkIV.Config.xml"));
         }
     }
 }
