@@ -38,6 +38,7 @@ namespace SparkIV
 {
     public partial class MainForm : Form
     {
+        private static readonly Color CustomDataForeColor = SystemColors.HotTrack;
         private const int SizeColumn = 1;
 
         private FileSystem _fs;
@@ -128,7 +129,7 @@ namespace SparkIV
 
                             if (file.IsCustomData)
                             {
-                                lvi.ForeColor = SystemColors.HotTrack;
+                                lvi.ForeColor = CustomDataForeColor;
                             }
 
                             if (selectedFileNames.Contains(file.Name))
@@ -227,7 +228,17 @@ namespace SparkIV
             if (Editors.HasEditor(file))
             {
                 Editors.LaunchEditor(_fs, file);
-                PopulateListView();
+                if (file.IsCustomData)
+                {
+                    foreach (ListViewItem item in lvFiles.Items)
+                    {
+                        if (item.Tag == file)
+                        {
+                            item.ForeColor = CustomDataForeColor;
+                            break;
+                        }
+                    }
+                }
             }
         }
 
