@@ -19,16 +19,44 @@
 \**********************************************************************/
 
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using RageLib.Common;
-using RageLib.FileSystem.Common;
 using RageLib.FileSystem.RPF;
+using Directory=RageLib.FileSystem.Common.Directory;
 using File=RageLib.FileSystem.RPF.File;
 
 namespace RageLib.FileSystem
 {
     public class RPFFileSystem : Common.FileSystem
     {
+        private static readonly Dictionary<uint, string> _knownFilenames;
+
         private File _rpfFile;
+
+        static RPFFileSystem()
+        {
+            _knownFilenames = new Dictionary<uint, string>();
+            using (var s = Assembly.GetExecutingAssembly().GetManifestResourceStream("RageLib.FileSystem.RPF.KnownFilenames.txt"))
+            {
+                var sw = new StreamReader(s);
+
+                string item;
+                while ((item = sw.ReadLine()) != null)
+                {
+                    var names = item.Split('\\');
+                    foreach (var name in names)
+                    {
+                        uint hash = Hasher.Hash(name);
+                        if (!_knownFilenames.ContainsKey(hash))
+                        {
+                            _knownFilenames.Add(hash, name);
+                        }
+                    }
+                }
+            }
+        }
 
         public override void Open(string filename)
         {
@@ -58,15 +86,27 @@ namespace RageLib.FileSystem
 
         private string GetName(TOCEntry entry)
         {
-            if (_rpfFile.Header.Identifier < MagicId.Version3 || entry.NameOffset == 0)
+            string name;
+            if (_rpfFile.Header.Identifier < MagicId.Version3)
             {
-                string name = _rpfFile.TOC.GetName(entry.NameOffset);
-                return name;
+                name = _rpfFile.TOC.GetName(entry.NameOffset);
             }
             else
             {
-                return string.Format("0x{0:x}", entry.NameOffset);
+                if (entry == _rpfFile.TOC[0])
+                {
+                    name = "/";
+                }
+                else if (_knownFilenames.ContainsKey((uint)entry.NameOffset))
+                {
+                    name = _knownFilenames[(uint)entry.NameOffset];
+                }
+                else
+                {
+                    name = string.Format("0x{0:x}", entry.NameOffset);   
+                }
             }
+            return name;
         }
 
         private byte[] LoadData(FileEntry entry)
