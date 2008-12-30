@@ -38,7 +38,7 @@ namespace RageLib.Common.Compression
             StreamUtils.Copy(source, deflater, dataBuffer);
              */
 
-            var def = new Deflater(Deflater.BEST_COMPRESSION, true);
+            var def = new Deflater(Deflater.DEFAULT_COMPRESSION, true);
             
             var inputData = new byte[source.Length - source.Position];
             source.Read(inputData, 0, inputData.Length);

@@ -30,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -44,6 +45,9 @@
     </Compile>
     <Compile Include="Decoder\DXTDecoder.cs" />
     <Compile Include="Decoder\TextureDecoder.cs" />
+    <Compile Include="Encoder\DXTEncoder.cs" />
+    <Compile Include="Encoder\Squish.cs" />
+    <Compile Include="Encoder\TextureEncoder.cs" />
     <Compile Include="Filter\ChannelFilter.cs" />
     <Compile Include="Filter\IFilter.cs" />
     <Compile Include="Filter\ImageChannel.cs" />
@@ -55,6 +59,13 @@
     <Compile Include="Resource\Header.cs" />
     <Compile Include="Resource\TextureInfo.cs" />
     <Compile Include="Texture.cs" />
+    <Compile Include="TextureEditController.cs" />
+    <Compile Include="TextureEditView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TextureEditView.Designer.cs">
+      <DependentUpon>TextureEditView.cs</DependentUpon>
+    </Compile>
     <Compile Include="TextureFile.cs" />
     <Compile Include="TexturePreviewController.cs" />
     <Compile Include="TexturePreviewView.cs">
@@ -73,6 +84,10 @@
     <Compile Include="TextureViewController.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="TextureEditView.resx">
+      <DependentUpon>TextureEditView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="TexturePreviewView.resx">
       <DependentUpon>TexturePreviewView.cs</DependentUpon>
       <SubType>Designer</SubType>

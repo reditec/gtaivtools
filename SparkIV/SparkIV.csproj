@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -69,6 +71,13 @@
     <Compile Include="Editor\IDynamicEditor.cs" />
     <Compile Include="Editor\IEditor.cs" />
     <Compile Include="Editor\SparkIVEditor.cs" />
+    <Compile Include="Editor\EditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editor\EditorForm.designer.cs">
+      <DependentUpon>EditorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\Textures\TextureEditor.cs" />
     <Compile Include="ListViewItemComparer.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -135,6 +144,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Editor\EditorForm.resx">
+      <DependentUpon>EditorForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Viewer\Script\ScriptView.resx">
       <DependentUpon>ScriptView.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -142,6 +155,10 @@
     <EmbeddedResource Include="Viewer\Xml\defaultss.xslt" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\Vendor\libsquish.dll">
+      <Link>libsquish.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="SparkIV.Config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

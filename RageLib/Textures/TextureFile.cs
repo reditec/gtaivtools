@@ -57,6 +57,16 @@ namespace RageLib.Textures
             BuildTextures();
         }
 
+        public void Save(Stream stream)
+        {
+            _file.Save(stream);
+        }
+
+        public void Save(Stream systemMemory, Stream graphicsMemory)
+        {
+            _file.Save(systemMemory, graphicsMemory);
+        }
+
         private void BuildTextures()
         {
             Textures = new List<Texture>(_file.Header.TextureCount);

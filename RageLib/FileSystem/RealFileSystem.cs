@@ -74,8 +74,12 @@ namespace RageLib.FileSystem
                 var fileEntry = dirEntry.GetFile(i);
 
                 File file;
-                file = new File(fileEntry.GetData, data => _customData[fileEntry.FullName] = data,
-                                () => _customData.ContainsKey(fileEntry.FullName));
+                file = new File( 
+                                ()=> (_customData.ContainsKey(fileEntry.FullName) ? _customData[fileEntry.FullName] : fileEntry.GetData()),     
+                                data => _customData[fileEntry.FullName] = data,
+                                () => _customData.ContainsKey(fileEntry.FullName)
+                            );
+
                 file.CompressedSize = fileEntry.Size;
                 file.IsCompressed = false;
                 file.Name = fileEntry.Name;

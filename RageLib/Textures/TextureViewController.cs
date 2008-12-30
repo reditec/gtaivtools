@@ -82,7 +82,7 @@ namespace RageLib.Textures
             UpdateImage();
         }
 
-        private void UpdateImage()
+        public void UpdateImage()
         {
             var texture = _view.SelectedTexture;
             if (texture != null)
@@ -96,6 +96,5 @@ namespace RageLib.Textures
                 _view.PreviewImage = image;
             }
         }
-
     }
 }

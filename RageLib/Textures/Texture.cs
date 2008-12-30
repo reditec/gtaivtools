@@ -21,6 +21,7 @@
 using System;
 using System.Drawing;
 using RageLib.Textures.Decoder;
+using RageLib.Textures.Encoder;
 using RageLib.Textures.Resource;
 
 namespace RageLib.Textures
@@ -28,7 +29,9 @@ namespace RageLib.Textures
     public class Texture
     {
         public const int ThumbnailSize = 32;
+        
         private Image _thumbnailCache;
+
         internal Texture(TextureInfo info)
         {
             Name = info.Name;
@@ -50,7 +53,6 @@ namespace RageLib.Textures
                     throw new ArgumentOutOfRangeException();
             }
 
-            TextureData = info.TextureData;
             Levels = info.Levels;
             Info = info;
         }
@@ -60,10 +62,9 @@ namespace RageLib.Textures
         public uint Width { get; private set; }
         public uint Height { get; private set; }
         public TextureType TextureType { get; private set; }
-        public byte[] TextureData { get; private set; }
+        public byte[] TextureData { get { return Info.TextureData; } }
         public string Name { get; private set; }
         public int Levels { get; private set; }
-
 
         public string TitleName
         { 
@@ -115,6 +116,20 @@ namespace RageLib.Textures
             return TextureDecoder.Decode(this, level);
         }
 
+        public void Encode(Image image)
+        {
+            for(int i=0; i<Levels; i++)
+            {
+                TextureEncoder.Encode(this, image, i);
+            }
+
+            if (_thumbnailCache != null)
+            {
+                _thumbnailCache.Dispose();
+                _thumbnailCache = null;
+            }
+        }
+
         public override string ToString()
         {
             string format;
@@ -163,16 +178,28 @@ namespace RageLib.Textures
             else
             {
                 uint offset = 0;
-                for(int i=0; i<level; i++)
+                for(var i=0; i<level; i++)
                 {
                     offset += GetTextureDataSize(i);
                 }
-                uint size = GetTextureDataSize(level);
+                var size = GetTextureDataSize(level);
 
                 data = new byte[size];
                 Array.Copy(TextureData, offset, data, 0, size);
             }
             return data;
+        }
+
+        public void SetTextureData(int level, byte[] data)
+        {
+            uint offset = 0;
+            for (var i = 0; i < level; i++)
+            {
+                offset += GetTextureDataSize(i);
+            }
+            var size = GetTextureDataSize(level);
+
+            Array.Copy(data, 0, TextureData, offset, size);
         }
     }
 }

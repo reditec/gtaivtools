@@ -111,6 +111,12 @@ namespace RageLib.Textures.Resource
             TextureData = br.ReadBytes(dataSize);
         }
 
+        public void WriteData(BinaryWriter bw)
+        {
+            bw.BaseStream.Seek(RawDataOffset, SeekOrigin.Begin);
+            bw.Write(TextureData);
+        }
+
         #region IFileAccess Members
 
         public void Read(BinaryReader br)

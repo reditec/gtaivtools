@@ -146,6 +146,11 @@ namespace RageLib.Textures
             }
         }
 
+        public void RedrawTextureList()
+        {
+            listTextures.Invalidate();
+        }
+
         private void view_ImageChannelChecked(object sender, EventArgs e)
         {
             if (ImageChannelChanged != null)
@@ -214,7 +219,5 @@ namespace RageLib.Textures
                          textSpacer + sizeMain.Height + e.Bounds.Top + TextureListIconPadding);
 
         }
-
-
     }
 }

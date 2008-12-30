@@ -27,6 +27,8 @@ namespace RageLib.Textures.Resource
 {
     internal class File
     {
+        private ResourceFile _resourceFile;
+
         public Header Header { get; private set; }
 
         public Dictionary<uint, TextureInfo> TexturesByHash { get; private set; }
@@ -93,7 +95,6 @@ namespace RageLib.Textures.Resource
             {
                 Textures[i].ReadData(br);
             }
-
         }
 
         public void Open(Stream stream)
@@ -106,7 +107,7 @@ namespace RageLib.Textures.Resource
                 throw new Exception("Not a valid texture resource.");
             }
 
-            // Read System Memory
+            // Read
 
             var systemMem = new MemoryStream(res.SystemMemData);
             var graphicsMem = new MemoryStream(res.GraphicsMemData);
@@ -116,6 +117,38 @@ namespace RageLib.Textures.Resource
             systemMem.Close();
             graphicsMem.Close();
 
+            // Save the resource file for later
+            _resourceFile = res;
+        }
+
+        public void Save(Stream stream)
+        {
+            var res = _resourceFile;
+
+            // Save to the Resource file stream
+
+            var systemMem = new MemoryStream(res.SystemMemData);
+            var graphicsMem = new MemoryStream(res.GraphicsMemData);
+
+            Save(systemMem, graphicsMem);
+
+            systemMem.Close();
+            graphicsMem.Close();
+
+            // Now write the Resource data back to the stream
+
+            res.Write(stream);
+        }
+
+        public void Save(Stream systemMemory, Stream graphicsMemory)
+        {
+            var ms = graphicsMemory;
+            var bw = new BinaryWriter(ms);
+
+            for (int i = 0; i < Header.TextureCount; i++)
+            {
+                Textures[i].WriteData(bw);
+            }           
         }
     }
 }

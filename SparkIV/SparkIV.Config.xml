@@ -11,5 +11,6 @@
   <Editors>
     <Editor Extension="img,rpf" Type="SparkIV.Editor.SparkIVEditor, SparkIV" />
     <Editor Extension="" Type="SparkIV.Editor.ExternalEditor, SparkIV" />
+    <Editor Extension="wtd" Type="SparkIV.Editor.Textures.TextureEditor, SparkIV" />
   </Editors>
 </SparkIV>
