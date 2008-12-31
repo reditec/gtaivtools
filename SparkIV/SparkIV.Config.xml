@@ -13,5 +13,6 @@
     <Editor Extension="" Type="SparkIV.Editor.ExternalEditor, SparkIV" />
     <Editor Extension="wtd" Type="SparkIV.Editor.Textures.TextureEditor, SparkIV" />
     <Editor Extension="wdr" Type="SparkIV.Editor.Textures.ModelTextureEditor, SparkIV" />
+    <Editor Extension="whm" Type="SparkIV.Editor.Textures.HyperTextTextureEditor, SparkIV" />
   </Editors>
 </SparkIV>

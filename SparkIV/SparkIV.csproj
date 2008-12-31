@@ -78,6 +78,7 @@
       <DependentUpon>EditorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Editor\Textures\EmbeddedTextureEditor.cs" />
+    <Compile Include="Editor\Textures\HyperTextTextureEditor.cs" />
     <Compile Include="Editor\Textures\ModelTextureEditor.cs" />
     <Compile Include="Editor\Textures\TextureEditor.cs" />
     <Compile Include="ListViewItemComparer.cs" />
@@ -136,6 +137,10 @@
     <ProjectReference Include="..\RageLib\FileSystem\FileSystem.csproj">
       <Project>{7001A079-BE0E-40DD-A3AB-2AB2B6474EEA}</Project>
       <Name>FileSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RageLib\HyperText\HyperText.csproj">
+      <Project>{2DCDBA6F-9941-45E5-94A4-082ACB9486FC}</Project>
+      <Name>HyperText</Name>
     </ProjectReference>
     <ProjectReference Include="..\RageLib\Models\Models.csproj">
       <Project>{BEC8B82B-9EB6-43CA-BB70-8AFB8729E230}</Project>

@@ -1,6 +1,6 @@
 ﻿/**********************************************************************\
 
- RageLib
+ RageLib - HyperText
  Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
@@ -18,19 +18,33 @@
 
 \**********************************************************************/
 
-using System.Reflection;
-using System.Runtime.InteropServices;
+using RageLib.HyperText.Resource;
+using RageLib.Textures;
+using Stream=System.IO.Stream;
 
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
+namespace RageLib.HyperText
+{
+    public class HyperTextFile
+    {
+        internal File File { get; private set; }
 
-[assembly: AssemblyTitle("RageLib.Models")]
+        public void Open(string filename)
+        {
+            File = new File();
+            File.Open(filename);
+        }
 
-// Setting ComVisible to false makes the types in this assembly not visible 
-// to COM components.  If you need to access a type in this assembly from 
-// COM, set the ComVisible attribute to true on that type.
-[assembly: ComVisible(false)]
+        public void Open(Stream stream)
+        {
+            File = new File();
+            File.Open(stream);
+        }
 
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("66a2fc83-9957-44ae-9917-58948779f789")]
+        public TextureFile EmbeddedTextureFile
+        {
+            get { return File.Data.TextureDictionary; }
+        }
+
+
+    }
+}
