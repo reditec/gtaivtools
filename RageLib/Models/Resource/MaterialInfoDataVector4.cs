@@ -19,6 +19,7 @@
 \**********************************************************************/
 
 using System.IO;
+using RageLib.Common.ResourceTypes;
 
 namespace RageLib.Models.Resource
 {

@@ -1,4 +1,4 @@
-﻿/**********************************************************************\
+/**********************************************************************\
 
  RageLib
  Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
@@ -21,30 +21,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using RageLib.Common;
-using RageLib.Common.Resources;
 
-namespace RageLib.Models.Resource
+namespace RageLib.Common.ResourceTypes
 {
-    internal class SimpleCollection<T> : IFileAccess, IEnumerable<T>
+    public class SimpleArray<T> : IFileAccess, IEnumerable<T>
     {
         public delegate T ReadDataDelegate(BinaryReader br);
 
         protected ReadDataDelegate ReadData;
 
         protected List<T> Values;
+        public int Count { get; private set; }
 
-        public ushort Count { get; set; }
-        public ushort Size { get; set; }
-
-        public SimpleCollection(ReadDataDelegate delg)
+        public SimpleArray(int count, ReadDataDelegate delg)
         {
+            Count = count;
             ReadData = delg;
         }
 
-        public SimpleCollection(BinaryReader br, ReadDataDelegate delg)
+        public SimpleArray(BinaryReader br, int count, ReadDataDelegate delg)
+            : this(count, delg)
         {
-            ReadData = delg;
             Read(br);
         }
 
@@ -58,22 +55,12 @@ namespace RageLib.Models.Resource
 
         public void Read(BinaryReader br)
         {
-            var offset = ResourceUtil.ReadOffset(br);
-
-            Count = br.ReadUInt16();
-            Size = br.ReadUInt16();
-
             Values = new List<T>(Count);
-
-            var position = br.BaseStream.Position;
-            br.BaseStream.Seek(offset, SeekOrigin.Begin);
 
             for (int i = 0; i < Count; i++)
             {
-                Values.Add(ReadData(br));
+                Values.Add( ReadData(br) );
             }
-
-            br.BaseStream.Position = position;
         }
 
         public void Write(BinaryWriter bw)

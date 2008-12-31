@@ -21,12 +21,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using RageLib.Common;
 using RageLib.Common.Resources;
 
-namespace RageLib.Models.Resource
+namespace RageLib.Common.ResourceTypes
 {
-    class PtrCollection<T> : IFileAccess, IEnumerable<T> where T : class, IFileAccess, new()
+    public class PtrCollection<T> : IFileAccess, IEnumerable<T> where T : class, IFileAccess, new()
     {
         private uint[] _itemOffsets;
         private List<T> _items;

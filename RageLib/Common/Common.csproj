@@ -79,6 +79,12 @@
     <Compile Include="Compression\CompressionLZXCodec.cs" />
     <Compile Include="Resources\ResourceType.cs" />
     <Compile Include="Resources\ResourceUtil.cs" />
+    <Compile Include="ResourceTypes\PGDictionary.cs" />
+    <Compile Include="ResourceTypes\PtrCollection.cs" />
+    <Compile Include="ResourceTypes\SimpleArray.cs" />
+    <Compile Include="ResourceTypes\SimpleCollection.cs" />
+    <Compile Include="ResourceTypes\UnDocData.cs" />
+    <Compile Include="ResourceTypes\Vector4.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

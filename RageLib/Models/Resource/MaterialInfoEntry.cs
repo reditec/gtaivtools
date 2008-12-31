@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.IO;
 using RageLib.Common;
 using RageLib.Common.Resources;
+using RageLib.Common.ResourceTypes;
 
 namespace RageLib.Models.Resource
 {

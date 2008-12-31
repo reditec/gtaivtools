@@ -89,12 +89,6 @@
     <Compile Include="Resource\MaterialInfoEntry.cs" />
     <Compile Include="Resource\MaterialInfoDataMatrix.cs" />
     <Compile Include="Resource\MaterialInfoDataVector4.cs" />
-    <Compile Include="Resource\PGDictionary.cs" />
-    <Compile Include="Resource\PtrCollection.cs" />
-    <Compile Include="Resource\SimpleArray.cs" />
-    <Compile Include="Resource\SimpleCollection.cs" />
-    <Compile Include="Resource\UnDocData.cs" />
-    <Compile Include="Resource\Vector4.cs" />
     <Compile Include="Resource\GeometryVertexDataInfo.cs" />
     <Compile Include="Resource\Vertex.cs" />
   </ItemGroup>

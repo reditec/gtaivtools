@@ -22,6 +22,7 @@ using System;
 using System.IO;
 using RageLib.Common;
 using RageLib.Common.Resources;
+using RageLib.Common.ResourceTypes;
 using RageLib.Textures;
 
 namespace RageLib.Models.Resource

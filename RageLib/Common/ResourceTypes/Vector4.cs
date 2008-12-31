@@ -18,33 +18,46 @@
 
 \**********************************************************************/
 
+using System;
 using System.IO;
-using RageLib.Common;
 
-namespace RageLib.Models.Resource
+namespace RageLib.Common.ResourceTypes
 {
-    class UnDocData : IFileAccess
+    public class Vector4 : IFileAccess
     {
-        public UnDocData()
+        public float X { get; set; }
+        public float Y { get; set; }
+        public float Z { get; set; }
+        public float W { get; set; }
+
+        public Vector4()
         {
-            
         }
 
-        public UnDocData(BinaryReader br)
+        public Vector4(float x, float y, float z, float w)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+            W = w;
+        }
+
+        public Vector4(BinaryReader br)
         {
             Read(br);
         }
 
-        #region Implementation of IFileAccess
-
         public void Read(BinaryReader br)
         {
+            X = br.ReadSingle();
+            Y = br.ReadSingle();
+            Z = br.ReadSingle();
+            W = br.ReadSingle();
         }
 
         public void Write(BinaryWriter bw)
         {
+            throw new NotImplementedException();
         }
-
-        #endregion
     }
 }

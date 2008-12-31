@@ -20,13 +20,12 @@
 
 using System;
 using System.IO;
-using RageLib.Common;
 using RageLib.Common.Resources;
 
-namespace RageLib.Models.Resource
+namespace RageLib.Common.ResourceTypes
 {
     // pgDictionary<T>
-    internal class PGDictionary<T> : IFileAccess where T: class, IFileAccess, new()
+    public class PGDictionary<T> : IFileAccess where T: class, IFileAccess, new()
     {
         public uint VTable { get; private set; }
 
