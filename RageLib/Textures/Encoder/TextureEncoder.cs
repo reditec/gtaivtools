@@ -20,6 +20,7 @@
 
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 
 namespace RageLib.Textures.Encoder
@@ -32,7 +33,13 @@ namespace RageLib.Textures.Encoder
             var height = texture.GetHeight(level);
             var data = new byte[width * height * 4];  // R G B A
 
-            var bitmap = new Bitmap(image, (int)width, (int)height);
+            var bitmap = new Bitmap((int)width, (int)height);
+
+            Graphics g = Graphics.FromImage(bitmap);
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g.DrawImage(image, 0, 0, (int)width, (int)height);
+            g.Dispose();
+
             var rect = new Rectangle(0, 0, (int) width, (int) height);
             BitmapData bmpdata = bitmap.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
