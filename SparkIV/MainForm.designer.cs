@@ -67,6 +67,9 @@ namespace SparkIV
             this.tsbImport = new System.Windows.Forms.ToolStripButton();
             this.tslAbout = new System.Windows.Forms.ToolStripLabel();
             this.tss2 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbPreview = new System.Windows.Forms.ToolStripButton();
+            this.tsbEdit = new System.Windows.Forms.ToolStripButton();
+            this.tss3 = new System.Windows.Forms.ToolStripSeparator();
             this.tslFilter = new System.Windows.Forms.ToolStripLabel();
             this.tstFilterBox = new System.Windows.Forms.ToolStripTextBox();
             this.tsContainer.ContentPanel.SuspendLayout();
@@ -140,6 +143,7 @@ namespace SparkIV
             this.lvFiles.UseCompatibleStateImageBehavior = false;
             this.lvFiles.View = System.Windows.Forms.View.Details;
             this.lvFiles.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lvFiles_MouseDoubleClick);
+            this.lvFiles.SelectedIndexChanged += new System.EventHandler(this.lvFiles_SelectedIndexChanged);
             this.lvFiles.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvFiles_ColumnClick);
             this.lvFiles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvFiles_KeyDown);
             // 
@@ -174,6 +178,9 @@ namespace SparkIV
             this.tsbImport,
             this.tslAbout,
             this.tss2,
+            this.tsbPreview,
+            this.tsbEdit,
+            this.tss3,
             this.tslFilter,
             this.tstFilterBox});
             this.tsToolbar.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
@@ -279,6 +286,33 @@ namespace SparkIV
             this.tss2.Name = "tss2";
             this.tss2.Size = new System.Drawing.Size(6, 46);
             // 
+            // tsbPreview
+            // 
+            this.tsbPreview.Image = ((System.Drawing.Image)(resources.GetObject("tsbPreview.Image")));
+            this.tsbPreview.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbPreview.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbPreview.Name = "tsbPreview";
+            this.tsbPreview.Size = new System.Drawing.Size(36, 43);
+            this.tsbPreview.Text = "&View";
+            this.tsbPreview.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbPreview.Click += new System.EventHandler(this.tsbPreview_Click);
+            // 
+            // tsbEdit
+            // 
+            this.tsbEdit.Image = ((System.Drawing.Image)(resources.GetObject("tsbEdit.Image")));
+            this.tsbEdit.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbEdit.Name = "tsbEdit";
+            this.tsbEdit.Size = new System.Drawing.Size(31, 43);
+            this.tsbEdit.Text = "&Edit";
+            this.tsbEdit.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbEdit.Click += new System.EventHandler(this.tsbEdit_Click);
+            // 
+            // tss3
+            // 
+            this.tss3.Name = "tss3";
+            this.tss3.Size = new System.Drawing.Size(6, 46);
+            // 
             // tslFilter
             // 
             this.tslFilter.Name = "tslFilter";
@@ -338,5 +372,8 @@ namespace SparkIV
         private System.Windows.Forms.ToolStripTextBox tstFilterBox;
         private System.Windows.Forms.ToolStripLabel tslFilter;
         private System.Windows.Forms.ToolStripButton tsbBrowseGame;
+        private System.Windows.Forms.ToolStripButton tsbPreview;
+        private System.Windows.Forms.ToolStripButton tsbEdit;
+        private System.Windows.Forms.ToolStripSeparator tss3;
     }
 }

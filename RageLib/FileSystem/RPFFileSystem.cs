@@ -84,6 +84,16 @@ namespace RageLib.FileSystem
             _rpfFile.Close();
         }
 
+        public override bool SupportsRebuild
+        {
+            get { return false; }
+        }
+
+        public override bool HasDirectoryStructure
+        {
+            get { return true; }
+        }
+
         private string GetName(TOCEntry entry)
         {
             string name;

@@ -18,6 +18,7 @@
 
 \**********************************************************************/
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using RageLib.FileSystem.Real;
@@ -50,11 +51,21 @@ namespace RageLib.FileSystem
 
         public override void Rebuild()
         {
-            Save();
+            throw new NotImplementedException();
         }
 
         public override void Close()
         {
+        }
+
+        public override bool SupportsRebuild
+        {
+            get { return false; }
+        }
+
+        public override bool HasDirectoryStructure
+        {
+            get { return true; }
         }
 
         private void BuildFSDirectory(DirectoryEntry dirEntry, Directory fsDirectory)

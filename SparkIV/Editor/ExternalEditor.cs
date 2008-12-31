@@ -77,8 +77,10 @@ namespace SparkIV.Editor
         {
             try
             {
-                RegistryKey key = Registry.ClassesRoot.OpenSubKey("." + extension);
-                return key.GetValue("") != null;
+                var key = Registry.ClassesRoot.OpenSubKey("." + extension);
+                var defaultValue = key.GetValue("").ToString();
+                var shellOpenKey = Registry.ClassesRoot.OpenSubKey(defaultValue + @"\shell\open");
+                return shellOpenKey != null;
             }
             catch
             {

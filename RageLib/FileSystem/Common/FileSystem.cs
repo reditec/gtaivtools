@@ -34,6 +34,9 @@ namespace RageLib.FileSystem.Common
 
         public abstract void Close();
 
+        public abstract bool SupportsRebuild { get; }
+        public abstract bool HasDirectoryStructure { get; }
+
         internal void DumpFSToDebug()
         {
             DumpDirToDebug("", RootDirectory);

@@ -56,9 +56,52 @@ namespace SparkIV
             Version ver = Assembly.GetExecutingAssembly().GetName().Version;
             tslAbout.Text = "Spark IV " + ver.Major + "." + ver.Minor + "." + ver.Build + "\n" +
                             "(C)2008, Aru";
+
+            SetInitialUIState();
         }
 
         #region Helpers
+
+        public void OpenFile(string filename, FileSystem fs)
+        {
+            if (fs == null)
+            {
+                if (filename.EndsWith(".rpf"))
+                {
+                    fs = new RPFFileSystem();
+                }
+                else if (filename.EndsWith(".img"))
+                {
+                    fs = new IMGFileSystem();
+                }
+            }
+
+            if (fs != null)
+            {
+                try
+                {
+                    using (new WaitCursor(this))
+                    {
+                        fs.Open(filename);
+
+                        if (_fs != null)
+                        {
+                            _fs.Close();
+                        }
+                        _fs = fs;
+
+                        Text = Application.ProductName + " - " + new FileInfo(filename).Name;
+                    }
+
+                    PopulateUI();
+                }
+                catch (Exception ex)
+                {
+                    fs.Close();
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
 
         private string FriendlySize(int size)
         {
@@ -78,6 +121,10 @@ namespace SparkIV
 
         private void PopulateListView()
         {
+            // Redisable some buttons (will be autoenabled based on selection)
+            tsbPreview.Enabled = false;
+            tsbEdit.Enabled = false; 
+            
             Directory dir = _selectedDir;
 
             string filterString = tstFilterBox.Text;
@@ -163,13 +210,39 @@ namespace SparkIV
             }
         }
 
+        private void SetInitialUIState()
+        {
+            // Disable some buttons
+            tsbSave.Enabled = false;
+            tsbRebuild.Enabled = false;
+            tsbExportAll.Enabled = false;
+            tsbImport.Enabled = false;
+            tsbExportSelected.Enabled = false;
+            tsbPreview.Enabled = false;
+            tsbEdit.Enabled = false;
+            tslFilter.Enabled = false;
+            tstFilterBox.Enabled = false;
+        }
+
         private void PopulateUI()
         {
+            // Reenable some buttons
+            tsbSave.Enabled = true;
+            tsbRebuild.Enabled = _fs.SupportsRebuild;
+            tsbExportAll.Enabled = true;
+            tsbImport.Enabled = true;
+            tsbExportSelected.Enabled = true;
+            tslFilter.Enabled = true;
+            tstFilterBox.Enabled = true;
+
+            // Redisable some buttons (will be autoenabled based on selection)
+            tsbPreview.Enabled = false;
+            tsbEdit.Enabled = false;
+
             _sortColumn = -1;
             lvFiles.ListViewItemSorter = null;
 
-            splitContainer.Panel1Collapsed = (_fs is IMGFileSystem);
-
+            splitContainer.Panel1Collapsed = !_fs.HasDirectoryStructure;
 
             tvDir.Nodes.Clear();
             
@@ -259,15 +332,14 @@ namespace SparkIV
 
         private void PreviewOrEditFile(File file)
         {
-            if (Editors.HasEditor(file))
-            {
-                EditFile(file);
-            }
-            else
+            if (Viewers.HasViewer(file))
             {
                 PreviewFile(file);
             }
-
+            else if (Editors.HasEditor(file))
+            {
+                EditFile(file);
+            }
         }
 
         #endregion
@@ -334,47 +406,6 @@ namespace SparkIV
                 OpenFile(ofd.FileName, fs);
             }
 
-        }
-
-        public void OpenFile(string filename, FileSystem fs)
-        {
-            if (fs == null)
-            {
-                if (filename.EndsWith(".rpf"))
-                {
-                    fs = new RPFFileSystem();
-                }
-                else if (filename.EndsWith(".img"))
-                {
-                    fs = new IMGFileSystem();
-                }
-            }
-
-            if (fs != null)
-            {
-                try
-                {
-                    using (new WaitCursor(this))
-                    {
-                        fs.Open(filename);
-
-                        if (_fs != null)
-                        {
-                            _fs.Close();
-                        }
-                        _fs = fs;
-
-                        Text = Application.ProductName + " - " + new FileInfo(filename).Name;
-                    }
-
-                    PopulateUI();
-                }
-                catch (Exception ex)
-                {
-                    fs.Close();
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
         }
 
         private void tsbSave_Click(object sender, EventArgs e)
@@ -574,6 +605,25 @@ namespace SparkIV
             PopulateListView();
         }
 
+        private void tsbPreview_Click(object sender, EventArgs e)
+        {
+            if (lvFiles.SelectedItems.Count == 1)
+            {
+                var file = lvFiles.SelectedItems[0].Tag as File;
+                PreviewFile(file);
+            }
+        }
+
+
+        private void tsbEdit_Click(object sender, EventArgs e)
+        {
+            if (lvFiles.SelectedItems.Count == 1)
+            {
+                var file = lvFiles.SelectedItems[0].Tag as File;
+                EditFile(file);
+            }
+        }
+
         #endregion
 
         #region Event Handlers
@@ -600,7 +650,7 @@ namespace SparkIV
         {
             if (e.KeyCode == Keys.Enter)
             {
-                if (lvFiles.SelectedItems.Count > 0)
+                if (lvFiles.SelectedItems.Count == 1)
                 {
                     var file = lvFiles.SelectedItems[0].Tag as File;
                     PreviewOrEditFile(file);
@@ -632,6 +682,21 @@ namespace SparkIV
             lvFiles.Sort();
         }
 
+        private void lvFiles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lvFiles.SelectedItems.Count == 1)
+            {
+                var file = lvFiles.SelectedItems[0].Tag as File;
+                tsbPreview.Enabled = Viewers.HasViewer(file);
+                tsbEdit.Enabled = Editors.HasEditor(file);
+            }
+            else
+            {
+                tsbPreview.Enabled = false;
+                tsbEdit.Enabled = false;
+            }
+        }
+
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (_fs != null)
@@ -641,5 +706,7 @@ namespace SparkIV
         }
 
         #endregion
+
+
     }
 }

@@ -41,6 +41,11 @@ namespace RageLib.Models
             File.Open(stream);
         }
 
+        public TextureFile EmbeddedTextureFile
+        {
+            get { return File.Data.MaterialInfos.TextureDictionary; }
+        }
+
         public Model3D GetModel(TextureFile textures)
         {
             return ModelGenerator.GenerateModel(File.Data, textures);

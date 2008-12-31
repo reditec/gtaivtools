@@ -19,66 +19,39 @@
 \**********************************************************************/
 
 using System.IO;
+using System.Windows.Forms;
 using RageLib.FileSystem.Common;
-using RageLib.Textures;
+using RageLib.Models;
 using File=RageLib.FileSystem.Common.File;
 
 namespace SparkIV.Editor.Textures
 {
-    class TextureEditor : IEditor
+    class ModelTextureEditor : EmbeddedTextureEditor
     {
-        public virtual void LaunchEditor(FileSystem fs, File file)
+        public override void LaunchEditor(FileSystem fs, File file)
         {
             var data = file.GetData();
 
             var ms = new MemoryStream(data);
-            var textureFile = new TextureFile();
+            var modelFile = new ModelFile();
             try
             {
-                textureFile.Open(ms);
+                modelFile.Open(ms);
             }
             finally
             {
                 ms.Close();
             }
 
-            ShowForm(file, textureFile);
-        }
-
-        protected void ShowForm(File file, TextureFile textureFile)
-        {
-            var view = new TextureEditView();
-            
-            var controller = new TextureEditController(view);
-            controller.TextureFile = textureFile;
-
-            var form = new EditorForm();
-            form.SetFilename(file.Name);
-            form.SetControl(view);
-
-            controller.SaveAndClose += ((sender, e) => SaveAndClose(form, textureFile, file));
-
-            form.ShowDialog();
-        }
-
-        protected virtual void SaveAndClose(EditorForm form, TextureFile textureFile, File file)
-        {
-            using (new WaitCursor(form))
+            if (modelFile.EmbeddedTextureFile != null)
             {
-                var msSave = new MemoryStream();
-                try
-                {
-                    textureFile.Save(msSave);
-
-                    file.SetData(msSave.ToArray());
-                }
-                finally
-                {
-                    msSave.Close();
-                }
+                ShowForm(file, modelFile.EmbeddedTextureFile);
             }
-
-            form.Close();
+            else
+            {
+                MessageBox.Show("There are no embedded textures in the selected model file to edit.", "Edit",
+                                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
         }
     }
 }

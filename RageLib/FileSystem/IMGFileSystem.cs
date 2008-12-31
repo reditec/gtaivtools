@@ -55,6 +55,16 @@ namespace RageLib.FileSystem
             _imgFile.Close();
         }
 
+        public override bool SupportsRebuild
+        {
+            get { return true; }
+        }
+
+        public override bool HasDirectoryStructure
+        {
+            get { return false; }
+        }
+
         private byte[] LoadData(TOCEntry entry)
         {
             if (entry.CustomData == null)
