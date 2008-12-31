@@ -36,7 +36,7 @@ namespace RageLib.Textures.Encoder
             var bitmap = new Bitmap((int)width, (int)height);
 
             Graphics g = Graphics.FromImage(bitmap);
-            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g.InterpolationMode = InterpolationMode.HighQualityBilinear;
             g.DrawImage(image, 0, 0, (int)width, (int)height);
             g.Dispose();
 
