@@ -80,6 +80,7 @@
     <Compile Include="Resource\GeometryInfo.cs" />
     <Compile Include="IDataReader.cs" />
     <Compile Include="IEmbeddedResourceReader.cs" />
+    <Compile Include="Resource\GeometryVertexDeclaration.cs" />
     <Compile Include="Resource\MaterialInfo.cs" />
     <Compile Include="Resource\MaterialInfoDataID.cs" />
     <Compile Include="Resource\MaterialInfoDataObject.cs" />

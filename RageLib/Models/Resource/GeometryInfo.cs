@@ -46,7 +46,7 @@ namespace RageLib.Models.Resource
             GeometryDataInfos = new PtrCollection<GeometryDataInfo>(br);
 
             var unknownVectorOffsets = ResourceUtil.ReadOffset(br);
-            var p2Offset = ResourceUtil.ReadOffset(br);
+            var materialMappingOffset = ResourceUtil.ReadOffset(br);
 
             Unknown1 = br.ReadUInt16();
             Unknown2 = br.ReadUInt16();
@@ -59,7 +59,7 @@ namespace RageLib.Models.Resource
             br.BaseStream.Seek(unknownVectorOffsets, SeekOrigin.Begin);
             UnknownVectors = new SimpleArray<Vector4>(br, 4, reader => new Vector4(reader));
 
-            br.BaseStream.Seek(p2Offset, SeekOrigin.Begin);
+            br.BaseStream.Seek(materialMappingOffset, SeekOrigin.Begin);
             MaterialMappings = new SimpleArray<ushort>(br, GeometryDataInfos.Count, reader => reader.ReadUInt16());
         }
 

@@ -71,13 +71,6 @@ namespace RageLib.FileSystem
             {
                 byte[] data = _imgFile.ReadData(entry.OffsetBlock * 0x800, entry.Size);
 
-                /*
-                if (entry.IsResourceFile)
-                {
-                    data = DataUtil.DecompressResource(data);
-                }
-                 */
-
                 return data;                
             }
             else

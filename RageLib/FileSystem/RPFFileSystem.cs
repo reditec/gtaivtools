@@ -130,12 +130,6 @@ namespace RageLib.FileSystem
                 {
                     data = DataUtil.DecompressDeflate(data, entry.Size);
                 }
-                /*
-                else if (entry.IsResourceFile)
-                {
-                    data = DataUtil.DecompressResource(data);
-                }
-                */
 
                 return data;
             }

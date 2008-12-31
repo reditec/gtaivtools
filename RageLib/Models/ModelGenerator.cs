@@ -22,12 +22,15 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Windows;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using RageLib.Models.Resource;
 using RageLib.Textures;
 using Brush=System.Windows.Media.Brush;
+using Color=System.Drawing.Color;
 using Point=System.Windows.Point;
 
 namespace RageLib.Models
@@ -43,6 +46,38 @@ namespace RageLib.Models
 
             var textureObj = textures.FindTextureByName(name);
             return textureObj;
+        }
+
+        internal static Image CreateUVMapImage(DrawableModel drawable)
+        {
+            var bmp = new Bitmap(512, 512);
+            var g = Graphics.FromImage(bmp);
+            var pen = new System.Drawing.Pen(Color.Red);
+
+            foreach (var geometryInfo in drawable.GeometryInfos)
+            {
+                foreach (var dataInfo in geometryInfo.GeometryDataInfos)
+                {
+                    for (var i = 0; i < dataInfo.FaceCount; i++)
+                    {
+                        var i1 = (dataInfo.IndexDataInfo.IndexData[i * 3 + 0]);
+                        var i2 = (dataInfo.IndexDataInfo.IndexData[i * 3 + 1]);
+                        var i3 = (dataInfo.IndexDataInfo.IndexData[i * 3 + 2]);
+
+                        var v1 = dataInfo.VertexDataInfo.VertexData[i1];
+                        var v2 = dataInfo.VertexDataInfo.VertexData[i2];
+                        var v3 = dataInfo.VertexDataInfo.VertexData[i3];
+
+                        g.DrawLine(pen, v1.TextureU * bmp.Width, v1.TextureV * bmp.Height, v2.TextureU * bmp.Width, v2.TextureV * bmp.Height);
+                        g.DrawLine(pen, v1.TextureU * bmp.Width, v1.TextureV * bmp.Height, v3.TextureU * bmp.Width, v3.TextureV * bmp.Height);
+                        g.DrawLine(pen, v2.TextureU * bmp.Width, v2.TextureV * bmp.Height, v3.TextureU * bmp.Width, v3.TextureV * bmp.Height);
+                    }
+                }
+            }
+
+            g.Dispose();
+
+            return bmp;
         }
 
         internal static Model3DGroup GenerateModel(DrawableModel drawable, TextureFile textures)
@@ -75,24 +110,15 @@ namespace RageLib.Models
                     {
                         var bitmap = textureObj.Decode() as Bitmap;
                         
-                        /*
                         var bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(
                             bitmap.GetHbitmap(),
                             IntPtr.Zero,
                             Int32Rect.Empty,
                             BitmapSizeOptions.FromEmptyOptions());
-                         */
-
-                        var ms = new MemoryStream();
-                        bitmap.Save(ms, ImageFormat.Png);
-                        ms.Position = 0;
-
-                        var bitmapSource = new BitmapImage();
-                        bitmapSource.BeginInit();
-                        bitmapSource.StreamSource = ms;
-                        bitmapSource.EndInit();
 
                         brush = new ImageBrush(bitmapSource);
+                        (brush as ImageBrush).ViewportUnits = BrushMappingMode.Absolute;
+                        (brush as ImageBrush).TileMode = TileMode.Tile;
                     }
                 }
 

@@ -37,6 +37,8 @@ namespace RageLib.Models.Resource
 
         public Vertex[] VertexData { get; private set; }
 
+        public GeometryVertexDeclaration VertexDeclaration { get; private set; }
+
         public GeometryVertexDataInfo()
         {
         }
@@ -53,7 +55,7 @@ namespace RageLib.Models.Resource
             VertexData = new Vertex[VertexCount];
             for (int i = 0; i < VertexCount; i++)
             {
-                VertexData[i] = new Vertex(br, StrideSize);
+                VertexData[i] = new Vertex(br, VertexDeclaration);
             }
         }
 
@@ -70,13 +72,18 @@ namespace RageLib.Models.Resource
 
             StrideSize = br.ReadUInt32();
 
-            var p1Offset = ResourceUtil.ReadOffset(br);     // 16 bytes there
+            var vertexDeclOffset = ResourceUtil.ReadOffset(br);
 
             Unknown2 = br.ReadUInt32();
 
             DataOffset2 = ResourceUtil.ReadDataOffset(br);
 
             var p2Offset = ResourceUtil.ReadOffset(br); // null
+
+            //
+
+            br.BaseStream.Seek(vertexDeclOffset, SeekOrigin.Begin);
+            VertexDeclaration = new GeometryVertexDeclaration(br);
         }
 
         public void Write(BinaryWriter bw)

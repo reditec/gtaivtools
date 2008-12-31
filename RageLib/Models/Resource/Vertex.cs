@@ -18,6 +18,7 @@
 
 \**********************************************************************/
 
+using System.Diagnostics;
 using System.IO;
 using RageLib.Common;
 
@@ -32,93 +33,120 @@ namespace RageLib.Models.Resource
         public float NormalY { get; set; }
         public float NormalZ { get; set; }
         public uint Diffuse { get; set; }
-        public float TextureU { get; set; }
-        public float TextureV { get; set; }
 
-        private uint StrideSize { get; set; }
+        public uint Unknown1 { get; set; }
+        public uint Unknown2 { get; set; }
 
-        public Vertex(uint stride)
+        private float[] TextureUCoordinates;
+        private float[] TextureVCoordinates;
+        private const int DefaultCoordinateIndex = 0;
+        
+        public float TextureU { get { return TextureUCoordinates[DefaultCoordinateIndex]; } set { TextureUCoordinates[DefaultCoordinateIndex] = value; } }
+        public float TextureV { get { return TextureVCoordinates[DefaultCoordinateIndex]; } set { TextureVCoordinates[DefaultCoordinateIndex] = value; } }
+
+        private GeometryVertexDeclaration Declaration { get; set; }
+
+        public Vertex(GeometryVertexDeclaration declaration)
         {
-            StrideSize = stride;
+            Declaration = declaration;
         }
 
-        public Vertex(BinaryReader br, uint stride)
+        public Vertex(BinaryReader br, GeometryVertexDeclaration declaration) : this(declaration)
         {
-            StrideSize = stride;
             Read(br);
+        }
+
+        private void ReadUV(BinaryReader br, int max)
+        {
+            TextureUCoordinates = new float[max];
+            TextureVCoordinates = new float[max];
+            for (var i = 0; i < max; i++)
+            {
+                TextureUCoordinates[i] = br.ReadSingle();
+                TextureVCoordinates[i] = br.ReadSingle();
+            }
         }
 
         #region Implementation of IFileAccess
 
         public void Read(BinaryReader br)
         {
-            if (StrideSize == 0x3c)
+            switch(Declaration.Type)
             {
-                // For peds?
-                X = br.ReadSingle();
-                Y = br.ReadSingle();
-                Z = br.ReadSingle();
+                case 4:
+                    Debug.Assert(Declaration.Stride == 0x24);
 
-                br.ReadUInt32(); // Maybe some bone info
-                br.ReadUInt32();
+                    X = br.ReadSingle();
+                    Y = br.ReadSingle();
+                    Z = br.ReadSingle();
+                    
+                    NormalX = br.ReadSingle();
+                    NormalY = br.ReadSingle();
+                    NormalZ = br.ReadSingle();
 
-                NormalX = br.ReadSingle();
-                NormalY = br.ReadSingle();
-                NormalZ = br.ReadSingle();
+                    Diffuse = br.ReadUInt32();
 
-                Diffuse = br.ReadUInt32();
+                    ReadUV(br, 1);
 
-                TextureU = br.ReadSingle();
-                TextureV = br.ReadSingle();
+                    break;
+                case 5:
+                    Debug.Assert(Declaration.Stride == 0x34);
 
-                br.ReadSingle(); // Additional UVs?
-                br.ReadSingle();
+                    X = br.ReadSingle();
+                    Y = br.ReadSingle();
+                    Z = br.ReadSingle();
 
-                br.ReadSingle();
-                br.ReadSingle();
-            }
-            else if (StrideSize == 0x34)
-            {
-                // For some weapons?
-                X = br.ReadSingle();
-                Y = br.ReadSingle();
-                Z = br.ReadSingle();
+                    NormalX = br.ReadSingle();
+                    NormalY = br.ReadSingle();
+                    NormalZ = br.ReadSingle();
 
-                NormalX = br.ReadSingle();
-                NormalY = br.ReadSingle();
-                NormalZ = br.ReadSingle();
+                    Diffuse = br.ReadUInt32();
 
-                Diffuse = br.ReadUInt32();
+                    ReadUV(br, 3);
 
-                TextureU = br.ReadSingle();
-                TextureV = br.ReadSingle(); 
-                
-                br.ReadSingle(); // Additional UVs?
-                br.ReadSingle();
+                    break;
+                case 6:
+                    Debug.Assert(Declaration.Stride == 0x2c);
 
-                br.ReadSingle();
-                br.ReadSingle();
-            }
-            else
-            {
+                    X = br.ReadSingle();
+                    Y = br.ReadSingle();
+                    Z = br.ReadSingle();
 
-                const int CurrentStrideSize = 4*9;
+                    br.ReadUInt32();
+                    br.ReadUInt32();
 
-                X = br.ReadSingle();
-                Y = br.ReadSingle();
-                Z = br.ReadSingle();
-                NormalX = br.ReadSingle();
-                NormalY = br.ReadSingle();
-                NormalZ = br.ReadSingle();
-                Diffuse = br.ReadUInt32();
-                TextureU = br.ReadSingle();
-                TextureV = br.ReadSingle();
+                    NormalX = br.ReadSingle();
+                    NormalY = br.ReadSingle();
+                    NormalZ = br.ReadSingle();
 
-                if ((StrideSize - CurrentStrideSize) > 0)
-                {
-                    br.ReadBytes((int) StrideSize - CurrentStrideSize);
-                }
+                    Diffuse = br.ReadUInt32();
 
+                    ReadUV(br, 1);
+
+                    break;
+                case 7:
+                    Debug.Assert(Declaration.Stride == 0x3c);
+
+                    X = br.ReadSingle();
+                    Y = br.ReadSingle();
+                    Z = br.ReadSingle();
+
+                    Unknown1 = br.ReadUInt32();
+                    Unknown2 = br.ReadUInt32();
+
+                    NormalX = br.ReadSingle();
+                    NormalY = br.ReadSingle();
+                    NormalZ = br.ReadSingle();
+
+                    Diffuse = br.ReadUInt32();
+
+                    ReadUV(br, 3);
+
+                    break;
+                default:
+                    Debug.Assert(false);
+
+                    break;
             }
         }
 
