@@ -25,7 +25,7 @@ using RageLib.Common.Resources;
 
 namespace RageLib.Textures.Resource
 {
-    internal class File
+    internal class File : IDisposable
     {
         private ResourceFile _resourceFile;
 
@@ -150,5 +150,27 @@ namespace RageLib.Textures.Resource
                 Textures[i].WriteData(bw);
             }           
         }
+
+        #region Implementation of IDisposable
+
+        public void Dispose()
+        {
+            if (_resourceFile != null)
+            {
+                _resourceFile.Dispose();
+            }
+
+            if (TexturesByHash != null)
+            {
+                TexturesByHash.Clear();
+            }
+
+            if (Textures != null)
+            {
+                Textures.Clear();
+            }
+        }
+
+        #endregion
     }
 }

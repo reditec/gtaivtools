@@ -36,6 +36,7 @@ namespace RageLib.Textures
             _view = view;
             _view.SaveClicked += View_SaveClicked;
             _view.SaveAllClicked += View_SaveAllClicked;
+            _view.Disposed += View_Disposed;
 
             _textureViewController = new TextureViewController(view.TextureView);
         }
@@ -46,7 +47,7 @@ namespace RageLib.Textures
             set
             {
                 _textureViewController.TextureFile = value;
-                _view.TextureCount = value.Count;
+                _view.TextureCount = value == null ? 0 : value.Count;
             }
         }
 
@@ -101,6 +102,17 @@ namespace RageLib.Textures
                 }
 
                 MessageBox.Show("Textures saved.", "Save All Textures", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void View_Disposed(object sender, EventArgs e)
+        {
+            // We handle this here instead of in the caller because the caller
+            // doesn't know anything about the involved files...
+            if (TextureFile != null)
+            {
+                TextureFile.Dispose();
+                TextureFile = null;
             }
         }
 

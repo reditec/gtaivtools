@@ -26,7 +26,7 @@ using RageLib.Textures.Resource;
 
 namespace RageLib.Textures
 {
-    public class Texture
+    public class Texture : IDisposable
     {
         public const int ThumbnailSize = 32;
         
@@ -206,5 +206,14 @@ namespace RageLib.Textures
 
             Array.Copy(data, 0, TextureData, offset, size);
         }
+
+        #region Implementation of IDisposable
+
+        public void Dispose()
+        {
+            Info = null;
+        }
+
+        #endregion
     }
 }

@@ -50,14 +50,22 @@ namespace RageLib.Textures
         private void UpdateView()
         {
             _view.ClearTextures();
-            foreach (var texture in _textureFile)
+            
+            if (_textureFile != null)
             {
-                _view.AddTexture(texture);
+                foreach (var texture in _textureFile)
+                {
+                    _view.AddTexture(texture);
+                }
+                if (_textureFile.Count > 0)
+                {
+                    _view.SelectedTexture = _textureFile.Textures[0];
+                    _view.InfoPanelEnabled = true;
+                }
             }
-            if (_textureFile.Count > 0)
+            else
             {
-                _view.SelectedTexture = _textureFile.Textures[0];
-                _view.InfoPanelEnabled = true;
+                _view.InfoPanelEnabled = false;
             }
         }
 

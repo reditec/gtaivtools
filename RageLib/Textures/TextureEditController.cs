@@ -53,7 +53,7 @@ namespace RageLib.Textures
             set
             {
                 _textureViewController.TextureFile = value;
-                _view.TextureCount = value.Count;
+                _view.TextureCount = value == null ? 0 : value.Count;
             }
         }
 

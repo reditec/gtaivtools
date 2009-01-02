@@ -24,7 +24,7 @@ using RageLib.Common.Compression;
 
 namespace RageLib.Common.Resources
 {
-    public class ResourceFile
+    public class ResourceFile : IDisposable
     {
         private ResourceHeader _header;
         private ICompressionCodec _codec;
@@ -144,5 +144,15 @@ namespace RageLib.Common.Resources
 
             bw.Flush();
         }
+
+        #region Implementation of IDisposable
+
+        public void Dispose()
+        {
+            _systemMemData = null;
+            _graphicsMemData = null;
+        }
+
+        #endregion
     }
 }

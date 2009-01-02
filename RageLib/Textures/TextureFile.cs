@@ -18,6 +18,7 @@
 
 \**********************************************************************/
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -26,7 +27,7 @@ using File=RageLib.Textures.Resource.File;
 
 namespace RageLib.Textures
 {
-    public class TextureFile : IEnumerable<Texture>
+    public class TextureFile : IEnumerable<Texture>, IDisposable
     {
         private File _file;
         public List<Texture> Textures { get; private set; }
@@ -94,14 +95,41 @@ namespace RageLib.Textures
             return null;
         }
 
+        #region Implementation of IEnumerable
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        #endregion
+
+        #region Implementation of IEnumerable<Texture>
+
         public IEnumerator<Texture> GetEnumerator()
         {
             return Textures.GetEnumerator();
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        #endregion
+
+        #region Implementation of IDisposable
+
+        public void Dispose()
         {
-            return Textures.GetEnumerator();
+            if (_file != null)
+            {
+                _file.Dispose();
+            }
+
+            foreach (var texture in this)
+            {
+                texture.Dispose();
+            }
+
+            Textures.Clear();
         }
+
+        #endregion
     }
 }

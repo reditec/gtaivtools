@@ -64,6 +64,7 @@ namespace RageLib.Textures
 
         public void ClearTextures()
         {
+            listTextures.SelectedItem = null;
             listTextures.Items.Clear();
             picPreview.Image = null;
             picPreview.Size = new Size(1, 1);

@@ -52,13 +52,17 @@ namespace SparkIV.Editor.Textures
             var controller = new TextureEditController(view);
             controller.TextureFile = textureFile;
 
-            var form = new EditorForm();
-            form.SetFilename(file.Name);
-            form.SetControl(view);
+            using (var form = new EditorForm())
+            {
+                form.SetFilename(file.Name);
+                form.SetControl(view);
 
-            controller.SaveAndClose += ((sender, e) => SaveAndClose(form, textureFile, file));
+                controller.SaveAndClose += ((sender, e) => SaveAndClose(form, textureFile, file));
 
-            form.ShowDialog();
+                form.ShowDialog();
+            }
+
+            textureFile.Dispose();
         }
 
         protected virtual void SaveAndClose(EditorForm form, TextureFile textureFile, File file)

@@ -322,10 +322,12 @@ namespace SparkIV
                 Control viewerControl = Viewers.GetControl(file);
                 if (viewerControl != null)
                 {
-                    var form = new ViewerForm();
-                    form.SetFilename(file.Name);
-                    form.SetControl(viewerControl);
-                    form.ShowDialog();
+                    using (var form = new ViewerForm())
+                    {
+                        form.SetFilename(file.Name);
+                        form.SetControl(viewerControl);
+                        form.ShowDialog();
+                    }
                 }                
             }
         }
