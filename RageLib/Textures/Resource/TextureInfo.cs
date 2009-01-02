@@ -79,6 +79,9 @@ namespace RageLib.Textures.Resource
                 case D3DFormat.DXT5:
                     dataSize = (int)(width * height);
                     break;
+                case D3DFormat.A8R8G8B8:
+                    dataSize = (int)(width*height*4);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

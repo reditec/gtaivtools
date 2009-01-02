@@ -49,6 +49,9 @@ namespace RageLib.Textures
                 case D3DFormat.DXT5:
                     TextureType = TextureType.DXT5;
                     break;
+                case D3DFormat.A8R8G8B8:
+                    TextureType = TextureType.A8R8G8B8;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -132,30 +135,32 @@ namespace RageLib.Textures
 
         public override string ToString()
         {
-            string format;
-            switch (TextureType)
-            {
-                case TextureType.DXT1:
-                    format = "DXT1";
-                    break;
-                case TextureType.DXT3:
-                    format = "DXT3";
-                    break;
-                case TextureType.DXT5:
-                    format = "DXT5";
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-            return string.Format("{0} ({1}x{2} {3})", Name.Substring(6), Width, Height, format);
+            return string.Format("{0} ({1}x{2} {3})", Name.Substring(6), Width, Height, TextureType);
         }
 
         public uint GetTextureDataSize(int level)
         {
             var width = GetWidth(level);
             var height = GetHeight(level);
-            var blockSize = TextureType == TextureType.DXT1 ? 8 : 16;
-            return (uint)((width/4)*(height/4)*blockSize);
+            uint size;
+
+            switch(TextureType)
+            {
+                case TextureType.DXT1:
+                    size = ((width/4)*(height/4)*8);
+                    break;
+                case TextureType.DXT3:
+                case TextureType.DXT5:
+                    size = ((width/4)*(height/4)*16);
+                    break;
+                case TextureType.A8R8G8B8:
+                    size = width*height*4;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return size;
         }
 
         public uint GetWidth(int level)

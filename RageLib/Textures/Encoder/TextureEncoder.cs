@@ -22,6 +22,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 
 namespace RageLib.Textures.Encoder
 {
@@ -43,22 +44,29 @@ namespace RageLib.Textures.Encoder
             var rect = new Rectangle(0, 0, (int) width, (int) height);
             BitmapData bmpdata = bitmap.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
-            // Convert from the B G R A format stored by GDI+ to R G B A
-            unsafe
+            if ( texture.TextureType == TextureType.A8R8G8B8 )
             {
-                var p = (byte*)bmpdata.Scan0;
-                for (var y = 0; y < bitmap.Height; y++)
+                Marshal.Copy(bmpdata.Scan0, data, 0, (int)width * (int)height * 4);
+            }
+            else
+            {
+                // Convert from the B G R A format stored by GDI+ to R G B A
+                unsafe
                 {
-                    for (var x = 0; x < bitmap.Width; x++)
+                    var p = (byte*)bmpdata.Scan0;
+                    for (var y = 0; y < bitmap.Height; y++)
                     {
-                        var offset = y*bmpdata.Stride + x*4;
-                        var dataOffset = y*width*4 + x*4;
-                        data[dataOffset + 0] = p[offset + 2];       // R
-                        data[dataOffset + 1] = p[offset + 1];       // G
-                        data[dataOffset + 2] = p[offset + 0];       // B
-                        data[dataOffset + 3] = p[offset + 3];       // A
+                        for (var x = 0; x < bitmap.Width; x++)
+                        {
+                            var offset = y * bmpdata.Stride + x * 4;
+                            var dataOffset = y * width * 4 + x * 4;
+                            data[dataOffset + 0] = p[offset + 2];       // R
+                            data[dataOffset + 1] = p[offset + 1];       // G
+                            data[dataOffset + 2] = p[offset + 0];       // B
+                            data[dataOffset + 3] = p[offset + 3];       // A
+                        }
                     }
-                }
+                }                
             }
 
             bitmap.UnlockBits(bmpdata);
@@ -75,6 +83,9 @@ namespace RageLib.Textures.Encoder
                     break;
                 case TextureType.DXT5:
                     data = DXTEncoder.EncodeDXT5(data, (int) width, (int) height);
+                    break;
+                case TextureType.A8R8G8B8:
+                    // Nothing to do
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

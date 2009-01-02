@@ -21,6 +21,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 
 namespace RageLib.Textures.Decoder
 {
@@ -43,16 +44,20 @@ namespace RageLib.Textures.Decoder
                 case TextureType.DXT5:
                     data = DXTDecoder.DecodeDXT5(data, (int)width, (int)height);
                     break;
+                case TextureType.A8R8G8B8:
+                    // Nothing to do, the data is already in the format we want it to be
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            Bitmap bmp = new Bitmap((int) width, (int) height, PixelFormat.Format32bppArgb);
+            var bmp = new Bitmap((int) width, (int) height, PixelFormat.Format32bppArgb);
 
-            Rectangle rect = new Rectangle(0, 0, (int) width, (int) height);
-            BitmapData bmpdata = bmp.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+            var rect = new Rectangle(0, 0, (int) width, (int) height);
+            var bmpdata = bmp.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
 
-            System.Runtime.InteropServices.Marshal.Copy(data, 0, bmpdata.Scan0, (int) width*(int) height*4);
+            Marshal.Copy(data, 0, bmpdata.Scan0, (int) width*(int) height*4);
+            
             bmp.UnlockBits(bmpdata);
 
             return bmp;
