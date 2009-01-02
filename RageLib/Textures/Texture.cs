@@ -96,11 +96,11 @@ namespace RageLib.Textures
                 int thumbHeight = ThumbnailSize;
                 if (Width > Height)
                 {
-                    thumbHeight = (int) (((float) Height/Width)*ThumbnailSize);
+                    thumbHeight = (int)Math.Ceiling(((float) Height/Width)*ThumbnailSize);
                 }
                 else if (Height > Width)
                 {
-                    thumbWidth = (int) (((float) Width/Height)*ThumbnailSize);
+                    thumbWidth = (int)Math.Ceiling(((float) Width/Height)*ThumbnailSize);
                 }
 
                 _thumbnailCache = image.GetThumbnailImage(thumbWidth, thumbHeight, () => false, IntPtr.Zero);
