@@ -29,9 +29,9 @@ namespace RageLib.Textures.Decoder
     {
         internal static Image Decode(Texture texture, int level)
         {
-            uint width = texture.GetWidth(level);
-            uint height = texture.GetHeight(level);
-            byte[] data = texture.GetTextureData(level);
+            var width = texture.GetWidth(level);
+            var height = texture.GetHeight(level);
+            var data = texture.GetTextureData(level);
             
             switch(texture.TextureType)
             {
@@ -46,6 +46,19 @@ namespace RageLib.Textures.Decoder
                     break;
                 case TextureType.A8R8G8B8:
                     // Nothing to do, the data is already in the format we want it to be
+                    break;
+                case TextureType.L8:
+                    {
+                        var newData = new byte[data.Length*4];
+                        for (int i = 0; i < data.Length; i++)
+                        {
+                            newData[i*4 + 0] = data[i];
+                            newData[i*4 + 1] = data[i];
+                            newData[i*4 + 2] = data[i];
+                            newData[i*4 + 3] = 255;
+                        }
+                        data = newData;
+                    }
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

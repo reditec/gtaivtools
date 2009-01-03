@@ -52,6 +52,9 @@ namespace RageLib.Textures
                 case D3DFormat.A8R8G8B8:
                     TextureType = TextureType.A8R8G8B8;
                     break;
+                case D3DFormat.L8:
+                    TextureType = TextureType.L8;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -147,14 +150,17 @@ namespace RageLib.Textures
             switch(TextureType)
             {
                 case TextureType.DXT1:
-                    size = ((width/4)*(height/4)*8);
+                    size = (width*height)/2;
                     break;
                 case TextureType.DXT3:
                 case TextureType.DXT5:
-                    size = ((width/4)*(height/4)*16);
+                    size = width*height;
                     break;
                 case TextureType.A8R8G8B8:
                     size = width*height*4;
+                    break;
+                case TextureType.L8:
+                    size = width*height;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

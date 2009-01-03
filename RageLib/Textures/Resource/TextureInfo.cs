@@ -81,14 +81,17 @@ namespace RageLib.Textures.Resource
             switch (Format)
             {
                 case D3DFormat.DXT1:
-                    dataSize = (int)(width * height / 2);
+                    dataSize = (int) (width*height/2);
                     break;
                 case D3DFormat.DXT3:
                 case D3DFormat.DXT5:
-                    dataSize = (int)(width * height);
+                    dataSize = (int) (width*height);
                     break;
                 case D3DFormat.A8R8G8B8:
-                    dataSize = (int)(width*height*4);
+                    dataSize = (int) (width*height*4);
+                    break;
+                case D3DFormat.L8:
+                    dataSize = (int) (width*height);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -98,9 +101,9 @@ namespace RageLib.Textures.Resource
             int levelDataSize = dataSize;
             while(levels > 1)
             {
-                dataSize += (levelDataSize/2);
+                dataSize += (levelDataSize/4);
                 
-                levelDataSize /= 2;
+                levelDataSize /= 4;
 
                 // clamp to 16 bytes
                 if (levelDataSize < 16)

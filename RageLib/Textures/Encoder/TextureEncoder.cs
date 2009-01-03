@@ -44,9 +44,31 @@ namespace RageLib.Textures.Encoder
             var rect = new Rectangle(0, 0, (int) width, (int) height);
             BitmapData bmpdata = bitmap.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
-            if ( texture.TextureType == TextureType.A8R8G8B8 )
+            if (texture.TextureType == TextureType.A8R8G8B8)
             {
-                Marshal.Copy(bmpdata.Scan0, data, 0, (int)width * (int)height * 4);
+                Marshal.Copy(bmpdata.Scan0, data, 0, (int) width*(int) height*4);
+            }
+            else if (texture.TextureType == TextureType.L8)
+            {
+                var newData = new byte[width * height];
+
+                // Convert to L8
+                unsafe
+                {
+                    var p = (byte*)bmpdata.Scan0;
+                    for (var y = 0; y < bitmap.Height; y++)
+                    {
+                        for (var x = 0; x < bitmap.Width; x++)
+                        {
+                            var offset = y * bmpdata.Stride + x * 4;
+                            var dataOffset = y * width + x;
+
+                            newData[dataOffset] = (byte)((p[offset + 2] + p[offset + 1] + p[offset + 0])/3);
+                        }
+                    }
+                }
+
+                data = newData;
             }
             else
             {
@@ -66,7 +88,7 @@ namespace RageLib.Textures.Encoder
                             data[dataOffset + 3] = p[offset + 3];       // A
                         }
                     }
-                }                
+                }
             }
 
             bitmap.UnlockBits(bmpdata);
@@ -85,6 +107,7 @@ namespace RageLib.Textures.Encoder
                     data = DXTEncoder.EncodeDXT5(data, (int) width, (int) height);
                     break;
                 case TextureType.A8R8G8B8:
+                case TextureType.L8:
                     // Nothing to do
                     break;
                 default:

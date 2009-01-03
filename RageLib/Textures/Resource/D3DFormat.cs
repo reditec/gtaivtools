@@ -26,5 +26,6 @@ namespace RageLib.Textures.Resource
         DXT3 = 0x33545844,
         DXT5 = 0x35545844,
         A8R8G8B8 = 0x15,
+        L8 = 0x32,
     }
 }

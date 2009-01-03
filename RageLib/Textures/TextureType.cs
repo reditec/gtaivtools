@@ -26,5 +26,6 @@ namespace RageLib.Textures
         DXT3,
         DXT5,
         A8R8G8B8,
+        L8,
     }
 }
