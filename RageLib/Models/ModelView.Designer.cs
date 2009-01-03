@@ -120,7 +120,6 @@ namespace RageLib.Models
             this.tvNav.Name = "tvNav";
             this.tvNav.Size = new System.Drawing.Size(171, 435);
             this.tvNav.TabIndex = 0;
-            this.tvNav.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvNav_AfterSelect);
             // 
             // tsToolbar
             // 
@@ -145,7 +144,7 @@ namespace RageLib.Models
             this.tsbSolid.Name = "tsbSolid";
             this.tsbSolid.Size = new System.Drawing.Size(53, 22);
             this.tsbSolid.Text = "Solid";
-            this.tsbSolid.Click += new System.EventHandler(this.tsbSolid_Click);
+            this.tsbSolid.CheckedChanged += new System.EventHandler(this.tsbSolid_CheckedChanged);
             // 
             // tsbWireframe
             // 

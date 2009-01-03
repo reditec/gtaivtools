@@ -45,7 +45,7 @@ namespace RageLib.Textures.Resource
 
         public D3DFormat Format;
 
-        private ushort Unknown5 { get; set; } // 0x100
+        private ushort StrideSize { get; set; }
         private byte Type { get; set; }   // 0 = normal, 1 = cube, 3 = volume
         public byte Levels { get; set; } // MipMap levels
 
@@ -146,7 +146,7 @@ namespace RageLib.Textures.Resource
             Height = br.ReadUInt16();
             Format = (D3DFormat) br.ReadInt32();
 
-            Unknown5 = br.ReadUInt16();
+            StrideSize = br.ReadUInt16();
             Type = br.ReadByte();
             Levels = br.ReadByte();
 

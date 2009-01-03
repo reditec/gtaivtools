@@ -18,12 +18,13 @@
 
 \**********************************************************************/
 
+using System;
 using System.IO;
 using RageLib.Common.ResourceTypes;
 
 namespace RageLib.Models.Resource
 {
-    class DrawableModelDictionary : PGDictionary<DrawableModel>, IDataReader, IEmbeddedResourceReader
+    class DrawableModelDictionary : PGDictionary<DrawableModel>, IDataReader, IEmbeddedResourceReader, IDisposable
     {
         public void ReadData(BinaryReader br)
         {
@@ -40,5 +41,17 @@ namespace RageLib.Models.Resource
                 entry.ReadEmbeddedResources(systemMemory, graphicsMemory);
             }
         }
+
+        #region Implementation of IDisposable
+
+        public void Dispose()
+        {
+            foreach (var entry in Entries)
+            {
+                entry.Dispose();
+            }
+        }
+
+        #endregion
     }
 }

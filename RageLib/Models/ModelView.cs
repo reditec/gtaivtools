@@ -18,53 +18,84 @@
 
 \**********************************************************************/
 
+using System;
 using System.Windows.Forms;
 using System.Windows.Media.Media3D;
 using RageLib.Models.Model3DViewer;
-using RageLib.Textures;
 using UserControl=System.Windows.Forms.UserControl;
 
 namespace RageLib.Models
 {
     public partial class ModelView : UserControl
     {
-        private IModelFile _modelFile;
-        private TextureFile _textureFile;
-
         public ModelView()
         {
             InitializeComponent();
-
-            _textureFile = null;
             _model3DView.RenderMode = RenderMode.Solid;
         }
 
-        public IModelFile ModelFile
+        public RenderMode RenderMode
         {
-            get { return _modelFile;  }
+            get { return _model3DView.RenderMode;  }
             set
             {
-                _modelFile = value;
-                UpdateView();
+                if (_model3DView.RenderMode != value)
+                {
+                    _model3DView.RenderMode = value;
+                    tsbWireframe.Checked = value == RenderMode.Wireframe;
+                    tsbSolid.Checked = value == RenderMode.Solid;
+                }
             }
         }
 
-        public TextureFile TextureFile
+        public event TreeViewEventHandler NavigationModelSelected
         {
-            get { return _textureFile; }
-            set { _textureFile = value; }
+            add { tvNav.AfterSelect += value; }
+            remove { tvNav.AfterSelect -= value; }
         }
 
-        private void UpdateView()
+        public Model3D SelectedNavigationModel
         {
-            var model = _modelFile.GetModel(_textureFile);
-            
-            var group = model as Model3DGroup;
-            
-            var node = tvNav.Nodes.Add("Model");
+            get
+            {
+                return tvNav.SelectedNode.Tag as Model3D;
+            }
+        }
 
-            node.Tag = group;
-            AddModelGroup(group, node);
+        public Model3D NavigationModel
+        {
+            set
+            {
+                UpdateTreeView(value);
+            }
+        }
+
+        public Model3D DisplayModel
+        {
+            set
+            {
+                _model3DView.Model = value;
+            }
+        }
+
+        private void UpdateTreeView(Model3D model)
+        {
+            if (!tvNav.IsDisposed)
+            {
+                tvNav.Nodes.Clear();
+            }
+
+            if (model != null)
+            {
+                var node = tvNav.Nodes.Add("Model");
+
+                node.Tag = model;
+
+                if (model is Model3DGroup)
+                {
+                    AddModelGroup(model as Model3DGroup, node);
+                }
+            }
         }
 
         private void AddModelGroup(Model3DGroup group, TreeNode node)
@@ -84,28 +115,20 @@ namespace RageLib.Models
             }
         }
 
-        private void tvNav_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            var model = e.Node.Tag as Model3D;
-            _model3DView.Model = model;
-        }
-
-        private void tsbSolid_Click(object sender, System.EventArgs e)
+        private void tsbSolid_CheckedChanged(object sender, EventArgs e)
         {
             if (tsbSolid.Checked)
             {
-                _model3DView.RenderMode = RenderMode.Solid;
+                RenderMode = RenderMode.Solid;
             }
-            tsbWireframe.Checked = !tsbSolid.Checked;
         }
 
-        private void tsbWireframe_Click(object sender, System.EventArgs e)
+        private void tsbWireframe_Click(object sender, EventArgs e)
         {
             if (tsbWireframe.Checked)
             {
-                _model3DView.RenderMode = RenderMode.Wireframe;
+                RenderMode = RenderMode.Wireframe;
             }
-            tsbSolid.Checked = !tsbWireframe.Checked;
         }
 
     }

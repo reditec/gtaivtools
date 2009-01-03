@@ -116,9 +116,14 @@ namespace RageLib.Models
                             Int32Rect.Empty,
                             BitmapSizeOptions.FromEmptyOptions());
 
+                        // For memory leak work around
+                        bitmapSource.Freeze();
+
                         brush = new ImageBrush(bitmapSource);
                         (brush as ImageBrush).ViewportUnits = BrushMappingMode.Absolute;
                         (brush as ImageBrush).TileMode = TileMode.Tile;
+
+                        bitmap.Dispose();
                     }
                 }
 

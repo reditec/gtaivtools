@@ -18,13 +18,14 @@
 
 \**********************************************************************/
 
+using System;
 using System.IO;
 using System.Windows.Media.Media3D;
 using RageLib.Textures;
 
 namespace RageLib.Models
 {
-    public interface IModelFile
+    public interface IModelFile : IDisposable
     {
         void Open(string filename);
         void Open(Stream stream);

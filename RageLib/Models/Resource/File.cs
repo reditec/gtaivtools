@@ -25,7 +25,7 @@ using RageLib.Common.Resources;
 
 namespace RageLib.Models.Resource
 {
-    class File<T> where T : IFileAccess, IDataReader, new()
+    class File<T> : IDisposable where T : IFileAccess, IDataReader, IDisposable, new()
     {
         public T Data { get; private set; }
 
@@ -81,5 +81,14 @@ namespace RageLib.Models.Resource
             graphicsMemory.Close();
 
         }
+
+        #region Implementation of IDisposable
+
+        public void Dispose()
+        {
+            Data.Dispose();
+        }
+
+        #endregion
     }
 }

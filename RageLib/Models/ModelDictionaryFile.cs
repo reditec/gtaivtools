@@ -52,5 +52,18 @@ namespace RageLib.Models
 
             return model;
         }
+
+        #region Implementation of IDisposable
+
+        public void Dispose()
+        {
+            if (File != null)
+            {
+                File.Dispose();
+                File = null;
+            }
+        }
+
+        #endregion
     }
 }

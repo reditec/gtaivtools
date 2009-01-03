@@ -28,7 +28,7 @@ using RageLib.Textures;
 namespace RageLib.Models.Resource
 {
     // gtaDrawable 
-    class DrawableModel : IFileAccess, IDataReader, IEmbeddedResourceReader
+    class DrawableModel : IFileAccess, IDataReader, IEmbeddedResourceReader, IDisposable
     {
         public uint VTable { get; private set; }
 
@@ -148,6 +148,22 @@ namespace RageLib.Models.Resource
 
                 MaterialInfos.TextureDictionary = new TextureFile();
                 MaterialInfos.TextureDictionary.Open(systemMemory, graphicsMemory);
+            }
+        }
+
+        #endregion
+
+        #region Implementation of IDisposable
+
+        public void Dispose()
+        {
+            if (MaterialInfos != null)
+            {
+                if (MaterialInfos.TextureDictionary != null)
+                {
+                    MaterialInfos.TextureDictionary.Dispose();
+                    MaterialInfos.TextureDictionary = null;
+                }
             }
         }
 

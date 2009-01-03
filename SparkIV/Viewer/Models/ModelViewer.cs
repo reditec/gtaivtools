@@ -31,6 +31,7 @@ namespace SparkIV.Viewer.Models
         protected Control CreateControl(File file, IModelFile modelfile)
         {
             var view = new ModelView();
+            var controller = new ModelViewController(view);
 
             var fileName = file.Name;
             var fileNameWOE = fileName.Substring(0, fileName.LastIndexOf('.'));
@@ -43,7 +44,7 @@ namespace SparkIV.Viewer.Models
                 try
                 {
                     textureFile.Open(textureMS);
-                    view.TextureFile = textureFile;
+                    controller.TextureFile = textureFile;
                 }
                 finally
                 {
@@ -51,7 +52,7 @@ namespace SparkIV.Viewer.Models
                 }
             }
 
-            view.ModelFile = modelfile;
+            controller.ModelFile = modelfile;
             return view;
         }
 

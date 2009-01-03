@@ -51,5 +51,18 @@ namespace RageLib.Models
             return ModelGenerator.GenerateModel(File.Data, textures);
         }
 
+        #region Implementation of IDisposable
+
+        public void Dispose()
+        {
+            if (File != null)
+            {
+                File.Dispose();
+                File = null;
+            }
+
+        }
+
+        #endregion
     }
 }

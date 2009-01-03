@@ -71,6 +71,7 @@
     <Compile Include="ModelView.Designer.cs">
       <DependentUpon>ModelView.cs</DependentUpon>
     </Compile>
+    <Compile Include="ModelViewController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resource\DrawableModelDictionary.cs" />
     <Compile Include="Resource\File.cs" />
