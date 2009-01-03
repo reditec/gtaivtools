@@ -55,7 +55,7 @@ namespace SparkIV
 
             Version ver = Assembly.GetExecutingAssembly().GetName().Version;
             tslAbout.Text = "Spark IV " + ver.Major + "." + ver.Minor + "." + ver.Build + "\n" +
-                            "(C)2008, Aru";
+                            "(C)2008-2009, Aru";
 
             SetInitialUIState();
         }

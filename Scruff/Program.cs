@@ -136,7 +136,7 @@ namespace Scruff
                 }
 
                 Console.Error.WriteLine("Scruff - A RAGE Script File Decompiler/Disassembler");
-                Console.Error.WriteLine("v" + Version + " -- (c) 2008, Aru");
+                Console.Error.WriteLine("v" + Version + " -- (c) 2008-2009, Aru <oneforaru at gmail dot com>");
                 Console.Error.WriteLine();
                 Console.Error.WriteLine(string.Format("Usage: scruff [{0}] [-o filename.sca] filename.sco", formatParams));
                 Console.Error.WriteLine();
