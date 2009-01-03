@@ -59,12 +59,20 @@ namespace RageLib.Textures.Resource
         private uint PrevTextureInfoOffset { get; set; }    // sometimes not always accurate
         private uint NextTextureInfoOffset { get; set; }    // always 0
 
-        private uint RawDataOffset { get; set; }
+        internal uint RawDataOffset { get; set; }
         public byte[] TextureData { get; private set; }
 
         private uint Unknown6 { get; set; }
 
         public void ReadData(BinaryReader br)
+        {
+            int dataSize = GetTotalDataSize();
+
+            br.BaseStream.Seek(RawDataOffset, SeekOrigin.Begin);
+            TextureData = br.ReadBytes(dataSize);
+        }
+
+        internal int GetTotalDataSize()
         {
             uint width = Width;
             uint height = Height;
@@ -109,9 +117,7 @@ namespace RageLib.Textures.Resource
 
                 levels--;
             }
-
-            br.BaseStream.Seek(RawDataOffset, SeekOrigin.Begin);
-            TextureData = br.ReadBytes(dataSize);
+            return dataSize;
         }
 
         public void WriteData(BinaryWriter bw)
