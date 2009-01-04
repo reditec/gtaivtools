@@ -36,6 +36,10 @@ namespace RageLib.Models.Resource
 
         public uint Unknown1 { get; set; }
         public uint Unknown2 { get; set; }
+        public uint Unknown3 { get; set; }
+        public uint Unknown4 { get; set; }
+        public uint Unknown5 { get; set; }
+        public uint Unknown6 { get; set; }
 
         private float[] TextureUCoordinates;
         private float[] TextureVCoordinates;
@@ -141,6 +145,29 @@ namespace RageLib.Models.Resource
                     Diffuse = br.ReadUInt32();
 
                     ReadUV(br, 3);
+
+                    break;
+                case 8:
+                    Debug.Assert(Declaration.Stride == 0x44);
+
+                    X = br.ReadSingle();
+                    Y = br.ReadSingle();
+                    Z = br.ReadSingle();
+
+                    NormalX = br.ReadSingle();
+                    NormalY = br.ReadSingle();
+                    NormalZ = br.ReadSingle();
+
+                    Diffuse = br.ReadUInt32();
+
+                    Unknown1 = br.ReadUInt32();
+                    Unknown2 = br.ReadUInt32();
+                    Unknown3 = br.ReadUInt32();
+                    Unknown4 = br.ReadUInt32();
+                    Unknown5 = br.ReadUInt32();
+                    Unknown6 = br.ReadUInt32();
+
+                    ReadUV(br, 2);
 
                     break;
                 default:
