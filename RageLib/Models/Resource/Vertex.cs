@@ -77,6 +77,18 @@ namespace RageLib.Models.Resource
         {
             switch(Declaration.Type)
             {
+                case 3:
+                    Debug.Assert(Declaration.Stride == 0x18);
+
+                    X = br.ReadSingle();
+                    Y = br.ReadSingle();
+                    Z = br.ReadSingle();
+
+                    Diffuse = br.ReadUInt32();
+
+                    ReadUV(br, 1);
+
+                    break;
                 case 4:
                     Debug.Assert(Declaration.Stride == 0x24);
 
