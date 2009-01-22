@@ -31,7 +31,8 @@ namespace RageLib.FileSystem
     {
         private RealContext _context;
 
-        private Dictionary<string, byte[]> _customData = new Dictionary<string, byte[]>();
+        // TODO: this has to be refactored to be part of Real.FileEntry
+        private readonly Dictionary<string, byte[]> _customData = new Dictionary<string, byte[]>();
 
         public override void Open(string filename)
         {

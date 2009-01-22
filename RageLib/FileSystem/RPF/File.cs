@@ -38,7 +38,7 @@ namespace RageLib.FileSystem.RPF
 
         public bool Open(string filename)
         {
-            _stream = new FileStream(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
+            _stream = new FileStream(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
 
             var br = new BinaryReader(_stream);
             Header.Read(br);

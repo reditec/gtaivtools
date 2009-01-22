@@ -40,7 +40,7 @@ namespace RageLib.FileSystem.IMG
 
             bool encrypted = false;
 
-            _stream = new FileStream(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
+            _stream = new FileStream(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
 
             var br = new BinaryReader(_stream);
 
