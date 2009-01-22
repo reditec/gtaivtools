@@ -20,6 +20,7 @@
 
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using RageLib.Textures.Decoder;
 using RageLib.Textures.Encoder;
 using RageLib.Textures.Resource;
@@ -106,7 +107,23 @@ namespace RageLib.Textures
                     thumbWidth = (int)Math.Ceiling(((float) Width/Height)*ThumbnailSize);
                 }
 
-                _thumbnailCache = image.GetThumbnailImage(thumbWidth, thumbHeight, () => false, IntPtr.Zero);
+                if (Environment.OSVersion.Version.Major >= 7)
+                {
+                    // for Windows 7
+                    // Don't use GetThumbnailImage as GDI+ is bugged.
+
+                    _thumbnailCache = new Bitmap(thumbWidth, thumbHeight);
+                    using (var g = Graphics.FromImage(_thumbnailCache))
+                    {
+                        g.SmoothingMode = SmoothingMode.HighQuality;
+                        g.InterpolationMode = InterpolationMode.HighQualityBilinear;
+                        g.DrawImage(image, 0, 0, thumbWidth, thumbHeight);
+                    }
+                }
+                else
+                {
+                    _thumbnailCache = image.GetThumbnailImage(thumbWidth, thumbHeight, () => false, IntPtr.Zero);                    
+                }
             }
 
             return _thumbnailCache;
@@ -218,6 +235,12 @@ namespace RageLib.Textures
         public void Dispose()
         {
             Info = null;
+
+            if (_thumbnailCache != null)
+            {
+                _thumbnailCache.Dispose();
+                _thumbnailCache = null;                
+            }
         }
 
         #endregion
