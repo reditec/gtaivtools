@@ -98,6 +98,7 @@
       <DependentUpon>ViewerForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <Compile Include="Viewer\Audio\AudioViewer.cs" />
     <Compile Include="Viewer\IViewer.cs" />
     <Compile Include="Viewer\Models\ModelDictionaryViewer.cs" />
     <Compile Include="Viewer\Models\ModelViewer.cs" />
@@ -125,6 +126,10 @@
     <Compile Include="WaitCursor.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RageLib\Audio\Audio.csproj">
+      <Project>{0D5CDB87-198D-4CD3-A06F-76AC76B7C35D}</Project>
+      <Name>Audio</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RageLib\Common\Common.csproj">
       <Project>{B2A6C9F9-A2BA-49EE-A364-2E839BD381BA}</Project>
       <Name>Common</Name>
