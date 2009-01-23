@@ -33,7 +33,7 @@ namespace SparkIV
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -88,7 +88,16 @@ namespace SparkIV
 
             GTAPath = gtaPath;
 
-            Application.Run(new MainForm());
+            if (args.Length > 0)
+            {
+                MainForm form = new MainForm();
+                form.OpenFile(args[0], null);
+                Application.Run(form);
+            }
+            else
+            {
+                Application.Run(new MainForm());
+            }
         }
     }
 }
