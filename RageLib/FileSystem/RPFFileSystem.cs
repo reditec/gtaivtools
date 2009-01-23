@@ -35,6 +35,9 @@ namespace RageLib.FileSystem
 
         private File _rpfFile;
 
+        private const bool AssumeVer3FilesAsAudio = true;
+        private const string AudioFilesExtension = "ivaud";
+
         static RPFFileSystem()
         {
             _knownFilenames = new Dictionary<uint, string>();
@@ -42,17 +45,13 @@ namespace RageLib.FileSystem
             {
                 var sw = new StreamReader(s);
 
-                string item;
-                while ((item = sw.ReadLine()) != null)
+                string name;
+                while ((name = sw.ReadLine()) != null)
                 {
-                    var names = item.Split('\\');
-                    foreach (var name in names)
+                    uint hash = Hasher.Hash(name);
+                    if (!_knownFilenames.ContainsKey(hash))
                     {
-                        uint hash = Hasher.Hash(name);
-                        if (!_knownFilenames.ContainsKey(hash))
-                        {
-                            _knownFilenames.Add(hash, name);
-                        }
+                        _knownFilenames.Add(hash, name);
                     }
                 }
             }
@@ -114,6 +113,11 @@ namespace RageLib.FileSystem
                 else
                 {
                     name = string.Format("0x{0:x}", entry.NameOffset);   
+                }
+
+                if (AssumeVer3FilesAsAudio && entry is FileEntry)
+                {
+                    name += "." + AudioFilesExtension;
                 }
             }
             return name;
