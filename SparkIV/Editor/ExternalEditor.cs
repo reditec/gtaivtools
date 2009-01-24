@@ -36,7 +36,7 @@ namespace SparkIV.Editor
                 // We'll edit RealFileSystems on the spot... no memory caching
                 // Some of the files are pretty big...
 
-                DirectoryInfo parent = new DirectoryInfo(Program.GTAPath).Parent;
+                DirectoryInfo parent = new DirectoryInfo((fs as RealFileSystem).RealDirectory).Parent;
                 string filename = parent == null ? file.FullName : Path.Combine(parent.FullName, file.FullName);
 
                 var info = new ProcessStartInfo(filename);

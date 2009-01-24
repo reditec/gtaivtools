@@ -77,6 +77,7 @@ namespace SparkIV
                 else if ( IODirectory.Exists(filename) )
                 {
                     fs = new RealFileSystem();
+                    filename = (new DirectoryInfo(filename)).FullName;
                 }
             }
 

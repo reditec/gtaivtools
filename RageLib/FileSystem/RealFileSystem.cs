@@ -33,9 +33,11 @@ namespace RageLib.FileSystem
 
         // TODO: this has to be refactored to be part of Real.FileEntry
         private readonly Dictionary<string, byte[]> _customData = new Dictionary<string, byte[]>();
+        private string _realDirectory;
 
         public override void Open(string filename)
         {
+            _realDirectory = filename;
             _context = new RealContext(new DirectoryInfo(filename));
 
             BuildFS();
@@ -67,6 +69,11 @@ namespace RageLib.FileSystem
         public override bool HasDirectoryStructure
         {
             get { return true; }
+        }
+
+        public string RealDirectory
+        {
+            get { return _realDirectory; }
         }
 
         private void BuildFSDirectory(DirectoryEntry dirEntry, Directory fsDirectory)

@@ -111,7 +111,7 @@ namespace RageLib.Audio.SoundBank
                         {
                             byte[] b = new byte[2];
                             soundBankStream.Read(b, 0, 2);
-                            block[i] = BitConverter.ToInt16(b, 0);
+                            block[j] = BitConverter.ToInt16(b, 0);
                         }
 
                         // this adjusts for weird values in codeIndices.
