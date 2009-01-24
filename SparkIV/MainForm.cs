@@ -74,6 +74,10 @@ namespace SparkIV
                 {
                     fs = new IMGFileSystem();
                 }
+                else if ( IODirectory.Exists(filename) )
+                {
+                    fs = new RealFileSystem();
+                }
             }
 
             if (fs != null)
