@@ -1,7 +1,7 @@
 ﻿/**********************************************************************\
 
  RageLib - HyperText
- Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
+ Copyright (C) 2008-2009  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -28,7 +28,8 @@ namespace RageLib.HyperText.Resource
 {
     class HtmlDocument : IFileAccess
     {
-        private uint RootElementOffset { get; set; }
+        public HtmlNode RootElement { get; private set; }
+
         private uint BodyOffset { get; set; }
         private uint Unknown1Offset { get; set; }
         
@@ -36,20 +37,21 @@ namespace RageLib.HyperText.Resource
         public TextureFile TextureDictionary { get; set; }
 
         private PtrCollection<UnDocData> Unknown2 { get; set; }
-        private PtrCollection<UnDocData> ChildNodes { get; set; }
+        private PtrCollection<HtmlNode> ChildNodes { get; set; }
         private PtrCollection<UnDocData> Unknown3 { get; set; }
 
         #region Implementation of IFileAccess
 
         public void Read(BinaryReader br)
         {
-            RootElementOffset = ResourceUtil.ReadOffset(br);
+            RootElement = new PtrValue<HtmlNode>(br).Value;
+
             BodyOffset = ResourceUtil.ReadOffset(br);
             Unknown1Offset = ResourceUtil.ReadOffset(br);
             TextureDictionaryOffset = ResourceUtil.ReadOffset(br);
 
             Unknown2 = new PtrCollection<UnDocData>(br);
-            ChildNodes = new PtrCollection<UnDocData>(br);
+            ChildNodes = new PtrCollection<HtmlNode>(br);
             Unknown3 = new PtrCollection<UnDocData>(br);
         }
 

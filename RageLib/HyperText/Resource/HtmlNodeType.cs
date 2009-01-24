@@ -1,7 +1,7 @@
 ﻿/**********************************************************************\
 
  RageLib - HyperText
- Copyright (C) 2008-2009  Arushan/Aru <oneforaru at gmail.com>
+ Copyright (C) 2009  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -18,38 +18,13 @@
 
 \**********************************************************************/
 
-using System.IO;
-using RageLib.Textures;
-using File=RageLib.HyperText.Resource.File;
-using Stream=System.IO.Stream;
-
-namespace RageLib.HyperText
+namespace RageLib.HyperText.Resource
 {
-    public class HyperTextFile
+    enum HtmlNodeType
     {
-        internal File File { get; private set; }
-
-        public void Open(string filename)
-        {
-            File = new File();
-            File.Open(filename);
-        }
-
-        public void Open(Stream stream)
-        {
-            File = new File();
-            File.Open(stream);
-        }
-
-        public TextureFile EmbeddedTextureFile
-        {
-            get { return File.Data.TextureDictionary; }
-        }
-
-        public void WriteHTML(TextWriter writer)
-        {
-            HyperTextExport.Export(File.Data.RootElement, writer);
-        }
-
+        HtmlElementNode = 0,
+        HtmlDataNode = 1,
+        HtmlTableNode = 2,
+        HtmlTableElementNode = 3
     }
 }

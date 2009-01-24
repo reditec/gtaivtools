@@ -40,9 +40,15 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="HyperTextFile.cs" />
+    <Compile Include="HyperTextExport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resource\File.cs" />
+    <Compile Include="Resource\HtmlAttributeValue.cs" />
     <Compile Include="Resource\HtmlDocument.cs" />
+    <Compile Include="Resource\HtmlNode.cs" />
+    <Compile Include="Resource\HtmlNodeType.cs" />
+    <Compile Include="Resource\HtmlRenderState.cs" />
+    <Compile Include="Resource\HtmlTag.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

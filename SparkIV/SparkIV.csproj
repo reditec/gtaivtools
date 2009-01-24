@@ -99,6 +99,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <Compile Include="Viewer\Audio\AudioViewer.cs" />
+    <Compile Include="Viewer\HyperText\HyperTextViewer.cs" />
     <Compile Include="Viewer\IViewer.cs" />
     <Compile Include="Viewer\Models\ModelDictionaryViewer.cs" />
     <Compile Include="Viewer\Models\ModelViewer.cs" />

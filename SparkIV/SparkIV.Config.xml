@@ -7,6 +7,7 @@
     <Viewer Extension="wtd" Type="SparkIV.Viewer.Textures.TextureViewer, SparkIV" />
     <Viewer Extension="wdr" Type="SparkIV.Viewer.Models.ModelViewer, SparkIV" />
     <Viewer Extension="wdd" Type="SparkIV.Viewer.Models.ModelDictionaryViewer, SparkIV" />
+    <Viewer Extension="whm" Type="SparkIV.Viewer.HyperText.HyperTextViewer, SparkIV" />
     <Viewer Extension="ivaud" Type="SparkIV.Viewer.Audio.AudioViewer, SparkIV" />
   </Viewers>
   <Editors>
