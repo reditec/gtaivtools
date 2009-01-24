@@ -106,8 +106,9 @@ namespace RageLib.Audio
                     AddExtension = true,
                     OverwritePrompt = true,
                     Title = "Export as WAV",
-                    Filter = "WAVE Audio File (*.wav)|*.wav",
+                    Filter = "WAV Audio File (*.wav)|*.wav",
                     InitialDirectory = _lastSaveDirectory,
+                    FileName = wave + ".wav"
                 };
 
                 if (sfd.ShowDialog() == DialogResult.OK)

@@ -38,23 +38,23 @@ namespace RageLib.Audio.SoundBank
 
         public Header Header { get; set; }
 
-        private List<WaveInfo> _blockInfos;
+        private List<WaveInfo> _waveInfos;
 
-        public int BlockCount
+        public int WaveCount
         {
             get { return Header.numBlocks; }
         }
 
         public ISoundWave this[int index]
         {
-            get { return _blockInfos[index];  }
+            get { return _waveInfos[index];  }
         }
 
         public int ExportWaveBlockAsPCM(int waveIndex, int blockIndex, ref DviAdpcmDecoder.AdpcmState state, Stream soundBankStream, Stream outStream)
         {
             int samplesWritten = 0;
 
-            WaveInfo waveInfo = _blockInfos[waveIndex];
+            WaveInfo waveInfo = _waveInfos[waveIndex];
             BinaryWriter bw = new BinaryWriter(outStream);
             byte[] block = new byte[2048];
 
@@ -92,33 +92,12 @@ namespace RageLib.Audio.SoundBank
                 }
             }
 
-            /*
-            if (blockSize < 2048)
-            {
-                // Last block... write some fillers
-                while(nibblePairCount < 2048)
-                {
-                    if (waveInfo.is_compressed)
-                    {
-                        bw.Write((short) 0);
-                        bw.Write((short) 0);
-                        nibblePairCount++;
-                    }
-                    else
-                    {
-                        bw.Write((short) 0);
-                        nibblePairCount += 2;
-                    }
-                }
-            }
-             */
-
-            return samplesWritten;
+            return samplesWritten * 2;  // byte size
         }
 
         public void ExportAsPCM(int index, Stream soundBankStream, Stream outStream)
         {
-            WaveInfo waveInfo = _blockInfos[index];
+            WaveInfo waveInfo = _waveInfos[index];
 
             int count = waveInfo.numSamplesInBytes_computed / 2048;
             
@@ -136,7 +115,7 @@ namespace RageLib.Audio.SoundBank
         {
             // Read and validate header
 
-            Header = new Header(br);
+            Header = new Mono.Header(br);
 
             if (Header.unk1Reserved != 0 || Header.unk3Reserved != 0)
             {
@@ -159,7 +138,7 @@ namespace RageLib.Audio.SoundBank
             }
 
             // Read block infos
-            _blockInfos = new List<WaveInfo>(Header.numBlocks);
+            _waveInfos = new List<WaveInfo>(Header.numBlocks);
             var position = br.BaseStream.Position;
 
             foreach (var biHeader in blockInfoHeaders)
@@ -167,7 +146,7 @@ namespace RageLib.Audio.SoundBank
                 br.BaseStream.Seek(position + biHeader.offset, SeekOrigin.Begin);
 
                 var blockInfo = new WaveInfo(biHeader, br);
-                _blockInfos.Add(blockInfo);
+                _waveInfos.Add(blockInfo);
             }
         }
 

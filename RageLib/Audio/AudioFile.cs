@@ -29,7 +29,7 @@ namespace RageLib.Audio
     public class AudioFile : IEnumerable<AudioWave>, IDisposable
     {
         private SoundBankFile _file;
-        public List<AudioWave> Blocks { get; private set; }
+        public List<AudioWave> AudioWaves { get; private set; }
 
         internal Stream Stream
         {
@@ -43,7 +43,7 @@ namespace RageLib.Audio
 
         public int Count
         {
-            get { return Blocks.Count; }
+            get { return AudioWaves.Count; }
         }
 
         public void Open(string filename)
@@ -63,14 +63,14 @@ namespace RageLib.Audio
 
         private void BuildAudioBlocks()
         {
-            Blocks = new List<AudioWave>();
+            AudioWaves = new List<AudioWave>();
 
-            int count = _file.SoundBank.BlockCount;
+            int count = _file.SoundBank.WaveCount;
             for (int i = 0; i < count; i++)
             {
                 AudioWave wave = new AudioWave(i);
                 wave.SoundWave = _file.SoundBank[i];
-                Blocks.Add(wave);
+                AudioWaves.Add(wave);
             }
         }
 
@@ -78,7 +78,7 @@ namespace RageLib.Audio
 
         public IEnumerator<AudioWave> GetEnumerator()
         {
-            return Blocks.GetEnumerator();
+            return AudioWaves.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -92,14 +92,15 @@ namespace RageLib.Audio
 
         public void Dispose()
         {
+            // We keep the Stream object open to play the file so lets dispose it.
             if (_file != null)
             {
                 _file.Dispose();
                 _file = null;
             }
 
-            Blocks.Clear();
-            Blocks = null;
+            AudioWaves.Clear();
+            AudioWaves = null;
         }
 
         #endregion

@@ -27,6 +27,7 @@ namespace RageLib.Audio.SoundBank
     {
         public ISoundBank SoundBank { get; private set; }
         public Stream Stream { get; private set; }
+        public bool IsMultiChannel { get; private set; }
 
         public void Open(string filename)
         {
@@ -48,8 +49,44 @@ namespace RageLib.Audio.SoundBank
             Stream = stream;
 
             BinaryReader br = new BinaryReader(stream);
-            SoundBank = new SoundBankMono();
-            SoundBank.Read(br);
+
+            var startPosition = stream.Position;
+
+            // Try loading as multichannel
+            try
+            {
+                stream.Seek(startPosition, SeekOrigin.Begin);
+                
+                SoundBank = new SoundBankMultiChannel();
+                SoundBank.Read(br);
+                IsMultiChannel = true;
+            }
+            catch(SoundBankException)
+            {
+                SoundBank = null;
+            }
+
+            // Failed, so lets try mono
+            if (SoundBank == null)
+            {
+                try
+                {
+                    stream.Seek(startPosition, SeekOrigin.Begin);
+                    
+                    SoundBank = new SoundBankMono();
+                    SoundBank.Read(br);
+                    IsMultiChannel = false;
+                }
+                catch (SoundBankException)
+                {
+                    SoundBank = null;
+                }
+            }
+
+            if (SoundBank == null)
+            {
+                throw new SoundBankException("Could not load sound bank.");
+            }
         }
 
         #region Implementation of IDisposable

@@ -36,6 +36,7 @@ namespace RageLib.Audio
         private DviAdpcmDecoder.AdpcmState _state;
         private int _lastBlock;
         private bool _looped;
+        private byte[] _leftOverBuffer;
 
         public void Initialize(AudioFile file, AudioWave wave)
         {
@@ -48,16 +49,22 @@ namespace RageLib.Audio
             _looped = false;
 
             _state = new DviAdpcmDecoder.AdpcmState();
+            _leftOverBuffer = null;
         }
 
         private void Filler(IntPtr data, int size)
         {
-            byte[] b = new byte[size*2];
             int blockCount = _wave.BlockCount;
+            byte[] b = new byte[size];
 
             if (_file != null && (_looped || _lastBlock < blockCount))
             {
-                MemoryStream ms = new MemoryStream(b);
+                MemoryStream ms = new MemoryStream();
+
+                if (_leftOverBuffer != null)
+                {
+                    ms.Write(_leftOverBuffer, 0, _leftOverBuffer.Length);
+                }
                 
                 while (ms.Position < size)
                 {
@@ -82,6 +89,21 @@ namespace RageLib.Audio
 
                     _file.SoundBank.ExportWaveBlockAsPCM(_wave.Index, _lastBlock, ref _state, _file.Stream, ms);
                 }
+
+                int extraData = (int)(ms.Position - size);
+                
+                ms.Seek(0, SeekOrigin.Begin);
+                ms.Read(b, 0, size);
+
+                if (extraData > 0)
+                {
+                    _leftOverBuffer = new byte[extraData];
+                    ms.Read(_leftOverBuffer, 0, extraData);
+                }
+                else
+                {
+                    _leftOverBuffer = null;
+                }
             }
             else
             {
@@ -101,6 +123,7 @@ namespace RageLib.Audio
             _lastBlock = -1;
             _state = new DviAdpcmDecoder.AdpcmState();
             _player = new WaveOutPlayer(-1, _format, _wave.BlockSize * 4, 3, Filler);
+            _leftOverBuffer = null;
         }
 
         public void Stop()

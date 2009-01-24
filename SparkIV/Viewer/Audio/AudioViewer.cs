@@ -1,7 +1,7 @@
 ﻿/**********************************************************************\
 
- RageLib - Audio
- Copyright (C) 2009  Arushan/Aru <oneforaru at gmail.com>
+ Spark IV
+ Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -19,15 +19,35 @@
 \**********************************************************************/
 
 using System.IO;
-using RageLib.Common;
+using System.Windows.Forms;
+using RageLib.Audio;
 
-namespace RageLib.Audio.SoundBank
+namespace SparkIV.Viewer.Audio
 {
-    interface ISoundBank : IFileAccess
+    class AudioViewer : IViewer
     {
-        int WaveCount { get; }
-        ISoundWave this[int index] { get; }
-        void ExportAsPCM(int index, Stream soundBankStream, Stream outStream);
-        int ExportWaveBlockAsPCM(int waveIndex, int blockIndex, ref DviAdpcmDecoder.AdpcmState state, Stream soundBankStream, Stream outStream);
+        public Control GetView(RageLib.FileSystem.Common.File file)
+        {
+            var data = file.GetData();
+
+            var ms = new MemoryStream(data);
+            var audioFile = new AudioFile();
+            try
+            {
+                audioFile.Open(ms);
+            }
+            catch
+            {
+                ms.Close();
+
+                throw;
+            }
+
+            var view = new AudioView();
+            var controller = new AudioViewController(view);
+            controller.AudioFile = audioFile;
+
+            return view;
+        }
     }
 }

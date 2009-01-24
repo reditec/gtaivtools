@@ -25,9 +25,18 @@ namespace RageLib.Audio
 {
     public partial class AudioView : UserControl
     {
+        private static bool _AutoPlay;
+        private static bool _PlayLooped;
+
         public AudioView()
         {
             InitializeComponent();
+
+            chkAutoPlay.Checked = _AutoPlay;
+            chkPlayLooped.Checked = _PlayLooped;
+
+            chkAutoPlay.CheckedChanged += delegate { _AutoPlay = chkAutoPlay.Checked; };
+            chkPlayLooped.CheckedChanged += delegate { _PlayLooped = chkPlayLooped.Checked; };
         }
 
         public event EventHandler PlayClicked
@@ -57,11 +66,13 @@ namespace RageLib.Audio
         public bool AutoPlay
         {
             get { return chkAutoPlay.Checked; }
+            set { chkAutoPlay.Checked = value; }
         }
 
         public bool PlayLooped
         {
             get { return chkPlayLooped.Checked; }
+            set { chkPlayLooped.Checked = value; }
         }
 
         public AudioWave SelectWave
