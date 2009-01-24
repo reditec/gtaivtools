@@ -78,6 +78,8 @@ namespace RageLib.HyperText.Resource
         public uint ALinkColor { get; set; }
         private int _fC0;
 
+        public TextureInfo BackgroundImageTextureInfo { get; private set; }
+
         public HtmlRenderState()
         {
         }
@@ -142,6 +144,16 @@ namespace RageLib.HyperText.Resource
             _fBA = new byte[] {br.ReadByte(), br.ReadByte()};
             ALinkColor = br.ReadUInt32();
             _fC0 = br.ReadInt32();
+
+            if (BackgroundImageOffset != 0)
+            {
+                var offset = br.BaseStream.Position;
+                
+                br.BaseStream.Seek(BackgroundImageOffset, SeekOrigin.Begin);
+                BackgroundImageTextureInfo = new TextureInfo(br);
+
+                br.BaseStream.Seek(offset, SeekOrigin.Begin);
+            }
         }
 
         public void Write(BinaryWriter bw)

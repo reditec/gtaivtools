@@ -40,7 +40,8 @@ namespace RageLib.HyperText
 
             if (dataNode)
             {
-                writer.WriteLine("{0}{1}", indent, node.Data.Value);
+                //writer.WriteLine("{0}{1}", indent, node.Data.Value);
+                writer.Write("{0}", node.Data.Value);
             }
             else
             {
@@ -49,7 +50,8 @@ namespace RageLib.HyperText
 
                 if (emptyNode && node.Tag != HtmlTag.Style)
                 {
-                    writer.WriteLine("{0}<{1} {2}/>", indent, tagName, attributes);
+                    //writer.WriteLine("{0}<{1} {2}/>", indent, tagName, attributes);
+                    writer.Write("<{0} {1}/>", tagName, attributes);
                 }
                 else if (node.Tag == HtmlTag.Style)
                 {
@@ -60,12 +62,14 @@ namespace RageLib.HyperText
                 }
                 else
                 {
-                    writer.WriteLine("{0}<{1}{2}>", indent, tagName, attributes);
+                    //writer.WriteLine("{0}<{1}{2}>", indent, tagName, attributes);
+                    writer.Write("<{0}{1}>", tagName, attributes);
                     foreach (var childNode in node.ChildNodes)
                     {
                         ExportNode(childNode, writer, indent + "   ");
                     }
-                    writer.WriteLine("{0}</{1}>", indent, tagName);
+                    //writer.WriteLine("{0}</{1}>", indent, tagName);
+                    writer.Write("</{0}>", tagName);
                 }
             }
 
@@ -93,7 +97,7 @@ namespace RageLib.HyperText
                 }
                 else
                 {
-                    // todo, figure out image name and write it out here
+                    styleAttributes.Add("background-image", "url(" + state.BackgroundImageTextureInfo.TextureName + ".png)");
                     styleAttributes.Add("background-repeat", GetAttributeValue(state.BackgroundRepeat));
                 }
             }
@@ -250,31 +254,31 @@ namespace RageLib.HyperText
                     break;
                 case HtmlAttributeValue.XXSmall:
                     //valueName = "xx-small";
-                    valueName = "6pt";
+                    valueName = "6px";
                     break;
                 case HtmlAttributeValue.XSmall:
                     //valueName = "x-small";
-                    valueName = "7pt";
+                    valueName = "7px";
                     break;
                 case HtmlAttributeValue.Small:
                     //valueName = "small";
-                    valueName = "8pt";
+                    valueName = "8px";
                     break;
                 case HtmlAttributeValue.Medium:
                     //valueName = "medium";
-                    valueName = "9pt";
+                    valueName = "9px";
                     break;
                 case HtmlAttributeValue.Large:
                     //valueName = "large";
-                    valueName = "11pt";
+                    valueName = "11px";
                     break;
                 case HtmlAttributeValue.XLarge:
                     //valueName = "x-large";
-                    valueName = "12pt";
+                    valueName = "12px";
                     break;
                 case HtmlAttributeValue.XXLarge:
                     //valueName = "xx-large";
-                    valueName = "14pt";
+                    valueName = "14px";
                     break;
                 case HtmlAttributeValue.Block:
                     valueName = "block";

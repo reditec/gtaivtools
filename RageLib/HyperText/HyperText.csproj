@@ -49,6 +49,7 @@
     <Compile Include="Resource\HtmlNodeType.cs" />
     <Compile Include="Resource\HtmlRenderState.cs" />
     <Compile Include="Resource\HtmlTag.cs" />
+    <Compile Include="Resource\TextureInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
