@@ -97,29 +97,24 @@ namespace RageLib.Audio.SoundBank
             }
             else
             {
-                // This needs clean up!
-
                 for (int i = 0; i < _blockInfo[blockIndex].codeIndices.Length; i++)
                 {
                     int currentChannel = _blockInfo[blockIndex].codeIndices[i].computed_channel;
 
                     if (currentChannel == waveIndex)
                     {
-                        short[] block = new short[1024];
+                        short[] block = new short[BlockSize / 2];
 
+                        // all the seeking is done here...
+                        soundBankStream.Seek(_blockInfo[blockIndex].computed_offset + i * BlockSize + _sizeBlockHeader, SeekOrigin.Begin);
+                        for (int j = 0; j < BlockSize / 2; j++)
                         {
-                            offset = (int)soundBankStream.Position;
-                            soundBankStream.Seek(_blockInfo[blockIndex].computed_offset + i * 2048 + _sizeBlockHeader, SeekOrigin.Begin);
-                            for (int j = 0; j < 1024; j++)
-                            {
-                                byte[] b = new byte[2];
-                                soundBankStream.Read(b, 0, 2);
-                                block[i] = BitConverter.ToInt16(b, 0);
-                            }
-                            soundBankStream.Seek(offset, SeekOrigin.Begin);
+                            byte[] b = new byte[2];
+                            soundBankStream.Read(b, 0, 2);
+                            block[i] = BitConverter.ToInt16(b, 0);
                         }
 
-                        soundBankStream.Seek(2048, SeekOrigin.Begin);
+                        // this adjusts for weird values in codeIndices.
                         if (_blockInfo[blockIndex].channelInfo[currentChannel].offset < 0)
                         {
                             _blockInfo[blockIndex].codeIndices[i].startIndex -=
@@ -129,8 +124,8 @@ namespace RageLib.Audio.SoundBank
                         else if (_blockInfo[blockIndex].channelInfo[currentChannel].offset > 0)
                         {
                             int len = _blockInfo[blockIndex].channelInfo[currentChannel].offset;
-                            short[] newblock = new short[1024 - len];
-                            Array.Copy(block, len, newblock, 0, 1024 - len);
+                            short[] newblock = new short[BlockSize / 2 - len];
+                            Array.Copy(block, len, newblock, 0, BlockSize / 2 - len);
                             block = newblock;
                             _blockInfo[blockIndex].channelInfo[currentChannel].offset = 0;
                         }
@@ -142,14 +137,8 @@ namespace RageLib.Audio.SoundBank
                             writer.Write(block[j]);
                         }
                     }
-                    else
-                    {
-                        soundBankStream.Seek(2048, SeekOrigin.Current);
-                    }
                 }
-
             }
-
             return 0;
 
         }
