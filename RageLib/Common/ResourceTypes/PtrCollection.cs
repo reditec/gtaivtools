@@ -43,6 +43,18 @@ namespace RageLib.Common.ResourceTypes
             Read(br);
         }
 
+        public T GetByOffset(uint offset)
+        {
+            for(int i=0; i<_itemOffsets.Length; i++)
+            {
+                if (_itemOffsets[i] == offset)
+                {
+                    return _items[i];
+                }
+            }
+            return null;
+        }
+
         public T this[int index]
         {
             get { return _items[index]; }

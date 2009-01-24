@@ -80,6 +80,8 @@
     <Compile Include="Resources\ResourceType.cs" />
     <Compile Include="Resources\ResourceUtil.cs" />
     <Compile Include="ResourceTypes\PGDictionary.cs" />
+    <Compile Include="ResourceTypes\PtrString.cs" />
+    <Compile Include="ResourceTypes\PtrValue.cs" />
     <Compile Include="ResourceTypes\PtrCollection.cs" />
     <Compile Include="ResourceTypes\SimpleArray.cs" />
     <Compile Include="ResourceTypes\SimpleCollection.cs" />
