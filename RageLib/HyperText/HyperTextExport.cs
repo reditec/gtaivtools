@@ -40,8 +40,11 @@ namespace RageLib.HyperText
 
             if (dataNode)
             {
-                //writer.WriteLine("{0}{1}", indent, node.Data.Value);
-                writer.Write("{0}", node.Data.Value);
+                string value = node.Data.Value;
+                value = value.Replace("&", "&amp;");
+                value = value.Replace("<", "&lt;");
+                value = value.Replace(">", "&gt;");
+                writer.Write("{0}", value);
             }
             else
             {
@@ -55,6 +58,7 @@ namespace RageLib.HyperText
                 }
                 else if (node.Tag == HtmlTag.Style)
                 {
+                    writer.WriteLine("{0}<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">", indent);
                     writer.WriteLine("{0}<style>", indent);
                     writer.WriteLine(indent + "   body { font-family: Arial; }");
                     writer.WriteLine(indent + "   a:link { text-decoration: none; }");
