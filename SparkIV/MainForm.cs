@@ -83,6 +83,23 @@ namespace SparkIV
 
             if (fs != null)
             {
+                if (IOFile.Exists(filename))
+                {
+                    FileInfo fi = new FileInfo(filename);
+                    if ((fi.Attributes & FileAttributes.ReadOnly) != 0)
+                    {
+                        DialogResult result =
+                            MessageBox.Show("The file you are trying to open appears to be read-only. " +
+                                "Would you like to make it writable before opening this file?",
+                                "Open", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                        if (result == DialogResult.Yes)
+                        {
+                            fi.Attributes = fi.Attributes & ~FileAttributes.ReadOnly;
+                        }
+                    }
+                }
+
                 try
                 {
                     using (new WaitCursor(this))
