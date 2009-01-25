@@ -63,6 +63,7 @@ namespace RageLib.Textures
                     Title = "Save Texture",
                     Filter = "Portable Network Graphics (*.png)|*.png|JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg",
                     InitialDirectory = _lastSaveDirectory,
+                    FileName = texture.TitleName + ".png"
                 };
 
                 if (sfd.ShowDialog() == DialogResult.OK)

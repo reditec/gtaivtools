@@ -69,7 +69,7 @@ namespace RageLib.Textures
                     Title = "Export Texture",
                     Filter = "Portable Network Graphics (*.png)|*.png",
                     InitialDirectory = _workingDirectory,
-                    FileName = texture.Name + ".png"
+                    FileName = texture.TitleName + ".png"
                 };
 
                 if (sfd.ShowDialog() == DialogResult.OK)
@@ -96,7 +96,7 @@ namespace RageLib.Textures
                     Title = "Import Texture",
                     Filter = "Portable Network Graphics (*.png)|*.png",
                     InitialDirectory = _workingDirectory,
-                    FileName = texture.Name + ".png"
+                    FileName = texture.TitleName + ".png"
                 };
 
                 if (ofd.ShowDialog() == DialogResult.OK)
