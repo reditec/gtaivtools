@@ -107,7 +107,7 @@ namespace RageLib.Textures
                     thumbWidth = (int)Math.Ceiling(((float) Width/Height)*ThumbnailSize);
                 }
 
-                if (Environment.OSVersion.Version.Major >= 7)
+                if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
                 {
                     // for Windows 7
                     // Don't use GetThumbnailImage as GDI+ is bugged.
