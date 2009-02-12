@@ -23,6 +23,7 @@
 \**********************************************************************/
 
 using System.IO;
+using RageLib.Audio.SoundBank.Hashes;
 using RageLib.Common;
 
 namespace RageLib.Audio.SoundBank.MultiChannel
@@ -47,6 +48,11 @@ namespace RageLib.Audio.SoundBank.MultiChannel
         public ChannelInfo(BinaryReader br) : this()
         {
             Read(br);
+        }
+
+        public string Name
+        {
+            get { return HashResolver.Resolve(hash); }
         }
 
         #region Implementation of IFileAccess

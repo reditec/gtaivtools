@@ -26,10 +26,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using RageLib.Audio.SoundBank.MultiChannel;
+using RageLib.Audio.WaveFile;
 
 namespace RageLib.Audio.SoundBank
 {
-    class SoundBankMultiChannel : ISoundBank
+    class SoundBankMultiChannel : ISoundBank, IMultichannelSound
     {
         public const int BlockSize = 2048;
 
@@ -41,7 +42,112 @@ namespace RageLib.Audio.SoundBank
         private BlockInfo[] _blockInfo;
         private int _sizeBlockHeader = BlockSize;
 
+        private string _commonFileName;
+        private int _commonSampleRate;
+        private ChannelMask _channelMask;
+        private int[] _channelOrder;
+        private bool _supportsMultichannelExport;
+
         private List<ISoundWave> _waveInfos;
+
+        private bool ReorganizeForMultiChannelWave()
+        {
+            // check if stereo, 3 channel or 5 channel...
+            if (!(_fileHeader.numChannels == 2 || _fileHeader.numChannels == 3 || _fileHeader.numChannels == 5)) return false;
+
+            // check if all channels have names to guess order....
+            for (int i = 0; i < _channelInfoHeader.Length; i++)
+            {
+                if (_channelInfo[i].Name == null || !(_channelInfo[i].Name.Contains("_") || _channelInfo[i].Name.Contains(".")))
+                {
+                    return false;
+                }
+            }
+
+            // extract common name and channel postfixes
+            int[] tmpChannelOrder = new int[_fileHeader.numChannels];
+            string[] tmpChannelNames = new string[_fileHeader.numChannels];
+            for (int i = 0; i < _fileHeader.numChannels; i++)
+            {
+                string channelName = _channelInfo[i].Name;
+
+                // get unique parts of name
+                int pos = Math.Max(channelName.LastIndexOf('.'), _channelInfo[i].Name.LastIndexOf('_'));
+                tmpChannelNames[i] = channelName.Substring(pos + 1);
+                string tmpString = channelName.Substring(0, pos);
+
+                // check if common part of name is the same for all channels
+                if (_commonFileName == null)
+                {
+                    _commonFileName = tmpString;
+                }
+                else if (_commonFileName != tmpString)
+                {
+                    return false;
+                }
+
+                // check if all channels have the same sampleRate
+                if (_commonSampleRate == 0)
+                {
+                    _commonSampleRate = _channelInfo[i].sampleRate;
+                }
+                else if (_commonSampleRate != _channelInfo[i].sampleRate)
+                {
+                    return false;
+                }
+            }
+
+            // try to guess channel mapping, return false if inconsistent...
+            _channelMask = ChannelMask.Invalid;
+            for (int i = 0; i < _fileHeader.numChannels; i++)
+            {
+                if (tmpChannelNames[i] == "LEFT" || tmpChannelNames[i] == "L")
+                {
+                    _channelMask |= ChannelMask.SpeakerFrontLeft;
+                    tmpChannelOrder[i] = 0;
+                }
+                else if (tmpChannelNames[i] == "RIGHT" || tmpChannelNames[i] == "R")
+                {
+                    _channelMask |= ChannelMask.SpeakerFrontRight;
+                    tmpChannelOrder[i] = 1;
+                }
+                else if (tmpChannelNames[i] == "CENTRE" || tmpChannelNames[i] == "C")
+                {
+                    if (_fileHeader.numChannels < 3)
+                    {
+                        return false;
+                    }
+                    _channelMask |= ChannelMask.SpeakerFrontCenter;
+                    tmpChannelOrder[i] = 2;
+                }
+                else if (tmpChannelNames[i] == "LS")
+                {
+                    if (_fileHeader.numChannels != 5)
+                    {
+                        return false;
+                    }
+                    _channelMask |= ChannelMask.SpeakerBackLeft;
+                    tmpChannelOrder[i] = 3;
+                }
+                else if (tmpChannelNames[i] == "RS")
+                {
+                    if (_fileHeader.numChannels != 5)
+                    {
+                        return false;
+                    }
+                    _channelMask |= ChannelMask.SpeakerBackRight;
+                    tmpChannelOrder[i] = 4;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            
+            // it's important to export samples in the right order: L, R, C, BL, BR - this array is for reordering...
+            _channelOrder = tmpChannelOrder;
+            return true;
+        }
 
         #region Implementation of ISoundBank
 
@@ -115,19 +221,19 @@ namespace RageLib.Audio.SoundBank
                         }
 
                         // this adjusts for weird values in codeIndices.
-                        if (_blockInfo[blockIndex].channelInfo[currentChannel].offset < 0)
+                        if (_blockInfo[blockIndex].channelInfo[currentChannel].offsetIntoCodeBlockIndices < 0)
                         {
                             _blockInfo[blockIndex].codeIndices[i].startIndex -=
-                                _blockInfo[blockIndex].channelInfo[currentChannel].offset;
-                            _blockInfo[blockIndex].channelInfo[currentChannel].offset = 0;
+                                _blockInfo[blockIndex].channelInfo[currentChannel].offsetIntoCodeBlockIndices;
+                            _blockInfo[blockIndex].channelInfo[currentChannel].offsetIntoCodeBlockIndices = 0;
                         }
-                        else if (_blockInfo[blockIndex].channelInfo[currentChannel].offset > 0)
+                        else if (_blockInfo[blockIndex].channelInfo[currentChannel].offsetIntoCodeBlockIndices > 0)
                         {
-                            int len = _blockInfo[blockIndex].channelInfo[currentChannel].offset;
+                            int len = _blockInfo[blockIndex].channelInfo[currentChannel].offsetIntoCodeBlockIndices;
                             short[] newblock = new short[BlockSize / 2 - len];
                             Array.Copy(block, len, newblock, 0, BlockSize / 2 - len);
                             block = newblock;
-                            _blockInfo[blockIndex].channelInfo[currentChannel].offset = 0;
+                            _blockInfo[blockIndex].channelInfo[currentChannel].offsetIntoCodeBlockIndices = 0;
                         }
 
                         int count = _blockInfo[blockIndex].codeIndices[i].endIndex -
@@ -153,6 +259,155 @@ namespace RageLib.Audio.SoundBank
             {
                 ExportWaveBlockAsPCM(index, k, ref state, soundBankStream, outStream);
             }
+        }
+
+        #endregion
+
+        #region Implementation of IMultichannelSound
+
+        public void ExportMultichannelAsPCM(Stream soundBankStream, Stream outStream)
+        {
+            // Use a memory stream as we seek back and forth.. 
+            // Directly outputting to a filestream when doing this is slow!
+
+            MemoryStream ms = new MemoryStream();
+
+            int[] sampleIndexes = new int[_fileHeader.numChannels];
+            int channelIndexStep = _fileHeader.numChannels * 2;
+            for (int i = 0; i < _fileHeader.numChannels; i++)
+            {
+                sampleIndexes[i] = _channelOrder[i]*2;
+            }
+
+            BinaryWriter writer = new BinaryWriter(ms);
+
+            if (_isCompressed)
+            {
+
+                DviAdpcmDecoder.AdpcmState[] state = new DviAdpcmDecoder.AdpcmState[_fileHeader.numChannels];
+                for (int current_block = 0; current_block < _fileHeader.numBlocks; current_block++)
+                {
+                    int offset = _blockInfo[current_block].computed_offset + _sizeBlockHeader;
+                    soundBankStream.Seek(offset, SeekOrigin.Begin);
+                    for (int i = 0; i < _blockInfo[current_block].codeIndices.Length; i++)
+                    {
+                        int current_channel = _blockInfo[current_block].codeIndices[i].computed_channel;
+                        if (current_channel >= 0)
+                        {
+                            int adpcmIndex = _blockInfo[current_block].codeIndices[i].computed_adpcmIndex;
+                            if (adpcmIndex < _channelInfo[current_channel].adpcmInfo.states.Length)
+                            {
+                                state[current_channel] = _channelInfo[current_channel].adpcmInfo.states[adpcmIndex];
+                            }
+
+                            byte[] buffer = new byte[BlockSize];
+                            soundBankStream.Read(buffer, 0, BlockSize);
+
+                            for (int j = 0; j < BlockSize; j++)
+                            {
+                                byte code = buffer[j];
+                                writer.BaseStream.Seek(sampleIndexes[current_channel], SeekOrigin.Begin);
+                                writer.Write(DviAdpcmDecoder.DecodeAdpcm((byte) (code & 0xf), ref state[current_channel]));
+                                sampleIndexes[current_channel] += channelIndexStep;
+
+                                writer.BaseStream.Seek(sampleIndexes[current_channel], SeekOrigin.Begin);
+                                writer.Write(DviAdpcmDecoder.DecodeAdpcm((byte) ((code >> 4) & 0xf),
+                                                                         ref state[current_channel]));
+                                sampleIndexes[current_channel] += channelIndexStep;
+                            }
+                        }
+                        else
+                        {
+                            soundBankStream.Seek(BlockSize, SeekOrigin.Current);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                BinaryReader reader = new BinaryReader(soundBankStream);
+
+                int current_channel = -1;
+                for (int current_block = 0; current_block < _fileHeader.numBlocks; current_block++)
+                {
+                    // loop through code block indices to get the associated channel index
+                    for (int codeBlockArrayIndex = 0; codeBlockArrayIndex < _blockInfo[current_block].codeIndices.Length; codeBlockArrayIndex++)
+                    {
+                        current_channel = _blockInfo[current_block].codeIndices[codeBlockArrayIndex].computed_channel;
+
+                        if (current_channel >= 0)
+                        {
+                            reader.BaseStream.Seek(_blockInfo[current_block].computed_offset + codeBlockArrayIndex * BlockSize + _sizeBlockHeader, SeekOrigin.Begin);
+                            short[] block = new short[BlockSize / 2];
+                            for (int i = 0; i < BlockSize / 2; i++)
+                            {
+                                block[i] = reader.ReadInt16();
+                            }
+
+                            //*******************************
+                            // sometimes offset is negative:
+                            // a block of codes belongs to another channel?!
+                            // i tried alot of things but this was the best solution (at the time i wrote this i knew exactly what it does :))
+                            if (_blockInfo[current_block].channelInfo[current_channel].offsetIntoCodeBlockIndices < 0)
+                            {
+                                _blockInfo[current_block].codeIndices[codeBlockArrayIndex].startIndex -= _blockInfo[current_block].channelInfo[current_channel].offsetIntoCodeBlockIndices;
+                                _blockInfo[current_block].channelInfo[current_channel].offsetIntoCodeBlockIndices = 0;
+                            }
+                            else if (_blockInfo[current_block].channelInfo[current_channel].offsetIntoCodeBlockIndices > 0)
+                            {
+                                int len = _blockInfo[current_block].channelInfo[current_channel].offsetIntoCodeBlockIndices;
+                                short[] newblock = new short[BlockSize / 2 - len];
+                                Array.Copy(block, len, newblock, 0, BlockSize / 2 - len);
+                                block = newblock;
+                                _blockInfo[current_block].channelInfo[current_channel].offsetIntoCodeBlockIndices = 0;
+                            }
+                            //*******************************
+
+                            int count = _blockInfo[current_block].codeIndices[codeBlockArrayIndex].endIndex - _blockInfo[current_block].codeIndices[codeBlockArrayIndex].startIndex;
+                            for (int j = 0; j <= count; j++)
+                            {
+                                writer.BaseStream.Seek(sampleIndexes[current_channel], SeekOrigin.Begin);
+                                writer.Write(block[j]);
+                                sampleIndexes[current_channel] += channelIndexStep;
+                            }
+                        }
+                    }
+                }
+            }
+
+            byte[] msBuffer = ms.GetBuffer();
+
+            int msSize = 0;
+            foreach (var info in _channelInfo)
+            {
+                msSize += info.numSamples16Bit*2;
+            }
+            if (msSize > msBuffer.Length)
+            {
+                msSize = msBuffer.Length;
+            }
+
+            outStream.Write(msBuffer, 0, msSize);
+        }
+
+        public int CommonSamplesPerSecond
+        {
+            get { return _commonSampleRate; }
+        }
+
+        public string CommonFilename
+        {
+            get { return _commonFileName; }
+        }
+
+        public ChannelMask ChannelMask
+        {
+            get { return _channelMask; }
+        }
+
+        public bool SupportsMultichannelExport
+        {
+            get { return _supportsMultichannelExport; }
         }
 
         #endregion
@@ -273,6 +528,8 @@ namespace RageLib.Audio.SoundBank
             {
                 _waveInfos.Add( new SoundWave(_fileHeader, _channelInfo[i]) );
             }
+
+            _supportsMultichannelExport = ReorganizeForMultiChannelWave();
         }
 
         public void Write(BinaryWriter bw)
@@ -281,5 +538,6 @@ namespace RageLib.Audio.SoundBank
         }
 
         #endregion
+
     }
 }

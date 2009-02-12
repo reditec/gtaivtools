@@ -46,6 +46,21 @@ namespace RageLib.Audio
             get { return AudioWaves.Count; }
         }
 
+        public bool IsMultichannel
+        {
+            get { return _file.IsMultiChannel; }
+        }
+
+        public bool SupportsMultichannelExport
+        {
+            get { return _file.SupportsMultichannelExport; }
+        }
+
+        public string Name
+        {
+            get { return _file.Name; }
+        }
+
         public void Open(string filename)
         {
             _file = new SoundBankFile();

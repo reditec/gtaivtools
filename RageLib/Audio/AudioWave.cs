@@ -18,6 +18,7 @@
 
 \**********************************************************************/
 
+using System;
 using RageLib.Audio.SoundBank;
 
 namespace RageLib.Audio
@@ -26,6 +27,20 @@ namespace RageLib.Audio
     {
         internal int Index { get; set; }
         internal ISoundWave SoundWave { get; set; }
+
+        public TimeSpan Length
+        {
+            get
+            {
+                var numberOfSeconds = (int) Math.Ceiling((float) NumberOfSamples/SamplesPerSecond);
+                return new TimeSpan(0, 0, numberOfSeconds);
+            }
+        }
+
+        public int NumberOfSamples
+        {
+            get { return SoundWave.NumberOfSamples; }
+        }
 
         public int SamplesPerSecond
         {

@@ -38,6 +38,7 @@ namespace RageLib.Audio
             _view.PlayClicked += View_PlayClicked;
             _view.StopClicked += View_StopClicked;
             _view.ExportWAVClicked += View_ExportWAVClicked;
+            _view.ExportMultichannelWAVClicked += View_ExportMultichannelWAVClicked;
             _view.SelectedWaveChanged += View_SelectedBlockChanged;
             _view.Disposed += View_Disposed;
 
@@ -69,6 +70,8 @@ namespace RageLib.Audio
 
         private void UpdateView()
         {
+            _view.SupportsMultichannelExport = _file.SupportsMultichannelExport;
+
             _view.ClearWaves();
 
             if (_file != null)
@@ -105,7 +108,7 @@ namespace RageLib.Audio
                 {
                     AddExtension = true,
                     OverwritePrompt = true,
-                    Title = "Export as WAV",
+                    Title = "Export Selected WAV",
                     Filter = "WAV Audio File (*.wav)|*.wav",
                     InitialDirectory = _lastSaveDirectory,
                     FileName = wave + ".wav"
@@ -120,10 +123,35 @@ namespace RageLib.Audio
 
                     _lastSaveDirectory = new FileInfo(sfd.FileName).Directory.FullName;
 
-                    MessageBox.Show("Audio exported.", "Export as WAV", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Audio exported.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             
+        }
+
+        private void View_ExportMultichannelWAVClicked(object sender, EventArgs e)
+        {
+            var sfd = new SaveFileDialog
+            {
+                AddExtension = true,
+                OverwritePrompt = true,
+                Title = "Export Multichannel WAV",
+                Filter = "WAV Audio File (*.wav)|*.wav",
+                InitialDirectory = _lastSaveDirectory,
+                FileName = _file.Name + ".wav",
+            };
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                using (var f = new FileStream(sfd.FileName, FileMode.Create, FileAccess.Write))
+                {
+                    WaveExport.ExportMultichannel(_file, f);
+                }
+
+                _lastSaveDirectory = new FileInfo(sfd.FileName).Directory.FullName;
+
+                MessageBox.Show("Audio exported.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void View_SelectedBlockChanged(object sender, EventArgs e)

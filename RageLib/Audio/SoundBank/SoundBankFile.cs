@@ -29,6 +29,16 @@ namespace RageLib.Audio.SoundBank
         public Stream Stream { get; private set; }
         public bool IsMultiChannel { get; private set; }
 
+        public bool SupportsMultichannelExport
+        {
+            get { return (SoundBank is IMultichannelSound) && (SoundBank as IMultichannelSound).SupportsMultichannelExport; }
+        }
+
+        public string Name
+        {
+            get { return (SoundBank is IMultichannelSound) ? (SoundBank as IMultichannelSound).CommonFilename : null; }
+        }
+
         public void Open(string filename)
         {
             var stream = new FileStream(filename, FileMode.Open, FileAccess.ReadWrite);

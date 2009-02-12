@@ -1,4 +1,4 @@
-﻿/**********************************************************************\
+/**********************************************************************\
 
  RageLib - Audio
  Copyright (C) 2009  Arushan/Aru <oneforaru at gmail.com>
@@ -18,14 +18,17 @@
 
 \**********************************************************************/
 
+using System.IO;
+using RageLib.Audio.WaveFile;
+
 namespace RageLib.Audio.SoundBank
 {
-    interface ISoundWave
+    interface IMultichannelSound
     {
-        string Name { get; }
-        int NumberOfSamples { get; }
-        int SamplesPerSecond { get; }
-        int BlockSize { get; }
-        int BlockCount { get; }
+        void ExportMultichannelAsPCM(Stream soundBankStream, Stream outStream);
+        int CommonSamplesPerSecond { get; }
+        string CommonFilename { get; }
+        ChannelMask ChannelMask { get; }
+        bool SupportsMultichannelExport { get; }
     }
 }

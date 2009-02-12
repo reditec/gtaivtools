@@ -39,8 +39,13 @@ namespace RageLib.Audio.SoundBank.MultiChannel
         {
             get
             {
-                return HashResolver.Resolve(_channelInfo.hash);
+                return _channelInfo.Name;
             }
+        }
+
+        public int NumberOfSamples
+        {
+            get { return _channelInfo.numSamples16Bit; }
         }
 
         public int SamplesPerSecond

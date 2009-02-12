@@ -62,6 +62,11 @@ namespace RageLib.Audio.SoundBank.Mono
             }
         }
 
+        public int NumberOfSamples
+        {
+            get { return numSamples16Bit; }
+        }
+
         public int SamplesPerSecond
         {
             get { return samplerate; }

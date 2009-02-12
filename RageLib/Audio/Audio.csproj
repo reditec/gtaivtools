@@ -52,6 +52,7 @@
     </Compile>
     <Compile Include="AudioViewController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SoundBank\IMultichannelSound.cs" />
     <Compile Include="SoundBank\MultiChannel\AdpcmInfo.cs" />
     <Compile Include="SoundBank\MultiChannel\BlockChannelInfo.cs" />
     <Compile Include="SoundBank\MultiChannel\BlockInfo.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="SoundBank\SoundBankMono.cs" />
     <Compile Include="SoundBank\SoundBankMultiChannel.cs" />
     <Compile Include="SoundBank\MultiChannel\SoundWave.cs" />
+    <Compile Include="WaveFile\ChannelMask.cs" />
     <Compile Include="WaveFile\WaveExport.cs" />
     <Compile Include="WaveFile\WaveHeader.cs" />
     <Compile Include="Player\WaveNative.cs" />

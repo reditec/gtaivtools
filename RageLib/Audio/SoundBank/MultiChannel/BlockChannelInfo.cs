@@ -31,7 +31,7 @@ namespace RageLib.Audio.SoundBank.MultiChannel
     {
         public int startIndex;
         public int count;
-        public int offset;
+        public int offsetIntoCodeBlockIndices;
         public int numCodeNibbles;
 
         public BlockChannelInfo(BinaryReader br) : this()
@@ -45,7 +45,7 @@ namespace RageLib.Audio.SoundBank.MultiChannel
         {
             startIndex = br.ReadInt32();
             count = br.ReadInt32();
-            offset = br.ReadInt32();
+            offsetIntoCodeBlockIndices = br.ReadInt32();
             numCodeNibbles = br.ReadInt32();
         }
 

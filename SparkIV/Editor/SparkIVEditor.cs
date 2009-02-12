@@ -34,7 +34,7 @@ namespace SparkIV.Editor
                 var form = new MainForm();
                 form.Show();
 
-                DirectoryInfo parent = new DirectoryInfo(Program.GTAPath).Parent;
+                DirectoryInfo parent = new DirectoryInfo((fs as RealFileSystem).RealDirectory).Parent;
                 string archiveFilename = parent == null ? file.FullName : Path.Combine(parent.FullName, file.FullName);
                 form.OpenFile(archiveFilename, null);
             }

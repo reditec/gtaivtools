@@ -19,6 +19,8 @@
 \**********************************************************************/
 
 using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace RageLib.Audio
@@ -53,8 +55,14 @@ namespace RageLib.Audio
 
         public event EventHandler ExportWAVClicked
         {
-            add { btnExport.Click += value; }
-            remove { btnExport.Click -= value; }
+            add { tsbExportWave.Click += value; }
+            remove { tsbExportWave.Click -= value; }
+        }
+
+        public event EventHandler ExportMultichannelWAVClicked
+        {
+            add { tsbExportMultiChannel.Click += value; }
+            remove { tsbExportMultiChannel.Click -= value; }
         }
 
         public event EventHandler SelectedWaveChanged
@@ -73,6 +81,14 @@ namespace RageLib.Audio
         {
             get { return chkPlayLooped.Checked; }
             set { chkPlayLooped.Checked = value; }
+        }
+
+        public bool SupportsMultichannelExport
+        {
+            set
+            {
+                tsbExportMultiChannel.Enabled = value;
+            }
         }
 
         public AudioWave SelectWave
@@ -96,6 +112,61 @@ namespace RageLib.Audio
         {
             get { return listAudioBlocks.SelectedItem as AudioWave; }
             set { listAudioBlocks.SelectedItem = value; }
+        }
+
+        private void listAudioBlocks_MeasureItem(object sender, MeasureItemEventArgs e)
+        {
+            e.ItemHeight = 32;
+            e.ItemWidth = listAudioBlocks.Width;
+        }
+
+        private void listAudioBlocks_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index < 0)
+                return;
+
+            bool selected = ((e.State & DrawItemState.Selected) != 0);
+
+            var wave = listAudioBlocks.Items[e.Index] as AudioWave;
+            if (wave == null)
+                return;
+
+            string textMain = wave.ToString();
+            string textSub = wave.Length.ToString();
+            Font fontNormal = listAudioBlocks.Font;
+            Font fontBold = new Font(fontNormal, FontStyle.Bold);
+            Brush brushFG = selected ? SystemBrushes.HighlightText : SystemBrushes.ControlText;
+
+            Graphics g = e.Graphics;
+
+            // Clear the background
+            if (selected)
+            {
+                Brush brushBG =
+                    new LinearGradientBrush(e.Bounds, SystemColors.Highlight, SystemColors.HotTrack,
+                                            LinearGradientMode.Horizontal);
+                g.FillRectangle(brushBG, e.Bounds);
+            }
+            else
+            {
+                Brush brushBG = SystemBrushes.Window;
+                g.FillRectangle(brushBG, e.Bounds);
+            }
+
+            const int ListPadding = 2;
+
+            // Draw the text
+            int textLeft = ListPadding * 2;
+
+            SizeF sizeMain = g.MeasureString(textMain, fontBold);
+            SizeF sizeSub = g.MeasureString(textSub, fontNormal);
+
+            int textSpacer = (int)(e.Bounds.Height - (sizeMain.Height + sizeSub.Height + ListPadding * 2)) / 2;
+
+            g.DrawString(textMain, fontBold, brushFG, textLeft, textSpacer + e.Bounds.Top + ListPadding);
+            g.DrawString(textSub, fontNormal, brushFG, textLeft,
+                         textSpacer + sizeMain.Height + e.Bounds.Top + ListPadding);
+
         }
 
     }

@@ -23,41 +23,64 @@ using RageLib.Common;
 
 namespace RageLib.Audio.WaveFile
 {
-    class WaveHeader : IFileAccess
+    internal class WaveHeader : IFileAccess
     {
         // RIFF chunk
-        int RiffChunkID;
-        int RiffChunkSize;
-        int Format;
+        private int RiffChunkID;
+        private int RiffChunkSize;
+        private int Format;
 
         // fmt sub-chunk
         private int FmtChunkID;
         private int FmtChunkSize;
-        private short AudioFormat;
+        private ushort AudioFormat;
         private short NumChannels;
         private int SampleRate;
         private int ByteRate;
         private short BlockAlign;
         private short BitsPerSample;
 
+        // Extra Data
+        private short ExtraDataSize;
+        private short ValidBitsPerSample;
+        private ChannelMask AvailableChannelMask;
+        private uint[] FormatGuid = {0x00000001, 0x00100000, 0xaa000080, 0x719b3800}; // KSDATAFORMAT_SUBTYPE_PCM
+
         // data sub-chunk
         private int DataChunkID;
         private int DataChunkSize;
 
-        public WaveHeader()
-        {
-            RiffChunkID = 0x46464952;   // "RIFF"
-            Format = 0x45564157;        // "WAVE"
+        private const ushort WaveFormatExtensible = 0xFFFE;
 
-            FmtChunkID = 0x20746D66;    // "fmt "
+
+        public WaveHeader() : this(false)
+        {
+        }
+
+        public WaveHeader(bool extensible)
+        {
+            RiffChunkID = 0x46464952; // "RIFF"
+            Format = 0x45564157; // "WAVE"
+
+            FmtChunkID = 0x20746D66; // "fmt "
             FmtChunkSize = 0x10;
             AudioFormat = 1;
-            NumChannels = 1;    // Mono only for now
-            
-            BlockAlign = 2;
+            NumChannels = 1; // will be updated later for extensible
+
+            BlockAlign = 2; // will be updated later for extensible
             BitsPerSample = 16; // 16bit audio only for now
 
-            DataChunkID = 0x61746164;   // "data"
+            DataChunkID = 0x61746164; // "data"
+
+            if (extensible)
+            {
+                FmtChunkSize = 40;
+                AudioFormat = WaveFormatExtensible;
+
+                ExtraDataSize = 22;
+                ValidBitsPerSample = 16; // all bits
+                AvailableChannelMask = ChannelMask.Invalid;
+            }
         }
 
         public int FileSize
@@ -65,7 +88,22 @@ namespace RageLib.Audio.WaveFile
             set
             {
                 RiffChunkSize = value - 8;
-                DataChunkSize = value - 44;
+                DataChunkSize = value - HeaderSize;
+            }
+        }
+
+        public int HeaderSize
+        {
+            get
+            {
+                if (ExtraDataSize > 0)
+                {
+                    return 68;
+                }
+                else
+                {
+                    return 44;
+                }
             }
         }
 
@@ -74,13 +112,37 @@ namespace RageLib.Audio.WaveFile
             set
             {
                 SampleRate = value;
-                ByteRate = value*2;     // 16 bit
+                ByteRate = value*BlockAlign;
+            }
+        }
+
+        public ChannelMask ChannelMask
+        {
+            set
+            {
+                AvailableChannelMask = value;
+
+                int channels = 0;
+                int mask = (int) value;
+                for (var i = 0; i < 32; i++)
+                {
+                    if ((mask & 1) != 0)
+                    {
+                        channels++;
+                    }
+                    mask >>= 1;
+                }
+
+                NumChannels = (short) channels;
+
+                BlockAlign = (short) ((BitsPerSample*NumChannels)/8);
+                ByteRate = SampleRate*BlockAlign;
             }
         }
 
         #region Implementation of IFileAccess
 
-        public void Read(BinaryReader br)
+        public virtual void Read(BinaryReader br)
         {
             RiffChunkID = br.ReadInt32();
             RiffChunkSize = br.ReadInt32();
@@ -88,18 +150,29 @@ namespace RageLib.Audio.WaveFile
 
             FmtChunkID = br.ReadInt32();
             FmtChunkSize = br.ReadInt32();
-            AudioFormat = br.ReadInt16();
+            AudioFormat = br.ReadUInt16();
             NumChannels = br.ReadInt16();
             SampleRate = br.ReadInt32();
             ByteRate = br.ReadInt32();
             BlockAlign = br.ReadInt16();
             BitsPerSample = br.ReadInt16();
 
+            if (AudioFormat == WaveFormatExtensible)
+            {
+                ExtraDataSize = br.ReadInt16();
+                ValidBitsPerSample = br.ReadInt16();
+                AvailableChannelMask = (ChannelMask) br.ReadInt32();
+                FormatGuid[0] = br.ReadUInt32();
+                FormatGuid[1] = br.ReadUInt32();
+                FormatGuid[2] = br.ReadUInt32();
+                FormatGuid[3] = br.ReadUInt32();
+            }
+
             DataChunkID = br.ReadInt32();
             DataChunkSize = br.ReadInt32();
         }
 
-        public void Write(BinaryWriter bw)
+        public virtual void Write(BinaryWriter bw)
         {
             bw.Write(RiffChunkID);
             bw.Write(RiffChunkSize);
@@ -113,6 +186,17 @@ namespace RageLib.Audio.WaveFile
             bw.Write(ByteRate);
             bw.Write(BlockAlign);
             bw.Write(BitsPerSample);
+
+            if (ExtraDataSize > 0)
+            {
+                bw.Write(ExtraDataSize);
+                bw.Write(ValidBitsPerSample);
+                bw.Write((int) AvailableChannelMask);
+                bw.Write(FormatGuid[0]);
+                bw.Write(FormatGuid[1]);
+                bw.Write(FormatGuid[2]);
+                bw.Write(FormatGuid[3]);
+            }
 
             bw.Write(DataChunkID);
             bw.Write(DataChunkSize);

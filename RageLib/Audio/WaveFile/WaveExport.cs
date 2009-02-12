@@ -19,6 +19,7 @@
 \**********************************************************************/
 
 using System.IO;
+using RageLib.Audio.SoundBank;
 
 namespace RageLib.Audio.WaveFile
 {
@@ -26,17 +27,37 @@ namespace RageLib.Audio.WaveFile
     {
         public static void Export(AudioFile file, AudioWave wave, Stream outStream)
         {
+            WaveHeader header = new WaveHeader();
+            
             // Skip the header
-            outStream.Seek(44, SeekOrigin.Begin);
+            outStream.Seek(header.HeaderSize, SeekOrigin.Begin);
 
             // Write the data
             file.SoundBank.ExportAsPCM(wave.Index, file.Stream, outStream);
 
             // Create header and write it
             outStream.Seek(0, SeekOrigin.Begin);
-            WaveHeader header = new WaveHeader();
             header.FileSize = (int)outStream.Length;
             header.SamplesPerSecond = wave.SamplesPerSecond;
+            header.Write(new BinaryWriter(outStream));
+        }
+
+        public static void ExportMultichannel(AudioFile file, Stream outStream)
+        {
+            WaveHeader header = new WaveHeader(true);
+
+            // Skip the header
+            outStream.Seek(header.HeaderSize, SeekOrigin.Begin);
+
+            // Write the data
+            IMultichannelSound sound = file.SoundBank as IMultichannelSound;
+            sound.ExportMultichannelAsPCM(file.Stream, outStream);
+
+            // Create header and write it
+            outStream.Seek(0, SeekOrigin.Begin);
+            header.FileSize = (int)outStream.Length;
+            header.SamplesPerSecond = sound.CommonSamplesPerSecond;
+            header.ChannelMask = sound.ChannelMask;
             header.Write(new BinaryWriter(outStream));
         }
     }
