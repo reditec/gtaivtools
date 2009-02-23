@@ -267,127 +267,45 @@ namespace RageLib.Audio.SoundBank
 
         public void ExportMultichannelAsPCM(Stream soundBankStream, Stream outStream)
         {
-            // Use a memory stream as we seek back and forth.. 
-            // Directly outputting to a filestream when doing this is slow!
+            int numBlocks = _fileHeader.numBlocks;
+            int numChannels = _fileHeader.numChannels;
+            DviAdpcmDecoder.AdpcmState[] state = new DviAdpcmDecoder.AdpcmState[numChannels];
 
-            MemoryStream ms = new MemoryStream();
+            BinaryWriter bw = new BinaryWriter(outStream);
 
-            int[] sampleIndexes = new int[_fileHeader.numChannels];
-            int channelIndexStep = _fileHeader.numChannels * 2;
-            for (int i = 0; i < _fileHeader.numChannels; i++)
+            int[] inverseChannelOrder = new int[numChannels];
+            for (int i = 0; i < numChannels; i++)
             {
-                sampleIndexes[i] = _channelOrder[i]*2;
+                inverseChannelOrder[_channelOrder[i]] = i;
             }
 
-            BinaryWriter writer = new BinaryWriter(ms);
-
-            if (_isCompressed)
+            for (int i = 0; i < numChannels; i++)
             {
+                state[i] = new DviAdpcmDecoder.AdpcmState();
+            }
 
-                DviAdpcmDecoder.AdpcmState[] state = new DviAdpcmDecoder.AdpcmState[_fileHeader.numChannels];
-                for (int current_block = 0; current_block < _fileHeader.numBlocks; current_block++)
+            for (int blockIndex = 0; blockIndex < numBlocks; blockIndex++)
+            {
+                byte[][] blockData = new byte[numChannels][];
+                
+                // Decode the block for all channels
+                for (int channelIndex = 0; channelIndex < numChannels; channelIndex++)
                 {
-                    int offset = _blockInfo[current_block].computed_offset + _sizeBlockHeader;
-                    soundBankStream.Seek(offset, SeekOrigin.Begin);
-                    for (int i = 0; i < _blockInfo[current_block].codeIndices.Length; i++)
+                    MemoryStream ms = new MemoryStream();
+                    ExportWaveBlockAsPCM(channelIndex, blockIndex, ref state[channelIndex], soundBankStream, ms);
+                    blockData[channelIndex] = ms.ToArray();
+                }
+
+                // Now interleave them
+                for (int j = 0; j < blockData[0].Length / 2; j++)
+                {
+                    for (int i = 0; i < numChannels; i++)
                     {
-                        int current_channel = _blockInfo[current_block].codeIndices[i].computed_channel;
-                        if (current_channel >= 0)
-                        {
-                            int adpcmIndex = _blockInfo[current_block].codeIndices[i].computed_adpcmIndex;
-                            if (adpcmIndex < _channelInfo[current_channel].adpcmInfo.states.Length)
-                            {
-                                state[current_channel] = _channelInfo[current_channel].adpcmInfo.states[adpcmIndex];
-                            }
-
-                            byte[] buffer = new byte[BlockSize];
-                            soundBankStream.Read(buffer, 0, BlockSize);
-
-                            for (int j = 0; j < BlockSize; j++)
-                            {
-                                byte code = buffer[j];
-                                writer.BaseStream.Seek(sampleIndexes[current_channel], SeekOrigin.Begin);
-                                writer.Write(DviAdpcmDecoder.DecodeAdpcm((byte) (code & 0xf), ref state[current_channel]));
-                                sampleIndexes[current_channel] += channelIndexStep;
-
-                                writer.BaseStream.Seek(sampleIndexes[current_channel], SeekOrigin.Begin);
-                                writer.Write(DviAdpcmDecoder.DecodeAdpcm((byte) ((code >> 4) & 0xf),
-                                                                         ref state[current_channel]));
-                                sampleIndexes[current_channel] += channelIndexStep;
-                            }
-                        }
-                        else
-                        {
-                            soundBankStream.Seek(BlockSize, SeekOrigin.Current);
-                        }
+                        bw.Write(blockData[inverseChannelOrder[i]][j*2 + 0]);
+                        bw.Write(blockData[inverseChannelOrder[i]][j*2 + 1]);
                     }
                 }
             }
-            else
-            {
-                BinaryReader reader = new BinaryReader(soundBankStream);
-
-                int current_channel = -1;
-                for (int current_block = 0; current_block < _fileHeader.numBlocks; current_block++)
-                {
-                    // loop through code block indices to get the associated channel index
-                    for (int codeBlockArrayIndex = 0; codeBlockArrayIndex < _blockInfo[current_block].codeIndices.Length; codeBlockArrayIndex++)
-                    {
-                        current_channel = _blockInfo[current_block].codeIndices[codeBlockArrayIndex].computed_channel;
-
-                        if (current_channel >= 0)
-                        {
-                            reader.BaseStream.Seek(_blockInfo[current_block].computed_offset + codeBlockArrayIndex * BlockSize + _sizeBlockHeader, SeekOrigin.Begin);
-                            short[] block = new short[BlockSize / 2];
-                            for (int i = 0; i < BlockSize / 2; i++)
-                            {
-                                block[i] = reader.ReadInt16();
-                            }
-
-                            //*******************************
-                            // sometimes offset is negative:
-                            // a block of codes belongs to another channel?!
-                            // i tried alot of things but this was the best solution (at the time i wrote this i knew exactly what it does :))
-                            if (_blockInfo[current_block].channelInfo[current_channel].offsetIntoCodeBlockIndices < 0)
-                            {
-                                _blockInfo[current_block].codeIndices[codeBlockArrayIndex].startIndex -= _blockInfo[current_block].channelInfo[current_channel].offsetIntoCodeBlockIndices;
-                                _blockInfo[current_block].channelInfo[current_channel].offsetIntoCodeBlockIndices = 0;
-                            }
-                            else if (_blockInfo[current_block].channelInfo[current_channel].offsetIntoCodeBlockIndices > 0)
-                            {
-                                int len = _blockInfo[current_block].channelInfo[current_channel].offsetIntoCodeBlockIndices;
-                                short[] newblock = new short[BlockSize / 2 - len];
-                                Array.Copy(block, len, newblock, 0, BlockSize / 2 - len);
-                                block = newblock;
-                                _blockInfo[current_block].channelInfo[current_channel].offsetIntoCodeBlockIndices = 0;
-                            }
-                            //*******************************
-
-                            int count = _blockInfo[current_block].codeIndices[codeBlockArrayIndex].endIndex - _blockInfo[current_block].codeIndices[codeBlockArrayIndex].startIndex;
-                            for (int j = 0; j <= count; j++)
-                            {
-                                writer.BaseStream.Seek(sampleIndexes[current_channel], SeekOrigin.Begin);
-                                writer.Write(block[j]);
-                                sampleIndexes[current_channel] += channelIndexStep;
-                            }
-                        }
-                    }
-                }
-            }
-
-            byte[] msBuffer = ms.GetBuffer();
-
-            int msSize = 0;
-            foreach (var info in _channelInfo)
-            {
-                msSize += info.numSamples16Bit*2;
-            }
-            if (msSize > msBuffer.Length)
-            {
-                msSize = msBuffer.Length;
-            }
-
-            outStream.Write(msBuffer, 0, msSize);
         }
 
         public int CommonSamplesPerSecond
