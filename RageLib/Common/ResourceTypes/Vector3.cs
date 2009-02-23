@@ -1,7 +1,7 @@
-﻿/**********************************************************************\
+/**********************************************************************\
 
  RageLib
- Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
+ Copyright (C) 2009  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -23,22 +23,20 @@ using System.IO;
 
 namespace RageLib.Common.ResourceTypes
 {
-    public struct Vector4 : IFileAccess
+    public struct Vector3 : IFileAccess
     {
         public float X { get; set; }
         public float Y { get; set; }
         public float Z { get; set; }
-        public float W { get; set; }
 
-        public Vector4(float x, float y, float z, float w) : this()
+        public Vector3(float x, float y, float z) : this()
         {
             X = x;
             Y = y;
             Z = z;
-            W = w;
         }
 
-        public Vector4(BinaryReader br) : this()
+        public Vector3(BinaryReader br) : this()
         {
             Read(br);
         }
@@ -48,7 +46,6 @@ namespace RageLib.Common.ResourceTypes
             X = br.ReadSingle();
             Y = br.ReadSingle();
             Z = br.ReadSingle();
-            W = br.ReadSingle();
         }
 
         public void Write(BinaryWriter bw)

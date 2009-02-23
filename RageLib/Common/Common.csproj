@@ -86,6 +86,8 @@
     <Compile Include="ResourceTypes\SimpleArray.cs" />
     <Compile Include="ResourceTypes\SimpleCollection.cs" />
     <Compile Include="ResourceTypes\UnDocData.cs" />
+    <Compile Include="ResourceTypes\Vector2.cs" />
+    <Compile Include="ResourceTypes\Vector3.cs" />
     <Compile Include="ResourceTypes\Vector4.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
