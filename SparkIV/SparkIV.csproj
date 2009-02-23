@@ -102,6 +102,7 @@
     <Compile Include="Viewer\HyperText\HyperTextViewer.cs" />
     <Compile Include="Viewer\IViewer.cs" />
     <Compile Include="Viewer\Models\ModelDictionaryViewer.cs" />
+    <Compile Include="Viewer\Models\ModelFragTypeViewer.cs" />
     <Compile Include="Viewer\Models\ModelViewer.cs" />
     <Compile Include="Viewer\Script\Format\CLikeFormat.cs" />
     <Compile Include="Viewer\Script\Format\CodeFormat.cs" />
