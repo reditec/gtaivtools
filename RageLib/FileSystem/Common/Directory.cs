@@ -26,6 +26,7 @@ namespace RageLib.FileSystem.Common
     public class Directory : FSObject, IEnumerable<FSObject>
     {
         private readonly List<FSObject> _fsObjects = new List<FSObject>();
+        private readonly Dictionary<string, FSObject> _fsObjectsByName = new Dictionary<string, FSObject>();
 
         public override bool IsDirectory
         {
@@ -39,14 +40,9 @@ namespace RageLib.FileSystem.Common
 
         public FSObject FindByName(string name)
         {
-            foreach (var fsObject in this)
-            {
-                if (fsObject.Name == name)
-                {
-                    return fsObject;
-                }
-            }
-            return null;
+            FSObject obj;
+            _fsObjectsByName.TryGetValue(name.ToLower(), out obj);
+            return obj;
         }
 
         #region IEnumerable<FSObject> Members
@@ -66,10 +62,12 @@ namespace RageLib.FileSystem.Common
         public void AddObject(FSObject obj)
         {
             _fsObjects.Add(obj);
+            _fsObjectsByName.Add(obj.Name.ToLower(), obj);
         }
 
         public void DeleteObject(FSObject obj)
         {
+            _fsObjectsByName.Remove(obj.Name.ToLower());
             _fsObjects.Remove(obj);
         }
     }
