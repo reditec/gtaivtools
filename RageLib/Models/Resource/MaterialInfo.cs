@@ -39,7 +39,7 @@ namespace RageLib.Models.Resource
 
         private SimpleArray<uint> Zeros { get; set; }
 
-        private SimpleCollection<uint> Data2 { get; set; }
+        private SimpleCollection<uint> VertexDeclarationUsageFlags { get; set; }
 
         private SimpleCollection<uint> Data3 { get; set; }
 
@@ -65,7 +65,7 @@ namespace RageLib.Models.Resource
 
             Zeros = new SimpleArray<uint>(br, 12, r => r.ReadUInt32());
 
-            Data2 = new SimpleCollection<uint>(br, reader => reader.ReadUInt32());
+            VertexDeclarationUsageFlags = new SimpleCollection<uint>(br, reader => reader.ReadUInt32());
 
             Data3 = new SimpleCollection<uint>(br, reader => reader.ReadUInt32());
         }

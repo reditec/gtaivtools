@@ -18,6 +18,7 @@
 
 \**********************************************************************/
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using RageLib.Common;
@@ -37,7 +38,7 @@ namespace RageLib.Models.Resource
         private ushort Unknown4_1 { get; set; }
         private uint Unknown5 { get; set; }
         private uint Unknown6 { get; set; }
-        private int InfoDataCount { get; set; }
+        public int InfoDataCount { get; set; }
         private uint Unknown8 { get; set; }
         public uint Hash { get; private set; }
         private uint Unknown9 { get; set; }
@@ -54,7 +55,7 @@ namespace RageLib.Models.Resource
         private SimpleArray<byte> InfoDataTypes { get; set; }
         private SimpleArray<uint> InfoDataIDs { get; set; }
 
-        private Dictionary<MaterialInfoDataID, MaterialInfoDataObject> InfoDatas;
+        public Dictionary<MaterialInfoDataID, MaterialInfoDataObject> InfoDatas { get; private set; }
 
         public string ShaderName { get; private set; }
         public string ShaderSPS { get; private set; }
@@ -101,6 +102,7 @@ namespace RageLib.Models.Resource
             Unknown12 = br.ReadUInt32();
             Unknown13 = br.ReadUInt32();
 
+            // shaderFx starts here...
             var shaderNamePtr = ResourceUtil.ReadOffset(br);
             var shaderSpsPtr = ResourceUtil.ReadOffset(br);
 
@@ -140,7 +142,7 @@ namespace RageLib.Models.Resource
                 }
                 catch
                 {
-                    //
+                    InfoDatas.Add((MaterialInfoDataID)InfoDataIDs[i], null);
                 }
             }
         }

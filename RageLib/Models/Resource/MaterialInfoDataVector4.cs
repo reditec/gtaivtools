@@ -23,6 +23,7 @@ using RageLib.Common.ResourceTypes;
 
 namespace RageLib.Models.Resource
 {
+	// rageShaderMaterialParamVector4
     internal class MaterialInfoDataVector4 : MaterialInfoDataObject
     {
         public Vector4 Data { get; private set; }

@@ -35,7 +35,7 @@ namespace RageLib.Models.Resource
         private uint Unknown2 { get; set; }
         private uint DataOffset2 { get; set; }              // piVertexBuffer
 
-        public Vertex[] VertexData { get; private set; }
+        public byte[] RawData { get; private set; }
 
         public GeometryVertexDeclaration VertexDeclaration { get; private set; }
 
@@ -51,12 +51,7 @@ namespace RageLib.Models.Resource
         public void ReadData(BinaryReader br)
         {
             br.BaseStream.Seek(DataOffset, SeekOrigin.Begin);
-
-            VertexData = new Vertex[VertexCount];
-            for (int i = 0; i < VertexCount; i++)
-            {
-                VertexData[i] = new Vertex(br, VertexDeclaration);
-            }
+            RawData = br.ReadBytes((int) (VertexCount*StrideSize));
         }
 
         #region Implementation of IFileAccess

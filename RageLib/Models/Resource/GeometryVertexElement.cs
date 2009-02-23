@@ -1,7 +1,7 @@
 /**********************************************************************\
 
- RageLib
- Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
+ RageLib - Models
+ Copyright (C) 2009  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -18,16 +18,20 @@
 
 \**********************************************************************/
 
-using System;
-using System.IO;
-using RageLib.Textures;
-
-namespace RageLib.Models
+namespace RageLib.Models.Resource
 {
-    public interface IModelFile : IDisposable
+    internal struct GeometryVertexElement
     {
-        void Open(string filename);
-        void Open(Stream stream);
-        ModelNode GetModel(TextureFile textures);
+        public int StreamIndex;
+        public GeometryVertexElementUsage Usage;
+        public int UsageIndex;
+        public int Size;
+        public GeometryVertexElementType Type;
+        /*
+        // The following fields are used for some other purposes, and we don't really need them here
+        public int F14;
+        public short F18;
+        public short F1A;
+         */
     }
 }

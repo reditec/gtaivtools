@@ -19,6 +19,7 @@
 \**********************************************************************/
 
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Windows.Media.Media3D;
 using RageLib.Models.Model3DViewer;
@@ -62,7 +63,7 @@ namespace RageLib.Models
             }
         }
 
-        public Model3D NavigationModel
+        public ModelNode NavigationModel
         {
             set
             {
@@ -78,7 +79,7 @@ namespace RageLib.Models
             }
         }
 
-        private void UpdateTreeView(Model3D model)
+        private void UpdateTreeView(ModelNode model)
         {
             if (!tvNav.IsDisposed)
             {
@@ -87,28 +88,27 @@ namespace RageLib.Models
 
             if (model != null)
             {
-                var node = tvNav.Nodes.Add("Model");
+                var node = tvNav.Nodes.Add(model.Name);
+                node.Tag = model.Model3D;
 
-                node.Tag = model;
-
-                if (model is Model3DGroup)
+                if (model.Children.Count > 0)
                 {
-                    AddModelGroup(model as Model3DGroup, node);
+                    AddModelGroup(model.Children, node);
                 }
             }
         }
 
-        private void AddModelGroup(Model3DGroup group, TreeNode node)
+        private void AddModelGroup(List<ModelNode> group, TreeNode node)
         {
             int index = 1;
-            foreach (var child in group.Children)
+            foreach (var child in group)
             {
-                TreeNode newNode = node.Nodes.Add("Geometry " + index);
-                newNode.Tag = child;
+                TreeNode newNode = node.Nodes.Add(child.Name + " " + index);
+                newNode.Tag = child.Model3D;
 
-                if (child is Model3DGroup)
+                if (child.Children.Count > 0)
                 {
-                    AddModelGroup(child as Model3DGroup, newNode);
+                    AddModelGroup(child.Children, newNode);
                 }
 
                 index++;

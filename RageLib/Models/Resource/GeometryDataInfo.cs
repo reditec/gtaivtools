@@ -39,7 +39,7 @@ namespace RageLib.Models.Resource
         public uint IndexCount { get; private set; }
         public uint FaceCount { get; private set; }
         public ushort VertexCount { get; private set; }
-        public ushort IndicesPerFace { get; private set; }
+        public ushort PrimitiveType { get; private set; }	// RAGE_PRIMITIVE_TYPE
         private uint Unknown9 { get; set; }
         public ushort VertexStride { get; private set; }
         private ushort Unknown10 { get; set; }
@@ -73,7 +73,7 @@ namespace RageLib.Models.Resource
             IndexCount = br.ReadUInt32();
             FaceCount = br.ReadUInt32();
             VertexCount = br.ReadUInt16();
-            IndicesPerFace = br.ReadUInt16();
+            PrimitiveType = br.ReadUInt16();
 
             Unknown9 = br.ReadUInt32();
 

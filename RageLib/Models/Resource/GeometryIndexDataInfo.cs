@@ -31,7 +31,7 @@ namespace RageLib.Models.Resource
         public uint IndexCount { get; private set; }
         public uint DataOffset { get; private set; }
 
-        public ushort[] IndexData { get; private set; }
+        public byte[] RawData { get; private set; }
 
         public GeometryIndexDataInfo()
         {
@@ -45,12 +45,7 @@ namespace RageLib.Models.Resource
         public void ReadData(BinaryReader br)
         {
             br.BaseStream.Seek(DataOffset, SeekOrigin.Begin);
-
-            IndexData = new ushort[IndexCount];
-            for(int i=0; i<IndexCount; i++)
-            {
-                IndexData[i] = br.ReadUInt16();
-            }
+            RawData = br.ReadBytes((int)(IndexCount * 2));
         }
 
         #region Implementation of IFileAccess

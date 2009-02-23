@@ -47,7 +47,7 @@ namespace RageLib.Models.Resource
             var res = new ResourceFile();
             res.Read(stream);
 
-            if (res.Type != ResourceType.Model)
+            if (res.Type != ResourceType.Model && res.Type != ResourceType.ModelFrag)
             {
                 throw new Exception("Not a supported file type.");
             }

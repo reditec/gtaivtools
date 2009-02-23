@@ -1,7 +1,7 @@
 ﻿/**********************************************************************\
 
- RageLib
- Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
+ RageLib - Models
+ Copyright (C) 2009  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -25,25 +25,25 @@ using RageLib.Textures;
 
 namespace RageLib.Models
 {
-    public class ModelFile : IModelFile
+    public class ModelFragTypeFile : IModelFile
     {
-        internal File<DrawableModel> File { get; private set; }
+        internal File<FragTypeModel> File { get; private set; }
 
         public void Open(string filename)
         {
-            File = new File<DrawableModel>();
+            File = new File<FragTypeModel>();
             File.Open(filename);
         }
 
         public void Open(Stream stream)
         {
-            File = new File<DrawableModel>();
+            File = new File<FragTypeModel>();
             File.Open(stream);
         }
 
         public TextureFile EmbeddedTextureFile
         {
-            get { return File.Data.MaterialInfos.TextureDictionary; }
+            get { return File.Data.Drawable.MaterialInfos.TextureDictionary; }
         }
 
         public ModelNode GetModel(TextureFile textures)
@@ -53,7 +53,7 @@ namespace RageLib.Models
 
         public Drawable GetDataModel()
         {
-            return new Drawable(File.Data);
+            return new Drawable(File.Data.Drawable);
         }
 
         #region Implementation of IDisposable
@@ -65,7 +65,6 @@ namespace RageLib.Models
                 File.Dispose();
                 File = null;
             }
-
         }
 
         #endregion

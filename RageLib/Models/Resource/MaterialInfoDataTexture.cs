@@ -23,6 +23,7 @@ using RageLib.Common.Resources;
 
 namespace RageLib.Models.Resource
 {
+	// rageShaderMaterialParamTexture
     internal class MaterialInfoDataTexture : MaterialInfoDataObject
     {
         private uint VTable { get; set; }
@@ -40,6 +41,8 @@ namespace RageLib.Models.Resource
 
         public override void Read(BinaryReader br)
         {
+            // Hmm, this really is just the first "info" data of the real grcTexturePC structure
+
             VTable = br.ReadUInt32();
             Unknown1 = br.ReadUInt32();
             Unknown2 = br.ReadUInt16();

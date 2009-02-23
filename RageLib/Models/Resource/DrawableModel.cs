@@ -34,18 +34,14 @@ namespace RageLib.Models.Resource
 
         private uint BlockMapOffset { get; set; }
 
-        public MaterialInfo MaterialInfos { get; private set; }
+        public MaterialInfo MaterialInfos { get; set; }
         public UnDocData ModelInfo { get; private set; }        // Probably has data on the mount points!
 
         public Vector4 Center { get; private set; }
         public Vector4 BoundsMin { get; private set; }
         public Vector4 BoundsMax { get; private set; }
 
-        public PtrCollection<GeometryInfo> GeometryInfos { get; private set; }
-
-        private uint Zero1 { get; set; }
-        private uint Zero2 { get; set; }
-        private uint Zero3 { get; set; }
+        public PtrCollection<GeometryInfo>[] GeometryInfos { get; private set; }
 
         public Vector4 AbsoluteMax { get; private set; }
 
@@ -66,12 +62,15 @@ namespace RageLib.Models.Resource
 
         public void ReadData(BinaryReader br)
         {
-            foreach (var info in GeometryInfos)
+            foreach (var geometryInfo in GeometryInfos)
             {
-                foreach (var dataInfo in info.GeometryDataInfos)
+                foreach (var info in geometryInfo)
                 {
-                    dataInfo.VertexDataInfo.ReadData(br);
-                    dataInfo.IndexDataInfo.ReadData(br);
+                    foreach (var dataInfo in info.GeometryDataInfos)
+                    {
+                        dataInfo.VertexDataInfo.ReadData(br);
+                        dataInfo.IndexDataInfo.ReadData(br);
+                    }                    
                 }
             }
         }
@@ -97,11 +96,16 @@ namespace RageLib.Models.Resource
             BoundsMin = new Vector4(br);
             BoundsMax = new Vector4(br);
 
-            var geometryInfoOffset = ResourceUtil.ReadOffset(br);
-
-            Zero1 = br.ReadUInt32();
-            Zero2 = br.ReadUInt32();
-            Zero3 = br.ReadUInt32();
+            int geometryInfoCount = 0;
+            var geometryInfoOffsets = new uint[4];
+            for (int i = 0; i < 4; i++)
+            {
+                geometryInfoOffsets[i] = ResourceUtil.ReadOffset(br);
+                if (geometryInfoOffsets[i] != 0)
+                {
+                    geometryInfoCount++;
+                }
+            }
 
             AbsoluteMax = new Vector4(br);
 
@@ -121,14 +125,21 @@ namespace RageLib.Models.Resource
 
             //
 
-            br.BaseStream.Seek(materialInfoOffset, SeekOrigin.Begin);
-            MaterialInfos = new MaterialInfo(br);
+            if (materialInfoOffset != 0)
+            {
+                br.BaseStream.Seek(materialInfoOffset, SeekOrigin.Begin);
+                MaterialInfos = new MaterialInfo(br);
+            }
 
             br.BaseStream.Seek(modelInfoOffset, SeekOrigin.Begin);
             ModelInfo = new UnDocData(br);
 
-            br.BaseStream.Seek(geometryInfoOffset, SeekOrigin.Begin);
-            GeometryInfos = new PtrCollection<GeometryInfo>(br);
+            GeometryInfos = new PtrCollection<GeometryInfo>[geometryInfoCount];
+            for (int i = 0; i < geometryInfoCount; i++)
+            {
+                br.BaseStream.Seek(geometryInfoOffsets[i], SeekOrigin.Begin);
+                GeometryInfos[i] = new PtrCollection<GeometryInfo>(br);
+            }
         }
 
         public void Write(BinaryWriter bw)

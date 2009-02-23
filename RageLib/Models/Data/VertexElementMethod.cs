@@ -1,7 +1,7 @@
 /**********************************************************************\
 
- RageLib
- Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
+ RageLib - Models
+ Copyright (C) 2009  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -18,16 +18,16 @@
 
 \**********************************************************************/
 
-using System;
-using System.IO;
-using RageLib.Textures;
-
-namespace RageLib.Models
+namespace RageLib.Models.Data
 {
-    public interface IModelFile : IDisposable
+    public enum VertexElementMethod
     {
-        void Open(string filename);
-        void Open(Stream stream);
-        ModelNode GetModel(TextureFile textures);
+        Default = 0,
+        PartialU = 1,
+        PartialV = 2,
+        CrossUV = 3,
+        UV = 4,
+        Lookup = 5,
+        LookupPresampled = 6,
     }
 }

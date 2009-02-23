@@ -1,7 +1,7 @@
-/**********************************************************************\
+﻿/**********************************************************************\
 
- RageLib
- Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
+ RageLib - Models
+ Copyright (C) 2009  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -18,16 +18,23 @@
 
 \**********************************************************************/
 
-using System;
-using System.IO;
-using RageLib.Textures;
+using System.Collections.Generic;
+using RageLib.Common.ResourceTypes;
+using RageLib.Models.Resource;
 
-namespace RageLib.Models
+namespace RageLib.Models.Data
 {
-    public interface IModelFile : IDisposable
+    public class Model
     {
-        void Open(string filename);
-        void Open(Stream stream);
-        ModelNode GetModel(TextureFile textures);
+        public List<Geometry> Geometries { get; private set; }
+
+        internal Model(PtrCollection<GeometryInfo> infos)
+        {
+            Geometries = new List<Geometry>(infos.Count);
+            foreach (var info in infos)
+            {
+                Geometries.Add(new Geometry(info));
+            }
+        }
     }
 }

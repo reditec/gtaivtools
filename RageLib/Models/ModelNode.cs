@@ -1,7 +1,7 @@
-/**********************************************************************\
+﻿/**********************************************************************\
 
  RageLib
- Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
+ Copyright (C) 2009  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -18,16 +18,22 @@
 
 \**********************************************************************/
 
-using System;
-using System.IO;
-using RageLib.Textures;
+using System.Collections.Generic;
+using System.Windows.Media.Media3D;
 
 namespace RageLib.Models
 {
-    public interface IModelFile : IDisposable
+    public class ModelNode
     {
-        void Open(string filename);
-        void Open(Stream stream);
-        ModelNode GetModel(TextureFile textures);
+        public List<ModelNode> Children { get; set; }
+        public string Name { get; set; }
+        internal Model3D Model3D { get; set; }
+        public object DataModel { get; set; }
+        public bool NoCount { get; set; }
+        
+        public ModelNode()
+        {
+            Children = new List<ModelNode>();
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿/**********************************************************************\
 
- RageLib
- Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
+ RageLib - Models
+ Copyright (C) 2008-2009  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 
 \**********************************************************************/
 
+using System.Collections.Generic;
 using System.IO;
 using RageLib.Common;
 
@@ -25,29 +26,93 @@ namespace RageLib.Models.Resource
 {
     internal class GeometryVertexDeclaration : IFileAccess
     {
-        public uint Flags { get; set; }
+        public uint UsageFlags { get; set; }
         public ushort Stride { get; set; }
-        public byte Unknown1 { get; set; }
+        public byte AlterateDecoder { get; set; }
         public byte Type { get; set; }
-        public uint Unknown2 { get; set; }
-        public uint Unknown3 { get; set; }
+        public ulong DeclarationTypes { get; set; }
 
         public GeometryVertexDeclaration(BinaryReader br)
         {
             Read(br);
         }
 
+        private static GeometryVertexElementType GetType(ulong typeDecl, int index)
+        {
+            return (GeometryVertexElementType)((typeDecl >> (4 * index)) & 0xF);
+        }
+
+        private static int GetSize(GeometryVertexElementType type)
+        {
+            int[] sizeMapping = {2, 4, 6, 8, 4, 8, 12, 16, 4, 4, 4, 0, 0, 0, 0, 0};
+            return sizeMapping[(int) type];
+        }
+
+        private void DecodeSingleElement(ICollection<GeometryVertexElement> list, int index, int streamIndex, GeometryVertexElementUsage usage, int usageIndex)
+        {
+            DecodeSingleElement(list, index, streamIndex, usage, ref usageIndex);
+        }
+
+        private void DecodeSingleElement(ICollection<GeometryVertexElement> list, int index, int streamIndex, GeometryVertexElementUsage usage, ref int usageIndex)
+        {
+            var declTypes = DeclarationTypes;
+            var usageFlags = UsageFlags;
+            var usageFlagMask = (uint)(1 << index);
+            var type = GetType(declTypes, index);
+            var size = GetSize(type);
+
+            if ((usageFlags & usageFlagMask) != 0)
+            {
+                var element = new GeometryVertexElement()
+                                  {
+                                      UsageIndex = usageIndex++,
+                                      StreamIndex = streamIndex,
+                                      Usage = usage,
+                                      Type = type,
+                                      Size = size,
+                                  };
+                list.Add(element);
+            }
+        }
+
+        public GeometryVertexElement[] DecodeAsVertexElements()
+        {
+            var elements = new List<GeometryVertexElement>();
+            int streamIndex = 0;
+            int usageIndexPosition = 0;
+            int usageIndexBlendWeight = 0;
+            int usageIndexBlendIndices = 0;
+            int usageIndexNormal = 0;
+            int usageIndexTexture = 0;
+            int usageIndexTangent = 0;
+            int usageIndexBinormal = 0;
+
+            DecodeSingleElement(elements, 0, streamIndex, GeometryVertexElementUsage.Position, ref usageIndexPosition);
+            DecodeSingleElement(elements, 1, streamIndex, GeometryVertexElementUsage.BlendWeight, ref usageIndexBlendWeight);
+            DecodeSingleElement(elements, 2, streamIndex, GeometryVertexElementUsage.BlendIndices, ref usageIndexBlendIndices);
+            DecodeSingleElement(elements, 3, streamIndex, GeometryVertexElementUsage.Normal, ref usageIndexNormal);
+            DecodeSingleElement(elements, 4, streamIndex, GeometryVertexElementUsage.Color, 0); // Diffuse?
+            DecodeSingleElement(elements, 5, streamIndex, GeometryVertexElementUsage.Color, 1); // Specular?
+            for(int i = 6; i<14; i++) // 8
+            {
+                DecodeSingleElement(elements, i, streamIndex, GeometryVertexElementUsage.TextureCoordinate, ref usageIndexTexture);
+            }
+            DecodeSingleElement(elements, 14, streamIndex, GeometryVertexElementUsage.Tangent, ref usageIndexTangent);
+            DecodeSingleElement(elements, 15, streamIndex, GeometryVertexElementUsage.Binormal, ref usageIndexBinormal);
+
+            return elements.ToArray();
+        }
+
         #region Implementation of IFileAccess
 
         public void Read(BinaryReader br)
         {
-            Flags = br.ReadUInt32();
+            UsageFlags = br.ReadUInt32();
             Stride = br.ReadUInt16();
-            Unknown1 = br.ReadByte();       // Stream index probably?
+            AlterateDecoder = br.ReadByte();
             Type = br.ReadByte();
 
-            Unknown2 = br.ReadUInt32();
-            Unknown3 = br.ReadUInt32();
+            DeclarationTypes = br.ReadUInt64();
         }
 
         public void Write(BinaryWriter bw)

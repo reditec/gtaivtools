@@ -19,7 +19,7 @@
 \**********************************************************************/
 
 using System.IO;
-using System.Windows.Media.Media3D;
+using RageLib.Models.Data;
 using RageLib.Models.Resource;
 using RageLib.Textures;
 
@@ -41,16 +41,19 @@ namespace RageLib.Models
             File.Open(stream);
         }
 
-        public Model3D GetModel(TextureFile textures)
+        public ModelNode GetModel(TextureFile textures)
         {
-            var model = new Model3DGroup();
+            return ModelGenerator.GenerateModel(File.Data, textures);
+        }
 
-            foreach (var entry in File.Data.Entries)
-            {
-                model.Children.Add(ModelGenerator.GenerateModel(entry, textures));
-            }
+        public int ModelsInDictionary
+        {
+            get { return File.Data.Entries.Count; }
+        }
 
-            return model;
+        public Drawable GetDataModel(int modelIndex)
+        {
+            return new Drawable(File.Data.Entries[modelIndex]);
         }
 
         #region Implementation of IDisposable
