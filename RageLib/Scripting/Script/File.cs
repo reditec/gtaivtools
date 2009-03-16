@@ -48,24 +48,51 @@ namespace RageLib.Scripting.Script
 
             Header.Read(br);
 
-            if (Header.Identifier != Header.Magic && Header.Identifier != Header.MagicEncrypted)
+            if (Header.Identifier != Header.Magic && 
+                Header.Identifier != Header.MagicEncrypted && 
+                Header.Identifier != Header.MagicEncryptedCompressed)
             {
                 stream.Close();
                 return false;
             }
 
+            byte[] code, data1, data2;
             bool encrypted = Header.Identifier == Header.MagicEncrypted;
+            bool encryptedCompressed = Header.Identifier == Header.MagicEncryptedCompressed;
 
-            Code = br.ReadBytes(Header.CodeSize);
-            byte[] data1 = br.ReadBytes(Header.LocalVarCount*4);
-            byte[] data2 = br.ReadBytes(Header.GlobalVarCount*4);
-
-            if (encrypted)
+            if (encryptedCompressed)
             {
-                Code = DataUtil.Decrypt(Code);
-                data1 = DataUtil.Decrypt(data1);
-                data2 = DataUtil.Decrypt(data2);
+                byte[] encryptedData = br.ReadBytes(Header.CompressedSize);
+                byte[] compressedData = DataUtil.Decrypt(encryptedData);
+
+                IntPtr handle = RageZip.InflateInit(compressedData, compressedData.Length);
+                
+                code = new byte[Header.CodeSize];
+                RageZip.InflateProcess(handle, code, code.Length);
+
+                data1 = new byte[Header.LocalVarCount*4];
+                RageZip.InflateProcess(handle, data1, data1.Length);
+
+                data2 = new byte[Header.GlobalVarCount * 4];
+                RageZip.InflateProcess(handle, data2, data2.Length);
+
+                RageZip.InflateEnd(handle);
             }
+            else
+            {
+                code = br.ReadBytes(Header.CodeSize);
+                data1 = br.ReadBytes(Header.LocalVarCount * 4);
+                data2 = br.ReadBytes(Header.GlobalVarCount * 4);
+
+                if (encrypted)
+                {
+                    code = DataUtil.Decrypt(code);
+                    data1 = DataUtil.Decrypt(data1);
+                    data2 = DataUtil.Decrypt(data2);
+                }
+            }
+
+            Code = code;
 
             LocalVars = new uint[Header.LocalVarCount];
             for (int i = 0; i < Header.LocalVarCount; i++)

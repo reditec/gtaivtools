@@ -18,6 +18,7 @@
 
 \**********************************************************************/
 
+using System;
 using System.Security.Cryptography;
 using ICSharpCode.SharpZipLib.Zip.Compression;
 
@@ -25,8 +26,11 @@ namespace RageLib.Common
 {
     public static class DataUtil
     {
-        public static byte[] Decrypt(byte[] data)
+        public static byte[] Decrypt(byte[] dataIn)
         {
+            byte[] data = new byte[dataIn.Length];
+            dataIn.CopyTo(data, 0);
+
             // Create our Rijndael class
             Rijndael rj = Rijndael.Create();
             rj.BlockSize = 128;

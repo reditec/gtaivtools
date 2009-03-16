@@ -27,6 +27,7 @@ namespace RageLib.Scripting.Script
     {
         public uint Magic = 0x0d524353;
         public uint MagicEncrypted = 0x0e726373;
+        public uint MagicEncryptedCompressed = 0x0e726353;
 
         public Header(File file)
         {
@@ -40,6 +41,7 @@ namespace RageLib.Scripting.Script
         public int ScriptFlags { get; set; } // 
         public int GlobalsSignature { get; set; } // some hash definitely.. always seems to be 0x7DD1E61C for normal files
                                           // 0x31B42CB2 for navgen_main.sco
+        public int CompressedSize { get; set; }
 
         public File File { get; set; }
 
@@ -53,6 +55,11 @@ namespace RageLib.Scripting.Script
             GlobalVarCount = br.ReadInt32();
             ScriptFlags = br.ReadInt32();
             GlobalsSignature = br.ReadInt32();
+
+            if (Identifier == MagicEncryptedCompressed)
+            {
+                CompressedSize = br.ReadInt32();
+            }
         }
 
         public void Write(BinaryWriter bw)

@@ -169,10 +169,6 @@
     <EmbeddedResource Include="Viewer\Xml\defaultss.xslt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Vendor\libsquish.dll">
-      <Link>libsquish.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="SparkIV.Config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
