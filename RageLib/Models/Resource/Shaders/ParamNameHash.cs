@@ -18,32 +18,12 @@
 
 \**********************************************************************/
 
-using System.IO;
-using RageLib.Common.ResourceTypes;
-
-namespace RageLib.Models.Resource
+namespace RageLib.Models.Resource.Shaders
 {
-	// rageShaderMaterialParamMatrix44
-    internal class MaterialInfoDataMatrix : MaterialInfoDataObject
+    public enum ParamNameHash
     {
-        public Vector4[] Rows { get; private set; }
-
-        #region Overrides of MaterialInfoDataObject
-
-        public override void Read(BinaryReader br)
-        {
-            Rows = new Vector4[4];
-            for (int i = 0; i < Rows.Length; i++ )
-            {
-                Rows[i] = new Vector4(br);
-            }
-        }
-
-        public override void Write(BinaryWriter bw)
-        {
-
-        }
-
-        #endregion
+        Texture = 0x2b5170fd,
+        SpecularTexture = 0x608799c6,
+        NormalTexture = 0x46b7c64f,
     }
 }

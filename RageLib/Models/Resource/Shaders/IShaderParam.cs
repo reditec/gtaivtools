@@ -1,7 +1,7 @@
 /**********************************************************************\
 
- RageLib
- Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
+ RageLib - Models
+ Copyright (C) 2009  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -18,12 +18,11 @@
 
 \**********************************************************************/
 
-namespace RageLib.Models.Resource
+using RageLib.Common;
+
+namespace RageLib.Models.Resource.Shaders
 {
-    public enum MaterialInfoDataID
+    internal interface IShaderParam : IFileAccess
     {
-        Texture = 0x2b5170fd,
-        SpecularTexture = 0x608799c6,
-        NormalTexture = 0x46b7c64f,
     }
 }

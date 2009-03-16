@@ -1,7 +1,7 @@
 /**********************************************************************\
 
- RageLib
- Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
+ RageLib - Models
+ Copyright (C) 2009  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -18,28 +18,21 @@
 
 \**********************************************************************/
 
-using System.IO;
-using RageLib.Common.ResourceTypes;
-
-namespace RageLib.Models.Resource
+namespace RageLib.Models.Resource.Models
 {
-	// rageShaderMaterialParamVector4
-    internal class MaterialInfoDataVector4 : MaterialInfoDataObject
+    internal enum VertexElementUsage
     {
-        public Vector4 Data { get; private set; }
-
-        #region Overrides of MaterialInfoDataObject
-
-        public override void Read(BinaryReader br)
-        {
-            Data = new Vector4(br);
-        }
-
-        public override void Write(BinaryWriter bw)
-        {
-            
-        }
-
-        #endregion
+        Position = 0,
+        PositionT = 1,
+        Normal = 2,
+        Binormal = 3,
+        Tangent = 4,
+        TextureCoordinate = 5,
+        BlendWeight = 6,
+        BlendIndices = 7,
+        Color = 8,
+        Unknown1 = 9,
+        Unknown2 = 10,
+        Unknown3 = 11,
     }
 }

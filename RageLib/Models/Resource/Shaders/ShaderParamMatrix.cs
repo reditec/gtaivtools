@@ -18,25 +18,27 @@
 
 \**********************************************************************/
 
-using System;
+using System.IO;
+using RageLib.Common.ResourceTypes;
 
-namespace RageLib.Models.Resource
+namespace RageLib.Models.Resource.Shaders
 {
-    internal static class MaterialInfoDataObjectFactory
+    internal class ShaderParamMatrix : IShaderParam
     {
-        public static MaterialInfoDataObject Create(MaterialInfoDataType type)
+        public Matrix44 Data { get; private set; }
+
+        #region Overrides of MaterialInfoDataObject
+
+        public void Read(BinaryReader br)
         {
-            switch(type)
-            {
-                case MaterialInfoDataType.Texture:
-                    return new MaterialInfoDataTexture();
-                case MaterialInfoDataType.Vector4:
-                    return new MaterialInfoDataVector4();
-                case MaterialInfoDataType.Matrix:
-                    return new MaterialInfoDataMatrix();
-                default:
-                    throw new ArgumentOutOfRangeException("type");
-            }
+            Data = new Matrix44(br);
         }
+
+        public void Write(BinaryWriter bw)
+        {
+
+        }
+
+        #endregion
     }
 }

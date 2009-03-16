@@ -19,7 +19,7 @@
 \**********************************************************************/
 
 using System.Collections.Generic;
-using RageLib.Models.Resource;
+using RageLib.Models.Resource.Shaders;
 
 namespace RageLib.Models.Data
 {
@@ -28,12 +28,12 @@ namespace RageLib.Models.Data
         public string ShaderName { get; private set; }
         public Dictionary<uint, MaterialParam> Parameters { get; private set; }
 
-        internal Material(MaterialInfoEntry info)
+        internal Material(ShaderFx info)
         {
             ShaderName = info.ShaderName;
 
-            Parameters = new Dictionary<uint, MaterialParam>(info.InfoDataCount);
-            foreach (var data in info.InfoDatas)
+            Parameters = new Dictionary<uint, MaterialParam>(info.ShaderParamCount);
+            foreach (var data in info.ShaderParams)
             {
                 Parameters.Add((uint) data.Key, MaterialParam.Create((uint) data.Key, data.Value));
             }

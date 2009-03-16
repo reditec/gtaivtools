@@ -1,4 +1,4 @@
-/**********************************************************************\
+﻿/**********************************************************************\
 
  RageLib - Models
  Copyright (C) 2009  Arushan/Aru <oneforaru at gmail.com>
@@ -18,18 +18,13 @@
 
 \**********************************************************************/
 
-using RageLib.Models.Resource.Shaders;
-
-namespace RageLib.Models.Data
+namespace RageLib.Models.Export
 {
-    public class MaterialParamTexture : MaterialParam
+    public interface IExporter
     {
-        public string TextureName { get; private set; }
+        string Name { get; }
+        string Extension { get; }
 
-        internal MaterialParamTexture(uint hash, ShaderParamTexture texture) 
-            : base(hash)
-        {
-            TextureName = texture.TextureName;
-        }
+        void Export(Data.Drawable drawable, string filename);
     }
 }

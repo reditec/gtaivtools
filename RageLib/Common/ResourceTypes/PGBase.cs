@@ -1,6 +1,6 @@
-/**********************************************************************\
+﻿/**********************************************************************\
 
- RageLib - Models
+ RageLib
  Copyright (C) 2009  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
@@ -18,20 +18,29 @@
 
 \**********************************************************************/
 
-namespace RageLib.Models.Resource
+using System.IO;
+using RageLib.Common.Resources;
+
+namespace RageLib.Common.ResourceTypes
 {
-    internal struct GeometryVertexElement
+    public class PGBase : DATBase, IFileAccess
     {
-        public int StreamIndex;
-        public GeometryVertexElementUsage Usage;
-        public int UsageIndex;
-        public int Size;
-        public GeometryVertexElementType Type;
-        /*
-        // The following fields are used for some other purposes, and we don't really need them here
-        public int F14;
-        public short F18;
-        public short F1A;
-         */
+        public uint BlockMapAddress { get; set; }
+
+        #region Implementation of IFileAccess
+
+        public new void Read(BinaryReader br)
+        {
+            base.Read(br);
+            BlockMapAddress = ResourceUtil.ReadOffset(br);
+        }
+
+        public new void Write(BinaryWriter bw)
+        {
+            base.Write(bw);
+            bw.Write(BlockMapAddress);
+        }
+
+        #endregion
     }
 }

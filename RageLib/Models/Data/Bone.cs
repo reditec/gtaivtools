@@ -23,17 +23,36 @@ using RageLib.Common.ResourceTypes;
 
 namespace RageLib.Models.Data
 {
-    public class Model
+    public class Bone
     {
-        public List<Geometry> Geometries { get; private set; }
+        public Bone Parent { get; private set; }
+        public string Name { get; private set; }
+        public int Index { get; private set; }
+        
+        public Vector4 Position { get; private set; }
+        public Vector4 Rotation { get; private set; }
 
-        internal Model(PtrCollection<Resource.Models.Model> infos)
+        public List<Bone> Children { get; private set; }
+
+        internal Bone(Resource.Skeletons.Bone bone, Bone parent)
         {
-            Geometries = new List<Geometry>(infos.Count);
-            foreach (var info in infos)
-            {
-                Geometries.Add(new Geometry(info));
-            }
+            Parent = parent;
+            Name = bone.Name;
+            Index = bone.BoneIndex;
+
+            Position = bone.Position;
+            Rotation = bone.RotationEuler;
+
+            Children = new List<Bone>();
         }
+
+        #region Overrides of Object
+
+        public override string ToString()
+        {
+            return Name;
+        }
+
+        #endregion
     }
 }

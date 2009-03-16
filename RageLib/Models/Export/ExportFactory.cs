@@ -18,22 +18,39 @@
 
 \**********************************************************************/
 
-using System.Collections.Generic;
-using RageLib.Common.ResourceTypes;
+using System.Text;
 
-namespace RageLib.Models.Data
+namespace RageLib.Models.Export
 {
-    public class Model
+    internal static class ExportFactory
     {
-        public List<Geometry> Geometries { get; private set; }
+        private static readonly IExporter[] exporterTypes;
 
-        internal Model(PtrCollection<Resource.Models.Model> infos)
+        static ExportFactory()
         {
-            Geometries = new List<Geometry>(infos.Count);
-            foreach (var info in infos)
+            exporterTypes = new[]
+                               {
+                                   new StudiomdlExport(),
+                               };
+        }
+
+        public static string GenerateFilterString()
+        {
+            var sb = new StringBuilder();
+            foreach (var type in exporterTypes)
             {
-                Geometries.Add(new Geometry(info));
+                if (sb.Length > 0)
+                {
+                    sb.Append("|");
+                }
+                sb.AppendFormat("{0} (*.{1})|*.{1}", type.Name, type.Extension);
             }
+            return sb.ToString();
+        }
+
+        public static IExporter GetExporter( int exporterIndex )
+        {
+            return exporterTypes[exporterIndex];
         }
     }
 }

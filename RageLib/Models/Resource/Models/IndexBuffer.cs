@@ -21,23 +21,22 @@
 using System.IO;
 using RageLib.Common;
 using RageLib.Common.Resources;
+using RageLib.Common.ResourceTypes;
 
-namespace RageLib.Models.Resource
+namespace RageLib.Models.Resource.Models
 {
-    // grcIndexBufferD3D 
-    internal class GeometryIndexDataInfo : IFileAccess
+    internal class IndexBuffer : DATBase, IFileAccess
     {
-        private uint VTable { get; set; }
         public uint IndexCount { get; private set; }
         public uint DataOffset { get; private set; }
 
         public byte[] RawData { get; private set; }
 
-        public GeometryIndexDataInfo()
+        public IndexBuffer()
         {
         }
 
-        public GeometryIndexDataInfo(BinaryReader br)
+        public IndexBuffer(BinaryReader br)
         {
             Read(br);
         }
@@ -50,9 +49,10 @@ namespace RageLib.Models.Resource
 
         #region Implementation of IFileAccess
 
-        public void Read(BinaryReader br)
+        public new void Read(BinaryReader br)
         {
-            VTable = br.ReadUInt32();
+            base.Read(br);
+
             IndexCount = br.ReadUInt32();
 
             DataOffset = ResourceUtil.ReadDataOffset(br);
@@ -60,7 +60,7 @@ namespace RageLib.Models.Resource
             var p1Offset = ResourceUtil.ReadOffset(br);
         }
 
-        public void Write(BinaryWriter bw)
+        public new void Write(BinaryWriter bw)
         {
             throw new System.NotImplementedException();
         }

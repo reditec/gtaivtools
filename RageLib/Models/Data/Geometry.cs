@@ -19,7 +19,6 @@
 \**********************************************************************/
 
 using System.Collections.Generic;
-using RageLib.Models.Resource;
 
 namespace RageLib.Models.Data
 {
@@ -27,14 +26,14 @@ namespace RageLib.Models.Data
     {
         public List<Mesh> Meshes { get; private set; }
 
-        internal Geometry(GeometryInfo info)
+        internal Geometry(Resource.Models.Model info)
         {
             int index = 0;
-            Meshes = new List<Mesh>(info.GeometryDataInfos.Count);
-            foreach (var dataInfo in info.GeometryDataInfos)
+            Meshes = new List<Mesh>(info.Geometries.Count);
+            foreach (var dataInfo in info.Geometries)
             {
                 var mesh = new Mesh(dataInfo);
-                mesh.MaterialIndex = info.MaterialMappings[index++];
+                mesh.MaterialIndex = info.ShaderMappings[index++];
                 Meshes.Add(mesh);
             }
         }

@@ -20,7 +20,6 @@
 
 using System;
 using System.Collections.Generic;
-using RageLib.Models.Resource;
 
 namespace RageLib.Models.Data
 {
@@ -28,7 +27,7 @@ namespace RageLib.Models.Data
     {
         public VertexElement[] Elements { get; private set; }
 
-        internal VertexDeclaration(GeometryVertexDeclaration declaration)
+        internal VertexDeclaration(Resource.Models.VertexDeclaration declaration)
         {
             if (declaration.AlterateDecoder == 1)
             {

@@ -34,6 +34,7 @@ namespace RageLib.Models.Data
         public VertexDeclaration VertexDeclaration { get; private set; }
         public bool VertexHasNormal { get; set; }
         public bool VertexHasTexture { get; set; }
+        public bool VertexHasBlendInfo { get; set; }
         public int VertexStride { get; private set; }
         
         public int IndexCount { get; private set; }
@@ -41,7 +42,7 @@ namespace RageLib.Models.Data
 
         public int MaterialIndex { get; set; }
 
-        internal Mesh(GeometryDataInfo info)
+        internal Mesh(Resource.Models.Geometry info)
         {
             PrimitiveType = (PrimitiveType) info.PrimitiveType;
             
@@ -49,12 +50,12 @@ namespace RageLib.Models.Data
             
             VertexCount = info.VertexCount;
             VertexStride = info.VertexStride;
-            VertexData = info.VertexDataInfo.RawData;
+            VertexData = info.VertexBuffer.RawData;
 
             IndexCount = (int) info.IndexCount;
-            IndexData = info.IndexDataInfo.RawData;
+            IndexData = info.IndexBuffer.RawData;
 
-            VertexDeclaration = new VertexDeclaration(info.VertexDataInfo.VertexDeclaration);
+            VertexDeclaration = new VertexDeclaration(info.VertexBuffer.VertexDeclaration);
             foreach (var element in VertexDeclaration.Elements)
             {
                 if (element.Usage == VertexElementUsage.Normal)
@@ -64,6 +65,10 @@ namespace RageLib.Models.Data
                 if (element.Usage == VertexElementUsage.TextureCoordinate)
                 {
                     VertexHasTexture = true;
+                }
+                if (element.Usage == VertexElementUsage.BlendIndices)
+                {
+                    VertexHasBlendInfo = true;
                 }
             }
         }

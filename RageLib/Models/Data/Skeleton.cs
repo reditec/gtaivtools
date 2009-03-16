@@ -19,21 +19,39 @@
 \**********************************************************************/
 
 using System.Collections.Generic;
-using RageLib.Common.ResourceTypes;
 
 namespace RageLib.Models.Data
 {
-    public class Model
+    public class Skeleton
     {
-        public List<Geometry> Geometries { get; private set; }
+        public Bone RootBone { get; private set; }
 
-        internal Model(PtrCollection<Resource.Models.Model> infos)
+        private Dictionary<int, Bone> _bonesByIndex;
+
+        internal Skeleton(Resource.Skeletons.Skeleton skeleton)
         {
-            Geometries = new List<Geometry>(infos.Count);
-            foreach (var info in infos)
+            _bonesByIndex = new Dictionary<int, Bone>();
+            RootBone = BuildBone(skeleton.Bones[0], null);
+        }
+
+        public Bone this[int index]
+        {
+            get { return _bonesByIndex[index]; }
+        }
+
+        private Bone BuildBone(Resource.Skeletons.Bone bone, Bone parent)
+        {
+            var dataBone = new Bone(bone, parent);
+            _bonesByIndex.Add(dataBone.Index, dataBone);
+
+            var childBone = bone.FirstChild;
+            while(childBone != null)
             {
-                Geometries.Add(new Geometry(info));
+                dataBone.Children.Add( BuildBone(childBone, dataBone) );
+                childBone = childBone.NextSibling;
             }
+
+            return dataBone;
         }
     }
 }

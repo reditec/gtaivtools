@@ -19,29 +19,29 @@
 \**********************************************************************/
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using RageLib.Common;
 using RageLib.Common.Resources;
 using RageLib.Common.ResourceTypes;
+using RageLib.Models.Resource.Models;
+using RageLib.Models.Resource.Shaders;
+using RageLib.Models.Resource.Skeletons;
 using RageLib.Textures;
 
 namespace RageLib.Models.Resource
 {
-    // gtaDrawable 
-    class DrawableModel : IFileAccess, IDataReader, IEmbeddedResourceReader, IDisposable
+    // gtaDrawable : rmcDrawable : rmcDrawableBase
+    class DrawableModel : PGBase, IFileAccess, IDataReader, IEmbeddedResourceReader, IDisposable
     {
-        public uint VTable { get; private set; }
-
-        private uint BlockMapOffset { get; set; }
-
-        public MaterialInfo MaterialInfos { get; set; }
-        public UnDocData ModelInfo { get; private set; }        // Probably has data on the mount points!
+        public ShaderGroup ShaderGroup { get; set; }
+        public Skeleton Skeleton { get; private set; }
 
         public Vector4 Center { get; private set; }
         public Vector4 BoundsMin { get; private set; }
         public Vector4 BoundsMax { get; private set; }
 
-        public PtrCollection<GeometryInfo>[] GeometryInfos { get; private set; }
+        public PtrCollection<Model>[] ModelCollection { get; private set; }
 
         public Vector4 AbsoluteMax { get; private set; }
 
@@ -62,14 +62,14 @@ namespace RageLib.Models.Resource
 
         public void ReadData(BinaryReader br)
         {
-            foreach (var geometryInfo in GeometryInfos)
+            foreach (var geometryInfo in ModelCollection)
             {
                 foreach (var info in geometryInfo)
                 {
-                    foreach (var dataInfo in info.GeometryDataInfos)
+                    foreach (var dataInfo in info.Geometries)
                     {
-                        dataInfo.VertexDataInfo.ReadData(br);
-                        dataInfo.IndexDataInfo.ReadData(br);
+                        dataInfo.VertexBuffer.ReadData(br);
+                        dataInfo.IndexBuffer.ReadData(br);
                     }                    
                 }
             }
@@ -77,33 +77,29 @@ namespace RageLib.Models.Resource
 
         #region IFileAccess Members
 
-        public void Read(BinaryReader br)
+        public new void Read(BinaryReader br)
         {
-            // rage::datBase
-            VTable = br.ReadUInt32();
-
-            // rage::pgBase
-            BlockMapOffset = ResourceUtil.ReadOffset(br);
+            base.Read(br);
 
             // rage::rmcDrawableBase
             //    rage::rmcDrawable
             //        gtaDrawable
 
-            var materialInfoOffset = ResourceUtil.ReadOffset(br);
-            var modelInfoOffset = ResourceUtil.ReadOffset(br);
+            var shaderGroupOffset = ResourceUtil.ReadOffset(br);
+            var skeletonOffset = ResourceUtil.ReadOffset(br);
 
             Center = new Vector4(br);
             BoundsMin = new Vector4(br);
             BoundsMax = new Vector4(br);
 
-            int geometryInfoCount = 0;
-            var geometryInfoOffsets = new uint[4];
+            int levelOfDetailCount = 0;
+            var modelOffsets = new uint[4];
             for (int i = 0; i < 4; i++)
             {
-                geometryInfoOffsets[i] = ResourceUtil.ReadOffset(br);
-                if (geometryInfoOffsets[i] != 0)
+                modelOffsets[i] = ResourceUtil.ReadOffset(br);
+                if (modelOffsets[i] != 0)
                 {
-                    geometryInfoCount++;
+                    levelOfDetailCount++;
                 }
             }
 
@@ -120,29 +116,34 @@ namespace RageLib.Models.Resource
             Unk3 = br.ReadUInt32();
             Unk4 = br.ReadUInt32();
             Unk5 = br.ReadUInt32();
+
+            // Collection<LightAttrs>
             Unk6 = br.ReadUInt32();
             Unk7 = br.ReadUInt32();
 
-            //
+            // The data follows:
 
-            if (materialInfoOffset != 0)
+            if (shaderGroupOffset != 0)
             {
-                br.BaseStream.Seek(materialInfoOffset, SeekOrigin.Begin);
-                MaterialInfos = new MaterialInfo(br);
+                br.BaseStream.Seek(shaderGroupOffset, SeekOrigin.Begin);
+                ShaderGroup = new ShaderGroup(br);
             }
 
-            br.BaseStream.Seek(modelInfoOffset, SeekOrigin.Begin);
-            ModelInfo = new UnDocData(br);
-
-            GeometryInfos = new PtrCollection<GeometryInfo>[geometryInfoCount];
-            for (int i = 0; i < geometryInfoCount; i++)
+            if (skeletonOffset != 0)
             {
-                br.BaseStream.Seek(geometryInfoOffsets[i], SeekOrigin.Begin);
-                GeometryInfos[i] = new PtrCollection<GeometryInfo>(br);
+                br.BaseStream.Seek(skeletonOffset, SeekOrigin.Begin);
+                Skeleton = new Skeleton(br);
+            }
+
+            ModelCollection = new PtrCollection<Model>[levelOfDetailCount];
+            for (int i = 0; i < levelOfDetailCount; i++)
+            {
+                br.BaseStream.Seek(modelOffsets[i], SeekOrigin.Begin);
+                ModelCollection[i] = new PtrCollection<Model>(br);
             }
         }
 
-        public void Write(BinaryWriter bw)
+        public new void Write(BinaryWriter bw)
         {
             throw new NotImplementedException();
         }
@@ -153,12 +154,12 @@ namespace RageLib.Models.Resource
 
         public void ReadEmbeddedResources(Stream systemMemory, Stream graphicsMemory)
         {
-            if (MaterialInfos.TextureDictionaryOffset != 0)
+            if (ShaderGroup.TextureDictionaryOffset != 0)
             {
-                systemMemory.Seek(MaterialInfos.TextureDictionaryOffset, SeekOrigin.Begin);
+                systemMemory.Seek(ShaderGroup.TextureDictionaryOffset, SeekOrigin.Begin);
 
-                MaterialInfos.TextureDictionary = new TextureFile();
-                MaterialInfos.TextureDictionary.Open(systemMemory, graphicsMemory);
+                ShaderGroup.TextureDictionary = new TextureFile();
+                ShaderGroup.TextureDictionary.Open(systemMemory, graphicsMemory);
             }
         }
 
@@ -168,12 +169,12 @@ namespace RageLib.Models.Resource
 
         public void Dispose()
         {
-            if (MaterialInfos != null)
+            if (ShaderGroup != null)
             {
-                if (MaterialInfos.TextureDictionary != null)
+                if (ShaderGroup.TextureDictionary != null)
                 {
-                    MaterialInfos.TextureDictionary.Dispose();
-                    MaterialInfos.TextureDictionary = null;
+                    ShaderGroup.TextureDictionary.Dispose();
+                    ShaderGroup.TextureDictionary = null;
                 }
             }
         }

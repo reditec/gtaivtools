@@ -21,13 +21,12 @@
 using System.IO;
 using RageLib.Common;
 using RageLib.Common.Resources;
+using RageLib.Common.ResourceTypes;
 
-namespace RageLib.Models.Resource
+namespace RageLib.Models.Resource.Models
 {
-    // grmGeometry
-    internal class GeometryDataInfo : IFileAccess
+    internal class Geometry : DATBase, IFileAccess
     {
-        private uint VTable { get; set; }
         private uint Unknown1 { get; set; }
         private uint Unknown2 { get; set; }
         private uint Unknown3 { get; set; }
@@ -47,25 +46,24 @@ namespace RageLib.Models.Resource
         private uint Unknown12 { get; set; }
         private uint Unknown13 { get; set; }
 
-        public GeometryVertexDataInfo VertexDataInfo { get; set; }
-        public GeometryIndexDataInfo IndexDataInfo { get; set; }
+        public VertexBuffer VertexBuffer { get; set; }
+        public IndexBuffer IndexBuffer { get; set; }
 
         #region Implementation of IFileAccess
 
-        public void Read(BinaryReader br)
+        public new void Read(BinaryReader br)
         {
+            base.Read(br);
 
-            VTable = br.ReadUInt32();
-            
             Unknown1 = br.ReadUInt32();
             Unknown2 = br.ReadUInt32();
 
-            var vertexInfoOffset = ResourceUtil.ReadOffset(br);
+            var vertexBuffersOffset = ResourceUtil.ReadOffset(br);
             Unknown3 = br.ReadUInt32();
             Unknown4 = br.ReadUInt32();
             Unknown5 = br.ReadUInt32();
 
-            var indexInfoOffset = ResourceUtil.ReadOffset(br);
+            var indexBuffersOffset = ResourceUtil.ReadOffset(br);
             Unknown6 = br.ReadUInt32();
             Unknown7 = br.ReadUInt32();
             Unknown8 = br.ReadUInt32();
@@ -84,16 +82,16 @@ namespace RageLib.Models.Resource
             Unknown12 = br.ReadUInt32();
             Unknown13 = br.ReadUInt32();
 
-            //
+            // Data
 
-            br.BaseStream.Seek(vertexInfoOffset, SeekOrigin.Begin);
-            VertexDataInfo = new GeometryVertexDataInfo(br);
+            br.BaseStream.Seek(vertexBuffersOffset, SeekOrigin.Begin);
+            VertexBuffer = new VertexBuffer(br);
 
-            br.BaseStream.Seek(indexInfoOffset, SeekOrigin.Begin);
-            IndexDataInfo = new GeometryIndexDataInfo(br);
+            br.BaseStream.Seek(indexBuffersOffset, SeekOrigin.Begin);
+            IndexBuffer = new IndexBuffer(br);
         }
 
-        public void Write(BinaryWriter bw)
+        public new void Write(BinaryWriter bw)
         {
             throw new System.NotImplementedException();
         }

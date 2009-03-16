@@ -1,4 +1,4 @@
-/**********************************************************************\
+﻿/**********************************************************************\
 
  RageLib
  Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
@@ -18,12 +18,27 @@
 
 \**********************************************************************/
 
-namespace RageLib.Models.Resource
+using System.IO;
+
+namespace RageLib.Common.ResourceTypes
 {
-    public enum MaterialInfoDataType
+    // datBase
+    public class DATBase : IFileAccess
     {
-        Texture = 0,
-        Vector4 = 1,
-        Matrix = 4,
+        public KnownVTable VTable { get; set; }
+
+        #region Implementation of IFileAccess
+
+        public void Read(BinaryReader br)
+        {
+            VTable = (KnownVTable) br.ReadInt32();
+        }
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write((int) VTable);
+        }
+
+        #endregion
     }
 }

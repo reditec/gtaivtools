@@ -19,7 +19,7 @@
 \**********************************************************************/
 
 using RageLib.Common.ResourceTypes;
-using RageLib.Models.Resource;
+using RageLib.Models.Resource.Shaders;
 
 namespace RageLib.Models.Data
 {
@@ -27,7 +27,7 @@ namespace RageLib.Models.Data
     {
         public Vector4 Value { get; private set; }
 
-        internal MaterialParamVector4(uint hash, MaterialInfoDataVector4 vector)
+        internal MaterialParamVector4(uint hash, ShaderParamVector4 vector)
             : base(hash)
         {
             Value = vector.Data;

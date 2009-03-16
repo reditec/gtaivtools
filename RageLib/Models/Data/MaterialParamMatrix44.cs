@@ -19,18 +19,18 @@
 \**********************************************************************/
 
 using RageLib.Common.ResourceTypes;
-using RageLib.Models.Resource;
+using RageLib.Models.Resource.Shaders;
 
 namespace RageLib.Models.Data
 {
     public class MaterialParamMatrix44 : MaterialParam
     {
-        public Vector4[] Rows { get; private set; }
+        public Matrix44 Matrix { get; private set; }
 
-        internal MaterialParamMatrix44(uint hash, MaterialInfoDataMatrix matrix)
+        internal MaterialParamMatrix44(uint hash, ShaderParamMatrix matrix)
             : base(hash)
         {
-            Rows = matrix.Rows;
+            Matrix = matrix.Data;
         }
     }
 }

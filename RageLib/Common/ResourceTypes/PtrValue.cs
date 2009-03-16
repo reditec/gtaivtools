@@ -53,13 +53,13 @@ namespace RageLib.Common.ResourceTypes
         {
             _offset = ResourceUtil.ReadOffset(br);
 
-            var position = br.BaseStream.Position;
-            br.BaseStream.Seek(_offset, SeekOrigin.Begin);
+            using (new StreamContext(br))
+            {
+                br.BaseStream.Seek(_offset, SeekOrigin.Begin);
 
-            _value = new T();
-            _value.Read(br);
-
-            br.BaseStream.Seek(position, SeekOrigin.Begin);
+                _value = new T();
+                _value.Read(br);                
+            }
         }
 
         public void Write(BinaryWriter bw)

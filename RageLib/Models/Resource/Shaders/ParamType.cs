@@ -1,7 +1,7 @@
 /**********************************************************************\
 
- RageLib - Models
- Copyright (C) 2009  Arushan/Aru <oneforaru at gmail.com>
+ RageLib
+ Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -18,21 +18,12 @@
 
 \**********************************************************************/
 
-namespace RageLib.Models.Resource
+namespace RageLib.Models.Resource.Shaders
 {
-    internal enum GeometryVertexElementUsage
+    public enum ParamType
     {
-        Position = 0,
-        PositionT = 1,
-        Normal = 2,
-        Binormal = 3,
-        Tangent = 4,
-        TextureCoordinate = 5,
-        BlendWeight = 6,
-        BlendIndices = 7,
-        Color = 8,
-        Unknown1 = 9,
-        Unknown2 = 10,
-        Unknown3 = 11,
+        Texture = 0,
+        Vector4 = 1,
+        Matrix = 4,
     }
 }

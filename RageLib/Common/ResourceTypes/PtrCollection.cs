@@ -72,23 +72,23 @@ namespace RageLib.Common.ResourceTypes
             _itemOffsets = new uint[Count];
             _items = new List<T>();
 
-            var position = br.BaseStream.Position;
-            br.BaseStream.Seek(ptrListOffset, SeekOrigin.Begin);
-            
-            for(int i=0; i<Count; i++)
+            using (new StreamContext(br))
             {
-                _itemOffsets[i] = ResourceUtil.ReadOffset(br);
-            }
+                br.BaseStream.Seek(ptrListOffset, SeekOrigin.Begin);
 
-            for(int i=0; i<Count; i++)
-            {
-                br.BaseStream.Seek(_itemOffsets[i], SeekOrigin.Begin);
-                var item = new T();
-                item.Read(br);
-                _items.Add(item);
-            }
+                for (int i = 0; i < Count; i++)
+                {
+                    _itemOffsets[i] = ResourceUtil.ReadOffset(br);
+                }
 
-            br.BaseStream.Position = position;
+                for (int i = 0; i < Count; i++)
+                {
+                    br.BaseStream.Seek(_itemOffsets[i], SeekOrigin.Begin);
+                    var item = new T();
+                    item.Read(br);
+                    _items.Add(item);
+                }
+            }
         }
 
         public void Write(BinaryWriter bw)

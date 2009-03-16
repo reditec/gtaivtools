@@ -18,18 +18,20 @@
 
 \**********************************************************************/
 
-using RageLib.Models.Resource.Shaders;
-
-namespace RageLib.Models.Data
+namespace RageLib.Models.Resource.Models
 {
-    public class MaterialParamTexture : MaterialParam
+    internal struct VertexElement
     {
-        public string TextureName { get; private set; }
-
-        internal MaterialParamTexture(uint hash, ShaderParamTexture texture) 
-            : base(hash)
-        {
-            TextureName = texture.TextureName;
-        }
+        public int StreamIndex;
+        public VertexElementUsage Usage;
+        public int UsageIndex;
+        public int Size;
+        public VertexElementType Type;
+        /*
+        // The following fields are used for some other purposes, and we don't really need them here
+        public int F14;
+        public short F18;
+        public short F1A;
+         */
     }
 }

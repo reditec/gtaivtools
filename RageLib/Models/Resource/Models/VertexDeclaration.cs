@@ -22,9 +22,9 @@ using System.Collections.Generic;
 using System.IO;
 using RageLib.Common;
 
-namespace RageLib.Models.Resource
+namespace RageLib.Models.Resource.Models
 {
-    internal class GeometryVertexDeclaration : IFileAccess
+    internal class VertexDeclaration : IFileAccess
     {
         public uint UsageFlags { get; set; }
         public ushort Stride { get; set; }
@@ -32,28 +32,28 @@ namespace RageLib.Models.Resource
         public byte Type { get; set; }
         public ulong DeclarationTypes { get; set; }
 
-        public GeometryVertexDeclaration(BinaryReader br)
+        public VertexDeclaration(BinaryReader br)
         {
             Read(br);
         }
 
-        private static GeometryVertexElementType GetType(ulong typeDecl, int index)
+        private static VertexElementType GetType(ulong typeDecl, int index)
         {
-            return (GeometryVertexElementType)((typeDecl >> (4 * index)) & 0xF);
+            return (VertexElementType)((typeDecl >> (4 * index)) & 0xF);
         }
 
-        private static int GetSize(GeometryVertexElementType type)
+        private static int GetSize(VertexElementType type)
         {
             int[] sizeMapping = {2, 4, 6, 8, 4, 8, 12, 16, 4, 4, 4, 0, 0, 0, 0, 0};
             return sizeMapping[(int) type];
         }
 
-        private void DecodeSingleElement(ICollection<GeometryVertexElement> list, int index, int streamIndex, GeometryVertexElementUsage usage, int usageIndex)
+        private void DecodeSingleElement(ICollection<VertexElement> list, int index, int streamIndex, VertexElementUsage usage, int usageIndex)
         {
             DecodeSingleElement(list, index, streamIndex, usage, ref usageIndex);
         }
 
-        private void DecodeSingleElement(ICollection<GeometryVertexElement> list, int index, int streamIndex, GeometryVertexElementUsage usage, ref int usageIndex)
+        private void DecodeSingleElement(ICollection<VertexElement> list, int index, int streamIndex, VertexElementUsage usage, ref int usageIndex)
         {
             var declTypes = DeclarationTypes;
             var usageFlags = UsageFlags;
@@ -63,7 +63,7 @@ namespace RageLib.Models.Resource
 
             if ((usageFlags & usageFlagMask) != 0)
             {
-                var element = new GeometryVertexElement()
+                var element = new VertexElement()
                                   {
                                       UsageIndex = usageIndex++,
                                       StreamIndex = streamIndex,
@@ -75,9 +75,9 @@ namespace RageLib.Models.Resource
             }
         }
 
-        public GeometryVertexElement[] DecodeAsVertexElements()
+        public VertexElement[] DecodeAsVertexElements()
         {
-            var elements = new List<GeometryVertexElement>();
+            var elements = new List<VertexElement>();
             int streamIndex = 0;
             int usageIndexPosition = 0;
             int usageIndexBlendWeight = 0;
@@ -87,18 +87,18 @@ namespace RageLib.Models.Resource
             int usageIndexTangent = 0;
             int usageIndexBinormal = 0;
 
-            DecodeSingleElement(elements, 0, streamIndex, GeometryVertexElementUsage.Position, ref usageIndexPosition);
-            DecodeSingleElement(elements, 1, streamIndex, GeometryVertexElementUsage.BlendWeight, ref usageIndexBlendWeight);
-            DecodeSingleElement(elements, 2, streamIndex, GeometryVertexElementUsage.BlendIndices, ref usageIndexBlendIndices);
-            DecodeSingleElement(elements, 3, streamIndex, GeometryVertexElementUsage.Normal, ref usageIndexNormal);
-            DecodeSingleElement(elements, 4, streamIndex, GeometryVertexElementUsage.Color, 0); // Diffuse?
-            DecodeSingleElement(elements, 5, streamIndex, GeometryVertexElementUsage.Color, 1); // Specular?
+            DecodeSingleElement(elements, 0, streamIndex, VertexElementUsage.Position, ref usageIndexPosition);
+            DecodeSingleElement(elements, 1, streamIndex, VertexElementUsage.BlendWeight, ref usageIndexBlendWeight);
+            DecodeSingleElement(elements, 2, streamIndex, VertexElementUsage.BlendIndices, ref usageIndexBlendIndices);
+            DecodeSingleElement(elements, 3, streamIndex, VertexElementUsage.Normal, ref usageIndexNormal);
+            DecodeSingleElement(elements, 4, streamIndex, VertexElementUsage.Color, 0); // Diffuse?
+            DecodeSingleElement(elements, 5, streamIndex, VertexElementUsage.Color, 1); // Specular?
             for(int i = 6; i<14; i++) // 8
             {
-                DecodeSingleElement(elements, i, streamIndex, GeometryVertexElementUsage.TextureCoordinate, ref usageIndexTexture);
+                DecodeSingleElement(elements, i, streamIndex, VertexElementUsage.TextureCoordinate, ref usageIndexTexture);
             }
-            DecodeSingleElement(elements, 14, streamIndex, GeometryVertexElementUsage.Tangent, ref usageIndexTangent);
-            DecodeSingleElement(elements, 15, streamIndex, GeometryVertexElementUsage.Binormal, ref usageIndexBinormal);
+            DecodeSingleElement(elements, 14, streamIndex, VertexElementUsage.Tangent, ref usageIndexTangent);
+            DecodeSingleElement(elements, 15, streamIndex, VertexElementUsage.Binormal, ref usageIndexBinormal);
 
             return elements.ToArray();
         }

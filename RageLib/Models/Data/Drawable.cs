@@ -27,14 +27,15 @@ namespace RageLib.Models.Data
     {
         public List<Model> Models { get; private set; }
         public List<Material> Materials { get; private set; }
+        public Skeleton Skeleton { get; private set; }
         public Textures.TextureFile AttachedTexture { get; private set; }
 
         internal Drawable(DrawableModel drawableModel)
         {
-            if (drawableModel.MaterialInfos != null)
+            if (drawableModel.ShaderGroup != null)
             {
-                Materials = new List<Material>(drawableModel.MaterialInfos.Entries.Count);
-                foreach (var info in drawableModel.MaterialInfos.Entries)
+                Materials = new List<Material>(drawableModel.ShaderGroup.Shaders.Count);
+                foreach (var info in drawableModel.ShaderGroup.Shaders)
                 {
                     Materials.Add(new Material(info));
                 }
@@ -44,13 +45,18 @@ namespace RageLib.Models.Data
                 Materials = new List<Material>();
             }
 
-            Models = new List<Model>(drawableModel.GeometryInfos.Length);
-            foreach (var info in drawableModel.GeometryInfos)
+            if (drawableModel.Skeleton != null)
+            {
+                Skeleton = new Skeleton(drawableModel.Skeleton);
+            }
+
+            Models = new List<Model>(drawableModel.ModelCollection.Length);
+            foreach (var info in drawableModel.ModelCollection)
             {
                 Models.Add(new Model(info));
             }
 
-            AttachedTexture = drawableModel.MaterialInfos.TextureDictionary;
+            AttachedTexture = drawableModel.ShaderGroup.TextureDictionary;
         }
     }
 }

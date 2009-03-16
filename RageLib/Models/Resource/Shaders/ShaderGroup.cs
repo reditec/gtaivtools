@@ -25,17 +25,15 @@ using RageLib.Common.Resources;
 using RageLib.Common.ResourceTypes;
 using RageLib.Textures;
 
-namespace RageLib.Models.Resource
+namespace RageLib.Models.Resource.Shaders
 {
     /// grmShaderGroup 
-    class MaterialInfo : IFileAccess
+    class ShaderGroup : DATBase, IFileAccess
     {
-        private uint VTable { get; set; }
-
         public uint TextureDictionaryOffset { get; private set; }
         public TextureFile TextureDictionary { get; set; }
 
-        public PtrCollection<MaterialInfoEntry> Entries { get; private set; }
+        public PtrCollection<ShaderFx> Shaders { get; private set; }
 
         private SimpleArray<uint> Zeros { get; set; }
 
@@ -43,25 +41,25 @@ namespace RageLib.Models.Resource
 
         private SimpleCollection<uint> Data3 { get; set; }
 
-        public MaterialInfo()
+        public ShaderGroup()
         {
         }
 
-        public MaterialInfo(BinaryReader br)
+        public ShaderGroup(BinaryReader br)
         {
             Read(br);
         }
 
         #region Implementation of IFileAccess
 
-        public void Read(BinaryReader br)
+        public new void Read(BinaryReader br)
         {
-            VTable = br.ReadUInt32();
+            base.Read(br);
 
             TextureDictionaryOffset = ResourceUtil.ReadOffset(br);
 
             // CPtrCollection<T>
-            Entries = new PtrCollection<MaterialInfoEntry>(br);
+            Shaders = new PtrCollection<ShaderFx>(br);
 
             Zeros = new SimpleArray<uint>(br, 12, r => r.ReadUInt32());
 
@@ -70,7 +68,7 @@ namespace RageLib.Models.Resource
             Data3 = new SimpleCollection<uint>(br, reader => reader.ReadUInt32());
         }
 
-        public void Write(BinaryWriter bw)
+        public new void Write(BinaryWriter bw)
         {
             throw new NotImplementedException();
         }

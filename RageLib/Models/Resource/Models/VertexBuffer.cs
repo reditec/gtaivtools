@@ -21,13 +21,12 @@
 using System.IO;
 using RageLib.Common;
 using RageLib.Common.Resources;
+using RageLib.Common.ResourceTypes;
 
-namespace RageLib.Models.Resource
+namespace RageLib.Models.Resource.Models
 {
-    // grcVertexBufferD3D
-    internal class GeometryVertexDataInfo : IFileAccess
+    internal class VertexBuffer : DATBase, IFileAccess
     {
-        private uint VTable { get; set; }
         public ushort VertexCount { get; private set; }
         private ushort Unknown1 { get; set; }               // byte bLocked, byte align
         public uint DataOffset { get; private set; }        // pLockedData
@@ -37,13 +36,13 @@ namespace RageLib.Models.Resource
 
         public byte[] RawData { get; private set; }
 
-        public GeometryVertexDeclaration VertexDeclaration { get; private set; }
+        public VertexDeclaration VertexDeclaration { get; private set; }
 
-        public GeometryVertexDataInfo()
+        public VertexBuffer()
         {
         }
 
-        public GeometryVertexDataInfo(BinaryReader br)
+        public VertexBuffer(BinaryReader br)
         {
             Read(br);
         }
@@ -56,9 +55,9 @@ namespace RageLib.Models.Resource
 
         #region Implementation of IFileAccess
 
-        public void Read(BinaryReader br)
+        public new void Read(BinaryReader br)
         {
-            VTable = br.ReadUInt32();
+            base.Read(br);
 
             VertexCount = br.ReadUInt16();
             Unknown1 = br.ReadUInt16();
@@ -78,10 +77,10 @@ namespace RageLib.Models.Resource
             //
 
             br.BaseStream.Seek(vertexDeclOffset, SeekOrigin.Begin);
-            VertexDeclaration = new GeometryVertexDeclaration(br);
+            VertexDeclaration = new VertexDeclaration(br);
         }
 
-        public void Write(BinaryWriter bw)
+        public new void Write(BinaryWriter bw)
         {
             throw new System.NotImplementedException();
         }

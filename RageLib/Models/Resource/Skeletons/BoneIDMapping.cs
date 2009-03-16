@@ -1,7 +1,7 @@
 /**********************************************************************\
 
- RageLib
- Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
+ RageLib - Models
+ Copyright (C) 2009  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -21,15 +21,34 @@
 using System.IO;
 using RageLib.Common;
 
-namespace RageLib.Models.Resource
+namespace RageLib.Models.Resource.Skeletons
 {
-    internal abstract class MaterialInfoDataObject : IFileAccess
+    internal class BoneIDMapping : IFileAccess
     {
+        public short ID { get; set; }
+        public short Index { get; set; }
+
+        public BoneIDMapping()
+        {
+        }
+
+        public BoneIDMapping(BinaryReader br)
+        {
+            Read(br);
+        }
+
         #region Implementation of IFileAccess
 
-        public abstract void Read(BinaryReader br);
+        public void Read(BinaryReader br)
+        {
+            ID = br.ReadInt16();
+            Index = br.ReadInt16();
+        }
 
-        public abstract void Write(BinaryWriter bw);
+        public void Write(BinaryWriter bw)
+        {
+            throw new System.NotImplementedException();
+        }
 
         #endregion
     }

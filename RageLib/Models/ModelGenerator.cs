@@ -27,6 +27,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using RageLib.Models.Data;
 using RageLib.Models.Resource;
+using RageLib.Models.Resource.Shaders;
 using RageLib.Textures;
 using Brush=System.Windows.Media.Brush;
 using Material=System.Windows.Media.Media3D.Material;
@@ -54,19 +55,19 @@ namespace RageLib.Models
             var g = Graphics.FromImage(bmp);
             var pen = new System.Drawing.Pen(Color.Red);
 
-            foreach (var geometryInfo in drawable.GeometryInfos)
+            foreach (var geometryInfo in drawable.ModelCollection)
             {
-                foreach (var dataInfo in geometryInfo.GeometryDataInfos)
+                foreach (var dataInfo in geometryInfo.Geometries)
                 {
                     for (var i = 0; i < dataInfo.FaceCount; i++)
                     {
-                        var i1 = (dataInfo.IndexDataInfo.IndexData[i * 3 + 0]);
-                        var i2 = (dataInfo.IndexDataInfo.IndexData[i * 3 + 1]);
-                        var i3 = (dataInfo.IndexDataInfo.IndexData[i * 3 + 2]);
+                        var i1 = (dataInfo.IndexBuffer.IndexData[i * 3 + 0]);
+                        var i2 = (dataInfo.IndexBuffer.IndexData[i * 3 + 1]);
+                        var i3 = (dataInfo.IndexBuffer.IndexData[i * 3 + 2]);
 
-                        var v1 = dataInfo.VertexDataInfo.VertexData[i1];
-                        var v2 = dataInfo.VertexDataInfo.VertexData[i2];
-                        var v3 = dataInfo.VertexDataInfo.VertexData[i3];
+                        var v1 = dataInfo.VertexBuffer.VertexData[i1];
+                        var v2 = dataInfo.VertexBuffer.VertexData[i2];
+                        var v3 = dataInfo.VertexBuffer.VertexData[i3];
 
                         g.DrawLine(pen, v1.TextureU * bmp.Width, v1.TextureV * bmp.Height, v2.TextureU * bmp.Width, v2.TextureV * bmp.Height);
                         g.DrawLine(pen, v1.TextureU * bmp.Width, v1.TextureV * bmp.Height, v3.TextureU * bmp.Width, v3.TextureV * bmp.Height);
@@ -93,7 +94,7 @@ namespace RageLib.Models
 
             foreach (var fragTypeChild in fragTypeModel.Children)
             {
-                if (fragTypeChild.Drawable != null && fragTypeChild.Drawable.GeometryInfos.Length > 0)
+                if (fragTypeChild.Drawable != null && fragTypeChild.Drawable.ModelCollection.Length > 0)
                 {
                     var childDrawableNode = GenerateModel(fragTypeChild.Drawable, textures);
                     childDrawableNode.NoCount = false;
@@ -137,7 +138,7 @@ namespace RageLib.Models
                                                                             (byte)random.Next(0, 255)));
 
                 var drawableMat = drawable.Materials[i];
-                var texture = drawableMat.Parameters[(int)MaterialInfoDataID.Texture] as MaterialParamTexture;
+                var texture = drawableMat.Parameters[(int)ParamNameHash.Texture] as MaterialParamTexture;
                 if (texture != null)
                 {
                     // 1. Try looking in the embedded texture file (if any)

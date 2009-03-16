@@ -18,7 +18,7 @@
 
 \**********************************************************************/
 
-using RageLib.Models.Resource;
+using RageLib.Models.Resource.Shaders;
 
 namespace RageLib.Models.Data
 {
@@ -31,19 +31,19 @@ namespace RageLib.Models.Data
             NameHash = nameHash;
         }
 
-        internal static MaterialParam Create(uint nameHash, MaterialInfoDataObject obj)
+        internal static MaterialParam Create(uint nameHash, IShaderParam obj)
         {
-            if (obj is MaterialInfoDataMatrix)
+            if (obj is ShaderParamMatrix)
             {
-                return new MaterialParamMatrix44(nameHash, obj as MaterialInfoDataMatrix);
+                return new MaterialParamMatrix44(nameHash, obj as ShaderParamMatrix);
             }
-            if (obj is MaterialInfoDataVector4)
+            if (obj is ShaderParamVector4)
             {
-                return new MaterialParamVector4(nameHash, obj as MaterialInfoDataVector4);
+                return new MaterialParamVector4(nameHash, obj as ShaderParamVector4);
             }
-            if (obj is MaterialInfoDataTexture)
+            if (obj is ShaderParamTexture)
             {
-                return new MaterialParamTexture(nameHash, obj as MaterialInfoDataTexture);
+                return new MaterialParamTexture(nameHash, obj as ShaderParamTexture);
             }
             return null;
         }

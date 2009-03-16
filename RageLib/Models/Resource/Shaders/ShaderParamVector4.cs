@@ -1,7 +1,7 @@
 /**********************************************************************\
 
- RageLib - Models
- Copyright (C) 2009  Arushan/Aru <oneforaru at gmail.com>
+ RageLib
+ Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -18,25 +18,27 @@
 
 \**********************************************************************/
 
-namespace RageLib.Models.Resource
+using System.IO;
+using RageLib.Common.ResourceTypes;
+
+namespace RageLib.Models.Resource.Shaders
 {
-    internal enum GeometryVertexElementType
+    internal class ShaderParamVector4 : IShaderParam
     {
-        Float16_1 = 0,
-        Float16_2 = 1,
-        Float16_3 = 2,
-        Float16_4 = 3,
-        Float1 = 4,
-        Float2 = 5,
-        Float3 = 6,
-        Float4 = 7,
-        UByte4 = 8,
-        Color = 9,
-        Dec3N = 10,
-        UByte4_ = 11,
-        Unknown1 = 12,
-        Unknown2 = 13,
-        Unknown3 = 14,
-        Unknown4 = 15,
+        public Vector4 Data { get; private set; }
+
+        #region Overrides of MaterialInfoDataObject
+
+        public void Read(BinaryReader br)
+        {
+            Data = new Vector4(br);
+        }
+
+        public void Write(BinaryWriter bw)
+        {
+            
+        }
+
+        #endregion
     }
 }

@@ -19,6 +19,8 @@
 \**********************************************************************/
 
 using System;
+using System.IO;
+using System.Windows.Forms;
 using RageLib.Textures;
 
 namespace RageLib.Models
@@ -28,13 +30,21 @@ namespace RageLib.Models
         private readonly ModelView _view;
         private IModelFile _modelFile;
         private TextureFile _textureFile;
+        private string _workingDirectory;
 
         public ModelViewController(ModelView view)
         {
             _view = view;
 
-            _view.NavigationModelSelected += delegate { _view.DisplayModel = _view.SelectedNavigationModel; };
+            _view.NavigationModelSelected += View_NavigationModelSelected;
+            _view.ExportClicked += View_ExportClicked;
             _view.Disposed += View_Disposed;
+        }
+
+        private void View_NavigationModelSelected(object sender, TreeViewEventArgs e)
+        {
+            _view.DisplayModel = _view.SelectedNavigationModel;
+            _view.ExportEnabled = _view.SelectedNavigationModel.DataModel is Data.Drawable;
         }
 
         public TextureFile TextureFile
@@ -63,6 +73,30 @@ namespace RageLib.Models
             {
                 _view.NavigationModel = null;
                 _view.DisplayModel = null;
+            }
+        }
+
+        private void View_ExportClicked(object sender, EventArgs e)
+        {
+            var model = _view.SelectedNavigationModel.DataModel as Data.Drawable;
+            if (model != null)
+            {
+                var sfd = new SaveFileDialog
+                {
+                    AddExtension = true,
+                    OverwritePrompt = true,
+                    Title = "Export Model",
+                    Filter = Export.ExportFactory.GenerateFilterString(),
+                    InitialDirectory = _workingDirectory,
+                };
+
+                if (sfd.ShowDialog() == DialogResult.OK && sfd.FilterIndex > 0)
+                {
+                    Export.IExporter exporter = Export.ExportFactory.GetExporter(sfd.FilterIndex - 1);
+                    exporter.Export( model, sfd.FileName );
+
+                    _workingDirectory = new FileInfo(sfd.FileName).Directory.FullName;
+                }
             }
         }
 

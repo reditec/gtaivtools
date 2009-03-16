@@ -59,6 +59,8 @@ namespace RageLib.Models
             this.tsToolbar = new System.Windows.Forms.ToolStrip();
             this.tsbSolid = new System.Windows.Forms.ToolStripButton();
             this.tsbWireframe = new System.Windows.Forms.ToolStripButton();
+            this.tss1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbExport = new System.Windows.Forms.ToolStripButton();
             this.tsContainer.ContentPanel.SuspendLayout();
             this.tsContainer.TopToolStripPanel.SuspendLayout();
             this.tsContainer.SuspendLayout();
@@ -127,7 +129,9 @@ namespace RageLib.Models
             this.tsToolbar.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.tsToolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbSolid,
-            this.tsbWireframe});
+            this.tsbWireframe,
+            this.tss1,
+            this.tsbExport});
             this.tsToolbar.Location = new System.Drawing.Point(0, 0);
             this.tsToolbar.Name = "tsToolbar";
             this.tsToolbar.Size = new System.Drawing.Size(646, 25);
@@ -155,6 +159,19 @@ namespace RageLib.Models
             this.tsbWireframe.Size = new System.Drawing.Size(82, 22);
             this.tsbWireframe.Text = "Wireframe";
             this.tsbWireframe.Click += new System.EventHandler(this.tsbWireframe_Click);
+            // 
+            // tss1
+            // 
+            this.tss1.Name = "tss1";
+            this.tss1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tsbExport
+            // 
+            this.tsbExport.Image = ((System.Drawing.Image)(resources.GetObject("tsbExport.Image")));
+            this.tsbExport.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbExport.Name = "tsbExport";
+            this.tsbExport.Size = new System.Drawing.Size(60, 22);
+            this.tsbExport.Text = "Export";
             // 
             // ModelView
             // 
@@ -187,5 +204,7 @@ namespace RageLib.Models
         private System.Windows.Forms.ToolStrip tsToolbar;
         private System.Windows.Forms.ToolStripButton tsbSolid;
         private System.Windows.Forms.ToolStripButton tsbWireframe;
+        private System.Windows.Forms.ToolStripSeparator tss1;
+        private System.Windows.Forms.ToolStripButton tsbExport;
     }
 }

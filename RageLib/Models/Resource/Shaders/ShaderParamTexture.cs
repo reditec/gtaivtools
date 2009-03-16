@@ -20,13 +20,12 @@
 
 using System.IO;
 using RageLib.Common.Resources;
+using RageLib.Common.ResourceTypes;
 
-namespace RageLib.Models.Resource
+namespace RageLib.Models.Resource.Shaders
 {
-	// rageShaderMaterialParamTexture
-    internal class MaterialInfoDataTexture : MaterialInfoDataObject
+    internal class ShaderParamTexture : DATBase, IShaderParam
     {
-        private uint VTable { get; set; }
         private uint Unknown1 { get; set; }
         private ushort Unknown2 { get; set; }
         private ushort Unknown3 { get; set; }
@@ -39,11 +38,10 @@ namespace RageLib.Models.Resource
 
         #region Implementation of IFileAccess
 
-        public override void Read(BinaryReader br)
+        public new void Read(BinaryReader br)
         {
-            // Hmm, this really is just the first "info" data of the real grcTexturePC structure
-
-            VTable = br.ReadUInt32();
+            base.Read(br);
+            
             Unknown1 = br.ReadUInt32();
             Unknown2 = br.ReadUInt16();
             Unknown3 = br.ReadUInt16();
@@ -56,7 +54,7 @@ namespace RageLib.Models.Resource
             TextureName = ResourceUtil.ReadNullTerminatedString(br);
         }
 
-        public override void Write(BinaryWriter bw)
+        public new void Write(BinaryWriter bw)
         {
             throw new System.NotImplementedException();
         }

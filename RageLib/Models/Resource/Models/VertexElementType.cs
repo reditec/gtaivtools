@@ -18,18 +18,25 @@
 
 \**********************************************************************/
 
-using RageLib.Models.Resource.Shaders;
-
-namespace RageLib.Models.Data
+namespace RageLib.Models.Resource.Models
 {
-    public class MaterialParamTexture : MaterialParam
+    internal enum VertexElementType
     {
-        public string TextureName { get; private set; }
-
-        internal MaterialParamTexture(uint hash, ShaderParamTexture texture) 
-            : base(hash)
-        {
-            TextureName = texture.TextureName;
-        }
+        Float16_1 = 0,
+        Float16_2 = 1,
+        Float16_3 = 2,
+        Float16_4 = 3,
+        Float1 = 4,
+        Float2 = 5,
+        Float3 = 6,
+        Float4 = 7,
+        UByte4 = 8,
+        Color = 9,
+        Dec3N = 10,
+        UByte4_ = 11,
+        Unknown1 = 12,
+        Unknown2 = 13,
+        Unknown3 = 14,
+        Unknown4 = 15,
     }
 }

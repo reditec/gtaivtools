@@ -1,7 +1,7 @@
 /**********************************************************************\
 
- RageLib - Models
- Copyright (C) 2009  Arushan/Aru <oneforaru at gmail.com>
+ RageLib
+ Copyright (C) 2008  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -18,18 +18,25 @@
 
 \**********************************************************************/
 
-using RageLib.Models.Resource.Shaders;
+using System;
 
-namespace RageLib.Models.Data
+namespace RageLib.Models.Resource.Shaders
 {
-    public class MaterialParamTexture : MaterialParam
+    internal static class ParamObjectFactory
     {
-        public string TextureName { get; private set; }
-
-        internal MaterialParamTexture(uint hash, ShaderParamTexture texture) 
-            : base(hash)
+        public static IShaderParam Create(ParamType type)
         {
-            TextureName = texture.TextureName;
+            switch(type)
+            {
+                case ParamType.Texture:
+                    return new ShaderParamTexture();
+                case ParamType.Vector4:
+                    return new ShaderParamVector4();
+                case ParamType.Matrix:
+                    return new ShaderParamMatrix();
+                default:
+                    throw new ArgumentOutOfRangeException("type");
+            }
         }
     }
 }

@@ -55,11 +55,11 @@ namespace RageLib.Models
             remove { tvNav.AfterSelect -= value; }
         }
 
-        public Model3D SelectedNavigationModel
+        public ModelNode SelectedNavigationModel
         {
             get
             {
-                return tvNav.SelectedNode.Tag as Model3D;
+                return tvNav.SelectedNode.Tag as ModelNode;
             }
         }
 
@@ -71,11 +71,11 @@ namespace RageLib.Models
             }
         }
 
-        public Model3D DisplayModel
+        public ModelNode DisplayModel
         {
             set
             {
-                _model3DView.Model = value;
+                _model3DView.Model = value == null ? null : value.Model3D;
             }
         }
 
@@ -89,7 +89,7 @@ namespace RageLib.Models
             if (model != null)
             {
                 var node = tvNav.Nodes.Add(model.Name);
-                node.Tag = model.Model3D;
+                node.Tag = model;
 
                 if (model.Children.Count > 0)
                 {
@@ -104,7 +104,7 @@ namespace RageLib.Models
             foreach (var child in group)
             {
                 TreeNode newNode = node.Nodes.Add(child.Name + " " + index);
-                newNode.Tag = child.Model3D;
+                newNode.Tag = child;
 
                 if (child.Children.Count > 0)
                 {
@@ -113,6 +113,18 @@ namespace RageLib.Models
 
                 index++;
             }
+        }
+
+        public event EventHandler ExportClicked
+        {
+            add { tsbExport.Click += value; }
+            remove { tsbExport.Click -= value; }
+        }
+
+        public bool ExportEnabled
+        {
+            get { return tsbExport.Enabled; }
+            set { tsbExport.Enabled = value; }
         }
 
         private void tsbSolid_CheckedChanged(object sender, EventArgs e)

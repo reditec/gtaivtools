@@ -20,17 +20,12 @@
 
 using System;
 using System.IO;
-using RageLib.Common.Resources;
 
 namespace RageLib.Common.ResourceTypes
 {
     // pgDictionary<T>
-    public class PGDictionary<T> : IFileAccess where T: class, IFileAccess, new()
+    public class PGDictionary<T> : PGBase, IFileAccess where T: class, IFileAccess, new()
     {
-        public uint VTable { get; private set; }
-
-        private uint BlockMapOffset { get; set; }
-
         private uint ParentDictionary { get; set; } // always 0 in file
 
         public uint UsageCount { get; private set; } // always 1 in file
@@ -41,15 +36,10 @@ namespace RageLib.Common.ResourceTypes
 
         #region IFileAccess Members
 
-        public void Read(BinaryReader br)
+        public new void Read(BinaryReader br)
         {
-            // Full Structure of rage::pgDictionary
-
-            // rage::datBase
-            VTable = br.ReadUInt32();
-
-            // rage::pgBase
-            BlockMapOffset = ResourceUtil.ReadOffset(br);
+            base.Read(br);
+            
             ParentDictionary = br.ReadUInt32();
             UsageCount = br.ReadUInt32();
 
@@ -60,7 +50,7 @@ namespace RageLib.Common.ResourceTypes
             Entries = new PtrCollection<T>(br);
         }
 
-        public void Write(BinaryWriter bw)
+        public new void Write(BinaryWriter bw)
         {
             throw new NotImplementedException();
         }

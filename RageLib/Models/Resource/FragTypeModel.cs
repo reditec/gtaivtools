@@ -102,7 +102,7 @@ namespace RageLib.Models.Resource
             {
                 if (child.Drawable != null)
                 {
-                    child.Drawable.MaterialInfos = Drawable.MaterialInfos;
+                    child.Drawable.ShaderGroup = Drawable.ShaderGroup;
                 }
             }
             

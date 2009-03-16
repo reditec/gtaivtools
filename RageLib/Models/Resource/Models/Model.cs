@@ -23,27 +23,25 @@ using RageLib.Common;
 using RageLib.Common.Resources;
 using RageLib.Common.ResourceTypes;
 
-namespace RageLib.Models.Resource
+namespace RageLib.Models.Resource.Models
 {
-    // grmModel
-    internal class GeometryInfo : IFileAccess
+    internal class Model : DATBase, IFileAccess
     {
-        private uint VTable { get; set; }
-        public PtrCollection<GeometryDataInfo> GeometryDataInfos { get; private set; }
-        private ushort Unknown1 { get; set; }
+        public PtrCollection<Geometry> Geometries { get; private set; }
+        private ushort Unknown1 { get; set; } // the four following really should be bytes
         private ushort Unknown2 { get; set; }
         private ushort Unknown3 { get; set; }
         private ushort Unknown4 { get; set; }
         public SimpleArray<Vector4> UnknownVectors { get; private set; }
-        public SimpleArray<ushort> MaterialMappings { get; private set; }
+        public SimpleArray<ushort> ShaderMappings { get; private set; }
 
         #region Implementation of IFileAccess
 
-        public void Read(BinaryReader br)
+        public new void Read(BinaryReader br)
         {
-            VTable = br.ReadUInt32();
+            base.Read(br);
 
-            GeometryDataInfos = new PtrCollection<GeometryDataInfo>(br);
+            Geometries = new PtrCollection<Geometry>(br);
 
             var unknownVectorOffsets = ResourceUtil.ReadOffset(br);
             var materialMappingOffset = ResourceUtil.ReadOffset(br);
@@ -60,10 +58,10 @@ namespace RageLib.Models.Resource
             UnknownVectors = new SimpleArray<Vector4>(br, 4, reader => new Vector4(reader));
 
             br.BaseStream.Seek(materialMappingOffset, SeekOrigin.Begin);
-            MaterialMappings = new SimpleArray<ushort>(br, GeometryDataInfos.Count, reader => reader.ReadUInt16());
+            ShaderMappings = new SimpleArray<ushort>(br, Geometries.Count, reader => reader.ReadUInt16());
         }
 
-        public void Write(BinaryWriter bw)
+        public new void Write(BinaryWriter bw)
         {
             throw new System.NotImplementedException();
         }

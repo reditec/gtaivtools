@@ -53,17 +53,25 @@ namespace RageLib.Common.ResourceTypes
         {
             _offset = ResourceUtil.ReadOffset(br);
 
-            var position = br.BaseStream.Position;
-            br.BaseStream.Seek(_offset, SeekOrigin.Begin);
-
-            _value = ResourceUtil.ReadNullTerminatedString(br);
-
-            br.BaseStream.Seek(position, SeekOrigin.Begin);
+            using (new StreamContext(br))
+            {
+                br.BaseStream.Seek(_offset, SeekOrigin.Begin);
+                _value = ResourceUtil.ReadNullTerminatedString(br);
+            }
         }
 
         public void Write(BinaryWriter bw)
         {
             throw new System.NotImplementedException();
+        }
+
+        #endregion
+
+        #region Overrides of Object
+
+        public override string ToString()
+        {
+            return Value;
         }
 
         #endregion

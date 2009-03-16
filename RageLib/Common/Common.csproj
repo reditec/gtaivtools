@@ -79,6 +79,10 @@
     <Compile Include="Compression\CompressionLZXCodec.cs" />
     <Compile Include="Resources\ResourceType.cs" />
     <Compile Include="Resources\ResourceUtil.cs" />
+    <Compile Include="ResourceTypes\DATBase.cs" />
+    <Compile Include="ResourceTypes\KnownVTable.cs" />
+    <Compile Include="ResourceTypes\Matrix44.cs" />
+    <Compile Include="ResourceTypes\PGBase.cs" />
     <Compile Include="ResourceTypes\PGDictionary.cs" />
     <Compile Include="ResourceTypes\PtrString.cs" />
     <Compile Include="ResourceTypes\PtrValue.cs" />
@@ -89,6 +93,7 @@
     <Compile Include="ResourceTypes\Vector2.cs" />
     <Compile Include="ResourceTypes\Vector3.cs" />
     <Compile Include="ResourceTypes\Vector4.cs" />
+    <Compile Include="StreamContext.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

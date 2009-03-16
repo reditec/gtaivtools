@@ -1,6 +1,6 @@
-/**********************************************************************\
+﻿/**********************************************************************\
 
- RageLib - Models
+ RageLib
  Copyright (C) 2009  Arushan/Aru <oneforaru at gmail.com>
 
  This program is free software: you can redistribute it and/or modify
@@ -18,18 +18,34 @@
 
 \**********************************************************************/
 
-using RageLib.Models.Resource.Shaders;
+using System;
+using System.IO;
 
-namespace RageLib.Models.Data
+namespace RageLib.Common
 {
-    public class MaterialParamTexture : MaterialParam
+    public class StreamContext : IDisposable
     {
-        public string TextureName { get; private set; }
+        private long _position;
+        private Stream _stream;
 
-        internal MaterialParamTexture(uint hash, ShaderParamTexture texture) 
-            : base(hash)
+        public StreamContext(BinaryReader br)
+            : this(br.BaseStream)
         {
-            TextureName = texture.TextureName;
         }
+
+        public StreamContext(Stream stream)
+        {
+            _stream = stream;
+            _position = stream.Position;
+        }
+
+        #region Implementation of IDisposable
+
+        public void Dispose()
+        {
+            _stream.Position = _position;
+        }
+
+        #endregion
     }
 }

@@ -43,7 +43,7 @@ namespace RageLib.Models
 
         public TextureFile EmbeddedTextureFile
         {
-            get { return File.Data.MaterialInfos.TextureDictionary; }
+            get { return File.Data.ShaderGroup.TextureDictionary; }
         }
 
         public ModelNode GetModel(TextureFile textures)

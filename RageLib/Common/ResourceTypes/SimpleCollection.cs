@@ -64,15 +64,15 @@ namespace RageLib.Common.ResourceTypes
 
             Values = new List<T>(Count);
 
-            var position = br.BaseStream.Position;
-            br.BaseStream.Seek(offset, SeekOrigin.Begin);
-
-            for (int i = 0; i < Count; i++)
+            using (new StreamContext(br))
             {
-                Values.Add(ReadData(br));
-            }
+                br.BaseStream.Seek(offset, SeekOrigin.Begin);
 
-            br.BaseStream.Position = position;
+                for (int i = 0; i < Count; i++)
+                {
+                    Values.Add(ReadData(br));
+                }
+            }
         }
 
         public void Write(BinaryWriter bw)
