@@ -30,6 +30,24 @@ namespace RageLib.Models
         internal Model3D Model3D { get; set; }
         public object DataModel { get; set; }
         public bool NoCount { get; set; }
+        public bool Selected { get; set; }
+
+        public bool IsAnyNodeSelected()
+        {
+            if (Selected)
+            {
+                return true;
+            }
+
+            foreach (var node in Children)
+            {
+                if (node.IsAnyNodeSelected())
+                {
+                    return true;}
+            }
+
+            return false;
+        }
         
         public ModelNode()
         {

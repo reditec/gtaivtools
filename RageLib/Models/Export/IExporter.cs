@@ -25,6 +25,6 @@ namespace RageLib.Models.Export
         string Name { get; }
         string Extension { get; }
 
-        void Export(Data.Drawable drawable, string filename);
+        void Export(ModelNode node, string filename);
     }
 }

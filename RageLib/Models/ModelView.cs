@@ -29,6 +29,8 @@ namespace RageLib.Models
 {
     public partial class ModelView : UserControl
     {
+        public event EventHandler RefreshDisplayModel;
+
         public ModelView()
         {
             InitializeComponent();
@@ -49,12 +51,6 @@ namespace RageLib.Models
             }
         }
 
-        public event TreeViewEventHandler NavigationModelSelected
-        {
-            add { tvNav.AfterSelect += value; }
-            remove { tvNav.AfterSelect -= value; }
-        }
-
         public ModelNode SelectedNavigationModel
         {
             get
@@ -71,11 +67,11 @@ namespace RageLib.Models
             }
         }
 
-        public ModelNode DisplayModel
+        public Model3D DisplayModel
         {
             set
             {
-                _model3DView.Model = value == null ? null : value.Model3D;
+                _model3DView.Model = value;
             }
         }
 
@@ -121,12 +117,6 @@ namespace RageLib.Models
             remove { tsbExport.Click -= value; }
         }
 
-        public bool ExportEnabled
-        {
-            get { return tsbExport.Enabled; }
-            set { tsbExport.Enabled = value; }
-        }
-
         private void tsbSolid_CheckedChanged(object sender, EventArgs e)
         {
             if (tsbSolid.Checked)
@@ -140,6 +130,24 @@ namespace RageLib.Models
             if (tsbWireframe.Checked)
             {
                 RenderMode = RenderMode.Wireframe;
+            }
+        }
+
+        private void tvNav_AfterCheck(object sender, TreeViewEventArgs e)
+        {
+            ((ModelNode) e.Node.Tag).Selected = e.Node.Checked;
+
+            if (RefreshDisplayModel != null)
+            {
+                RefreshDisplayModel(this, null);
+            }
+        }
+
+        private void tvNav_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            if (RefreshDisplayModel != null)
+            {
+                RefreshDisplayModel(this, null);
             }
         }
 

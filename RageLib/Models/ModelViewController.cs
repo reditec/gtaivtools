@@ -19,8 +19,10 @@
 \**********************************************************************/
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using System.Windows.Media.Media3D;
 using RageLib.Textures;
 
 namespace RageLib.Models
@@ -29,6 +31,7 @@ namespace RageLib.Models
     {
         private readonly ModelView _view;
         private IModelFile _modelFile;
+        private ModelNode _rootModelNode;
         private TextureFile _textureFile;
         private string _workingDirectory;
 
@@ -36,15 +39,43 @@ namespace RageLib.Models
         {
             _view = view;
 
-            _view.NavigationModelSelected += View_NavigationModelSelected;
             _view.ExportClicked += View_ExportClicked;
             _view.Disposed += View_Disposed;
+            _view.RefreshDisplayModel += View_RefreshDisplayModel;
         }
 
-        private void View_NavigationModelSelected(object sender, TreeViewEventArgs e)
+        private void View_RefreshDisplayModel(object sender, EventArgs e)
         {
-            _view.DisplayModel = _view.SelectedNavigationModel;
-            _view.ExportEnabled = _view.SelectedNavigationModel.DataModel is Data.Drawable;
+            List<ModelNode> viewableNodes = new List<ModelNode>();
+            FindViewableNodes( _rootModelNode, viewableNodes );
+
+            if (!_view.SelectedNavigationModel.Selected)
+            {
+                viewableNodes.Add(_view.SelectedNavigationModel);
+            }
+
+            Model3DGroup group = new Model3DGroup();
+            foreach (var node in viewableNodes)
+            {
+                group.Children.Add(node.Model3D);
+            }
+
+            _view.DisplayModel = group;
+        }
+
+        private void FindViewableNodes(ModelNode node, List<ModelNode> viewableNodes )
+        {
+            if (node.Selected)
+            {
+                viewableNodes.Add(node);
+            }
+            else
+            {
+                foreach (var child in node.Children)
+                {
+                    FindViewableNodes(child, viewableNodes);
+                }
+            }
         }
 
         public TextureFile TextureFile
@@ -67,10 +98,12 @@ namespace RageLib.Models
         {
             if (_modelFile != null)
             {
-                _view.NavigationModel = _modelFile.GetModel(_textureFile);
+                _rootModelNode = _modelFile.GetModel(_textureFile);
+                _view.NavigationModel = _rootModelNode;
             }
             else
             {
+                _rootModelNode = null;
                 _view.NavigationModel = null;
                 _view.DisplayModel = null;
             }
@@ -78,7 +111,7 @@ namespace RageLib.Models
 
         private void View_ExportClicked(object sender, EventArgs e)
         {
-            var model = _view.SelectedNavigationModel.DataModel as Data.Drawable;
+            var model = _rootModelNode;
             if (model != null)
             {
                 var sfd = new SaveFileDialog

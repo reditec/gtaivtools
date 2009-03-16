@@ -116,12 +116,15 @@ namespace RageLib.Models
             // 
             // tvNav
             // 
+            this.tvNav.CheckBoxes = true;
             this.tvNav.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tvNav.HideSelection = false;
             this.tvNav.Location = new System.Drawing.Point(0, 0);
             this.tvNav.Name = "tvNav";
             this.tvNav.Size = new System.Drawing.Size(171, 435);
             this.tvNav.TabIndex = 0;
+            this.tvNav.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tvNav_AfterCheck);
+            this.tvNav.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvNav_AfterSelect);
             // 
             // tsToolbar
             // 
