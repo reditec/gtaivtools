@@ -29,17 +29,13 @@ namespace RageLib.Audio.SoundBank.MultiChannel
 {
     internal struct Header : IFileAccess
     {
-        public int offsetBlockInfo;
-        public int unk1Reserved;
+        public long offsetBlockInfo;
         public int numBlocks;
-        public int sizeBlock;
-        public int unk2Reserved;
-        public int offsetChannelInfo;
-        public int unk4Reserved;
-        public int unk5offset;
-        public int unk6Reserved;
+        public long sizeBlock;
+        public long offsetChannelInfo;
+        public long offsetUnknownTable;
         public int numChannels;
-        public int unk7IsCompressed;
+        public int numUnknownTableEntries;
         public int sizeHeader;
 
         public Header(BinaryReader br) : this()
@@ -51,17 +47,13 @@ namespace RageLib.Audio.SoundBank.MultiChannel
 
         public void Read(BinaryReader br)
         {
-            offsetBlockInfo = br.ReadInt32();
-            unk1Reserved = br.ReadInt32();
+            offsetBlockInfo = br.ReadInt64();
             numBlocks = br.ReadInt32();
-            sizeBlock = br.ReadInt32();
-            unk2Reserved = br.ReadInt32();
-            offsetChannelInfo = br.ReadInt32();
-            unk4Reserved = br.ReadInt32();
-            unk5offset = br.ReadInt32();
-            unk6Reserved = br.ReadInt32();
+            sizeBlock = br.ReadInt64();
+            offsetChannelInfo = br.ReadInt64();
+            offsetUnknownTable = br.ReadInt64();
             numChannels = br.ReadInt32();
-            unk7IsCompressed = br.ReadInt32();
+            numUnknownTableEntries = br.ReadInt32();
             sizeHeader = br.ReadInt32();
         }
 

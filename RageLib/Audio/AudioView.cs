@@ -2,6 +2,7 @@
 
  RageLib - Audio
  Copyright (C) 2009  Arushan/Aru <oneforaru at gmail.com>
+ Copyright (C) 2009  DerPlaya78
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -19,8 +20,6 @@
 \**********************************************************************/
 
 using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace RageLib.Audio
@@ -29,6 +28,7 @@ namespace RageLib.Audio
     {
         private static bool _AutoPlay;
         private static bool _PlayLooped;
+        private int _sortColumn = -1;
 
         public AudioView()
         {
@@ -91,83 +91,76 @@ namespace RageLib.Audio
             }
         }
 
-        public AudioWave SelectWave
-        {
-            get { return listAudioBlocks.SelectedItem as AudioWave; }
-            set { listAudioBlocks.SelectedItem = value; }
-        }
-
         public void ClearWaves()
         {
-            listAudioBlocks.SelectedItem = null;
+            listAudioBlocks.SelectedItems.Clear();
             listAudioBlocks.Items.Clear();
         }
 
         public void AddWave(AudioWave audioWave)
         {
-            listAudioBlocks.Items.Add(audioWave);
+            ListViewItem lvi = new ListViewItem(audioWave.ToString());
+            lvi.Name = audioWave.ToString();
+            lvi.Tag = audioWave;
+
+            TimeSpan playTime = audioWave.Length;
+            ListViewItem.ListViewSubItem lvisub = new ListViewItem.ListViewSubItem();
+            lvisub.Tag = playTime;
+            lvisub.Text = playTime.ToString();
+            lvi.SubItems.Add(lvisub);
+
+            lvisub = new ListViewItem.ListViewSubItem();
+            lvisub.Tag = audioWave.SamplesPerSecond;
+            lvisub.Text = audioWave.SamplesPerSecond + " Hz";
+            lvi.SubItems.Add(lvisub);
+
+            listAudioBlocks.Items.Add(lvi);
         }
 
         public AudioWave SelectedWave
         {
-            get { return listAudioBlocks.SelectedItem as AudioWave; }
-            set { listAudioBlocks.SelectedItem = value; }
-        }
-
-        private void listAudioBlocks_MeasureItem(object sender, MeasureItemEventArgs e)
-        {
-            e.ItemHeight = 32;
-            e.ItemWidth = listAudioBlocks.Width;
-        }
-
-        private void listAudioBlocks_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            if (e.Index < 0)
-                return;
-
-            bool selected = ((e.State & DrawItemState.Selected) != 0);
-
-            var wave = listAudioBlocks.Items[e.Index] as AudioWave;
-            if (wave == null)
-                return;
-
-            string textMain = wave.ToString();
-            string textSub = wave.Length.ToString();
-            Font fontNormal = listAudioBlocks.Font;
-            Font fontBold = new Font(fontNormal, FontStyle.Bold);
-            Brush brushFG = selected ? SystemBrushes.HighlightText : SystemBrushes.ControlText;
-
-            Graphics g = e.Graphics;
-
-            // Clear the background
-            if (selected)
+            get
             {
-                Brush brushBG =
-                    new LinearGradientBrush(e.Bounds, SystemColors.Highlight, SystemColors.HotTrack,
-                                            LinearGradientMode.Horizontal);
-                g.FillRectangle(brushBG, e.Bounds);
+                if (listAudioBlocks.SelectedItems.Count == 1)
+                {
+                    return listAudioBlocks.SelectedItems[0].Tag as AudioWave;
+                }
+                return null;
+            }
+
+            set
+            {
+                if (value != null)
+                {
+                    ListViewItem[] items = listAudioBlocks.Items.Find(value.ToString(), false);
+                    if (items != null && items.Length == 1)
+                    {
+                        items[0].Selected = true;
+                    }
+                }
+                else
+                {
+                    listAudioBlocks.SelectedItems.Clear();
+                }
+            }
+        }
+
+        private void listAudioBlocks_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            if (e.Column != _sortColumn)
+            {
+                _sortColumn = e.Column;
+                listAudioBlocks.Sorting = SortOrder.Ascending;
             }
             else
             {
-                Brush brushBG = SystemBrushes.Window;
-                g.FillRectangle(brushBG, e.Bounds);
+                listAudioBlocks.Sorting = listAudioBlocks.Sorting == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
             }
 
-            const int ListPadding = 2;
+            listAudioBlocks.ListViewItemSorter = new ListViewItemComparer(e.Column, listAudioBlocks.Sorting == SortOrder.Descending);
 
-            // Draw the text
-            int textLeft = ListPadding * 2;
-
-            SizeF sizeMain = g.MeasureString(textMain, fontBold);
-            SizeF sizeSub = g.MeasureString(textSub, fontNormal);
-
-            int textSpacer = (int)(e.Bounds.Height - (sizeMain.Height + sizeSub.Height + ListPadding * 2)) / 2;
-
-            g.DrawString(textMain, fontBold, brushFG, textLeft, textSpacer + e.Bounds.Top + ListPadding);
-            g.DrawString(textSub, fontNormal, brushFG, textLeft,
-                         textSpacer + sizeMain.Height + e.Bounds.Top + ListPadding);
-
-        }
+            listAudioBlocks.Sort();
+        }        
 
     }
 }

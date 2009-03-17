@@ -29,12 +29,10 @@ namespace RageLib.Audio.SoundBank.Mono
 {
     internal struct Header : IFileAccess
     {
-        public int offsetWaveInfo;
-        public int unk1Reserved;
-        public int unk2Offset;
-        public int unk3Reserved;
+        public long offsetWaveInfo;
+        public long offsetUnknownTable;
         public int numBlocks;
-        public int unk4Reserved;
+        public int numUnknownTableEntries;
         public int headerSize;
 
         public Header(BinaryReader br) : this()
@@ -46,12 +44,11 @@ namespace RageLib.Audio.SoundBank.Mono
 
         public void Read(BinaryReader br)
         {
-            offsetWaveInfo = br.ReadInt32();
-            unk1Reserved = br.ReadInt32();
-            unk2Offset = br.ReadInt32();
-            unk3Reserved = br.ReadInt32();
+            offsetWaveInfo = br.ReadInt64();
+            offsetUnknownTable = br.ReadInt64();
+            
             numBlocks = br.ReadInt32();
-            unk4Reserved = br.ReadInt32();
+            numUnknownTableEntries = br.ReadInt32();
             headerSize = br.ReadInt32();
         }
 

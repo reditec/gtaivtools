@@ -29,18 +29,15 @@ namespace RageLib.Audio.SoundBank.MultiChannel
 {
     internal struct BlockInfo : IFileAccess
     {
-        public int offset1;
-        public int unk1Reserved;
-        public int offset2;
-        public int unk2Reserved;
-        public int offset3;
-        public int unk3Reserved;
+        public long offset1;
+        public long offset2;
+        public long offset3;
 
         public BlockChannelInfo[] channelInfo;
         public CodeIndices[] codeIndices;
 
         // computed
-        public int computed_offset;
+        public long computed_offset;
 
         public BlockInfo(BinaryReader br) : this()
         {
@@ -51,12 +48,9 @@ namespace RageLib.Audio.SoundBank.MultiChannel
 
         public void Read(BinaryReader br)
         {
-            offset1 = br.ReadInt32();
-            unk1Reserved = br.ReadInt32();
-            offset2 = br.ReadInt32();
-            unk2Reserved = br.ReadInt32();
-            offset3 = br.ReadInt32();
-            unk3Reserved = br.ReadInt32();
+            offset1 = br.ReadInt64();
+            offset2 = br.ReadInt64();
+            offset3 = br.ReadInt64();
         }
 
         public void Write(BinaryWriter bw)

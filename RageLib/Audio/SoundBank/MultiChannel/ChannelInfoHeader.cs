@@ -30,8 +30,7 @@ namespace RageLib.Audio.SoundBank.MultiChannel
     internal struct ChannelInfoHeader : IFileAccess
     {
         // header
-        public int offset;
-        public int unk1Reserved;
+        public long offset;
         public uint hash;
         public int size;
 
@@ -44,8 +43,7 @@ namespace RageLib.Audio.SoundBank.MultiChannel
 
         public void Read(BinaryReader br)
         {
-            offset = br.ReadInt32();
-            unk1Reserved = br.ReadInt32();
+            offset = br.ReadInt64();
             hash = br.ReadUInt32();
             size = br.ReadInt32();
         }

@@ -29,8 +29,7 @@ namespace RageLib.Audio.SoundBank.Mono
 {
     internal struct WaveInfoHeader : IFileAccess
     {
-        public int offset;
-        public int unk1Reserved;
+        public long offset;
         public uint hash;
         public int size;
 
@@ -43,8 +42,7 @@ namespace RageLib.Audio.SoundBank.Mono
 
         public void Read(BinaryReader br)
         {
-            offset = br.ReadInt32();
-            unk1Reserved = br.ReadInt32();
+            offset = br.ReadInt64();
             hash = br.ReadUInt32();
             size = br.ReadInt32();
         }

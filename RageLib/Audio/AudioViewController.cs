@@ -41,7 +41,7 @@ namespace RageLib.Audio
             _view.ExportMultichannelWAVClicked += View_ExportMultichannelWAVClicked;
             _view.SelectedWaveChanged += View_SelectedBlockChanged;
             _view.Disposed += View_Disposed;
-
+            
             _player = new AudioPlayer();
         }
 
@@ -76,13 +76,15 @@ namespace RageLib.Audio
 
             if (_file != null)
             {
+                bool first = true;
                 foreach (var block in _file)
                 {
                     _view.AddWave(block);
 
-                    if (_view.SelectedWave == null)
+                    if (first)
                     {
                         _view.SelectedWave = block;
+                        first = false;
                     }
                 }
             }
@@ -157,11 +159,14 @@ namespace RageLib.Audio
         private void View_SelectedBlockChanged(object sender, EventArgs e)
         {
             _player.Stop();
-            _player.Initialize(_file, _view.SelectedWave);
-
-            if (_view.AutoPlay)
+            if(_view.SelectedWave != null)
             {
-                _player.Play(_view.PlayLooped);
+                _player.Initialize(_file, _view.SelectedWave);
+
+                if (_view.AutoPlay)
+                {
+                    _player.Play(_view.PlayLooped);
+                }
             }
         }
     }

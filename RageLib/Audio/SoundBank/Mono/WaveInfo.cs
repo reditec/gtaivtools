@@ -30,8 +30,7 @@ namespace RageLib.Audio.SoundBank.Mono
 {
     internal struct WaveInfo : IFileAccess, ISoundWave
     {
-        public int offset;
-        public int unk2reserved;
+        public long offset;
         public uint hash;
         public int numSamplesInBytes;
         public int numSamples16Bit;
@@ -39,12 +38,10 @@ namespace RageLib.Audio.SoundBank.Mono
         public ushort samplerate;
         public ushort unk6;
         public int unk7;
-        public int offsetToStates;
-        public int unk9reserved;
-        public uint unk10;
-        public int unk11;
-        public short unk12;
-        public short unk13;
+        public long offsetToStates;
+        public uint numSamples16Bit2;
+        public uint unk11;
+        public uint unk12;
         public int numStates;
 
         public DviAdpcmDecoder.AdpcmState[] states;
@@ -97,8 +94,7 @@ namespace RageLib.Audio.SoundBank.Mono
 
         public void Read(BinaryReader br)
         {
-            offset = br.ReadInt32();
-            unk2reserved = br.ReadInt32();
+            offset = br.ReadInt64();
             hash = br.ReadUInt32();
             numSamplesInBytes = br.ReadInt32();
             numSamplesInBytes_computed = SoundBankMono.GetPaddedSize(numSamplesInBytes);
@@ -110,12 +106,10 @@ namespace RageLib.Audio.SoundBank.Mono
             if (Header.size > 32)
             {
                 unk7 = br.ReadInt32();
-                offsetToStates = br.ReadInt32();
-                unk9reserved = br.ReadInt32();
-                unk10 = br.ReadUInt32();
-                unk11 = br.ReadInt32();
-                unk12 = br.ReadInt16();
-                unk13 = br.ReadInt16();
+                offsetToStates = br.ReadInt64();
+                numSamples16Bit2 = br.ReadUInt32();
+                unk11 = br.ReadUInt32();
+                unk12 = br.ReadUInt32();
                 numStates = br.ReadInt32();
                 if (numStates > 0)
                 {

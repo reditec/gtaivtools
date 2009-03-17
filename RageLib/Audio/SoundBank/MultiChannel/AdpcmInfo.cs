@@ -30,7 +30,6 @@ namespace RageLib.Audio.SoundBank.MultiChannel
     internal struct AdpcmInfo : IFileAccess
     {
         // adpcm states and info...
-        public int unk1Reserved;
         public int numSamples16Bit;
         public short[] unk3;
         public int numStates;
@@ -45,7 +44,6 @@ namespace RageLib.Audio.SoundBank.MultiChannel
 
         public void Read(BinaryReader br)
         {
-            unk1Reserved = br.ReadInt32();
             numSamples16Bit = br.ReadInt32();
             unk3 = new short[]
                        {

@@ -117,11 +117,6 @@ namespace RageLib.Audio.SoundBank
 
             Header = new Mono.Header(br);
 
-            if (Header.unk1Reserved != 0 || Header.unk3Reserved != 0)
-            {
-                throw new SoundBankException("Unexpected values");
-            }
-
             if (Header.offsetWaveInfo > Header.headerSize)
             {
                 throw new SoundBankException("WaveInfo is outside of header");

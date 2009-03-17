@@ -41,7 +41,7 @@ namespace RageLib.Audio.SoundBank.MultiChannel
         public short unk5;
         public short unk6;
         public short unk7Reserved;
-        public int offsetAdpcmStateTable;
+        public long offsetAdpcmStateTable;
 
         public AdpcmInfo adpcmInfo;
 
@@ -71,7 +71,7 @@ namespace RageLib.Audio.SoundBank.MultiChannel
             unk6 = br.ReadInt16();
             unk7Reserved = br.ReadInt16();
 
-            offsetAdpcmStateTable = br.ReadInt32();
+            offsetAdpcmStateTable = br.ReadInt64();
         }
 
         public void Write(BinaryWriter bw)

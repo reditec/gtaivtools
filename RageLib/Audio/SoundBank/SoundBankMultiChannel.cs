@@ -168,7 +168,7 @@ namespace RageLib.Audio.SoundBank
 
             BinaryWriter writer = new BinaryWriter(outStream);
 
-            int offset = _blockInfo[blockIndex].computed_offset + _sizeBlockHeader;
+            long offset = _blockInfo[blockIndex].computed_offset + _sizeBlockHeader;
             soundBankStream.Seek(offset, SeekOrigin.Begin);
 
             if (_isCompressed)
@@ -340,15 +340,10 @@ namespace RageLib.Audio.SoundBank
 
             bool errorCondition = false;
 
-            if (_fileHeader.unk1Reserved != 0) errorCondition = true;
             if (!(_fileHeader.numBlocks > 0)) errorCondition = true;
             if (!(_fileHeader.sizeBlock > 0)) errorCondition = true;
             if (_fileHeader.numBlocks * _fileHeader.sizeBlock > br.BaseStream.Length) errorCondition = true;
-            if (_fileHeader.unk2Reserved != 0) errorCondition = true;
-            if (_fileHeader.unk4Reserved != 0) errorCondition = true;
-            if (_fileHeader.unk6Reserved != 0) errorCondition = true;
             if (_fileHeader.offsetBlockInfo > _fileHeader.sizeHeader) errorCondition = true;
-            if (_fileHeader.unk5offset > _fileHeader.sizeHeader) errorCondition = true;
 
             if (errorCondition)
             {
@@ -372,7 +367,7 @@ namespace RageLib.Audio.SoundBank
                 br.BaseStream.Seek(currentOffset + _channelInfoHeader[i].offset, SeekOrigin.Begin);
                 _channelInfo[i] = new ChannelInfo(br);
 
-                if (_channelInfoHeader[i].size <= 32)
+                if (_channelInfoHeader[i].size <= 36)
                 {
                     _isCompressed = false;
                 }
