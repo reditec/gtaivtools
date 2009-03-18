@@ -82,7 +82,7 @@ namespace RageLib.Models
         }
          */
 
-        internal static ModelNode GenerateModel(FragTypeModel fragTypeModel, TextureFile textures)
+        internal static ModelNode GenerateModel(FragTypeModel fragTypeModel, TextureFile[] textures)
         {
             var fragTypeGroup = new Model3DGroup();
             var fragTypeNode = new ModelNode { DataModel = fragTypeModel, Model3D = fragTypeGroup, Name = "FragType", NoCount = true };
@@ -106,7 +106,7 @@ namespace RageLib.Models
             return fragTypeNode;
         }
 
-        internal static ModelNode GenerateModel(DrawableModelDictionary drawableModelDictionary, TextureFile textures)
+        internal static ModelNode GenerateModel(DrawableModelDictionary drawableModelDictionary, TextureFile[] textures)
         {
             var dictionaryTypeGroup = new Model3DGroup();
             var dictionaryTypeNode = new ModelNode { DataModel = drawableModelDictionary, Model3D = dictionaryTypeGroup, Name = "Dictionary", NoCount = true };
@@ -120,12 +120,12 @@ namespace RageLib.Models
             return dictionaryTypeNode;
         }
 
-        internal static ModelNode GenerateModel(DrawableModel drawableModel, TextureFile textures)
+        internal static ModelNode GenerateModel(DrawableModel drawableModel, TextureFile[] textures)
         {
             return GenerateModel(new Drawable(drawableModel), textures);
         }
 
-        internal static ModelNode GenerateModel(Drawable drawable, TextureFile textures)
+        internal static ModelNode GenerateModel(Drawable drawable, TextureFile[] textures)
         {
             var random = new Random();
 
@@ -147,7 +147,14 @@ namespace RageLib.Models
                     // 2. Try looking in any attached external texture dictionaries
                     if (textureObj == null)
                     {
-                        textureObj = FindTexture(textures, texture.TextureName);
+                        foreach (var file in textures)
+                        {
+                            textureObj = FindTexture(file, texture.TextureName);
+                            if (textureObj != null)
+                            {
+                                break;
+                            }
+                        }
                     }
 
                     // Generate a brush if we were successful

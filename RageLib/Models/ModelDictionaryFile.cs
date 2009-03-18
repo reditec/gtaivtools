@@ -41,7 +41,7 @@ namespace RageLib.Models
             File.Open(stream);
         }
 
-        public ModelNode GetModel(TextureFile textures)
+        public ModelNode GetModel(TextureFile[] textures)
         {
             return ModelGenerator.GenerateModel(File.Data, textures);
         }

@@ -18,6 +18,7 @@
 
 \**********************************************************************/
 
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using RageLib.Models;
@@ -35,7 +36,20 @@ namespace SparkIV.Viewer.Models
 
             var fileName = file.Name;
             var fileNameWOE = fileName.Substring(0, fileName.LastIndexOf('.'));
-            var textureFileName = fileNameWOE + ".wtd";
+
+            List<TextureFile> textures = new List<TextureFile>();
+            TryLoadTexture(textures, file, fileNameWOE);
+            TryLoadTexture(textures, file, "vehshare");
+            TryLoadTexture(textures, file, "vehshare_truck");
+            controller.TextureFiles = textures.ToArray();
+
+            controller.ModelFile = modelfile;
+            return view;
+        }
+
+        private void TryLoadTexture(List<TextureFile> textureList, File file, string name)
+        {
+            var textureFileName = name + ".wtd";
             var textures = file.ParentDirectory.FindByName(textureFileName) as File;
             if (textures != null)
             {
@@ -44,16 +58,13 @@ namespace SparkIV.Viewer.Models
                 try
                 {
                     textureFile.Open(textureMS);
-                    controller.TextureFile = textureFile;
+                    textureList.Add(textureFile);
                 }
                 finally
                 {
                     textureMS.Close();
                 }
             }
-
-            controller.ModelFile = modelfile;
-            return view;
         }
 
         #region Implementation of IViewer

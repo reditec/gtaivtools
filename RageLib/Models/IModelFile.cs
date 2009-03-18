@@ -28,6 +28,6 @@ namespace RageLib.Models
     {
         void Open(string filename);
         void Open(Stream stream);
-        ModelNode GetModel(TextureFile textures);
+        ModelNode GetModel(TextureFile[] textures);
     }
 }

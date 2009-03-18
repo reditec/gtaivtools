@@ -32,6 +32,9 @@ namespace RageLib.Models.Data
         public Vector4 Position { get; private set; }
         public Vector4 Rotation { get; private set; }
 
+        public Vector4 AbsolutePosition { get; private set; }
+        public Vector4 AbsoluteRotation { get; private set; }
+
         public List<Bone> Children { get; private set; }
 
         internal Bone(Resource.Skeletons.Bone bone, Bone parent)
@@ -42,6 +45,9 @@ namespace RageLib.Models.Data
 
             Position = bone.Position;
             Rotation = bone.RotationEuler;
+
+            AbsolutePosition = bone.AbsolutePosition;
+            AbsoluteRotation = bone.AbsoluteRotationEuler;
 
             Children = new List<Bone>();
         }

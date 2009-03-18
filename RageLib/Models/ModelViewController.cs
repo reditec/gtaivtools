@@ -32,7 +32,7 @@ namespace RageLib.Models
         private readonly ModelView _view;
         private IModelFile _modelFile;
         private ModelNode _rootModelNode;
-        private TextureFile _textureFile;
+        private TextureFile[] _textureFiles;
         private string _workingDirectory;
 
         public ModelViewController(ModelView view)
@@ -78,10 +78,10 @@ namespace RageLib.Models
             }
         }
 
-        public TextureFile TextureFile
+        public TextureFile[] TextureFiles
         {
-            get { return _textureFile; }
-            set { _textureFile = value; }
+            get { return _textureFiles; }
+            set { _textureFiles = value; }
         }
 
         public IModelFile ModelFile
@@ -98,7 +98,7 @@ namespace RageLib.Models
         {
             if (_modelFile != null)
             {
-                _rootModelNode = _modelFile.GetModel(_textureFile);
+                _rootModelNode = _modelFile.GetModel(_textureFiles);
                 _view.NavigationModel = _rootModelNode;
             }
             else
@@ -135,10 +135,13 @@ namespace RageLib.Models
 
         private void View_Disposed(object sender, EventArgs e)
         {
-            if (TextureFile != null)
+            if (TextureFiles != null)
             {
-                TextureFile.Dispose();
-                TextureFile = null;
+                foreach (var file in _textureFiles)
+                {
+                    file.Dispose();
+                }
+                TextureFiles = null;
             }
             
             if (ModelFile != null)

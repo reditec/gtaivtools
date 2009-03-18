@@ -46,7 +46,7 @@ namespace RageLib.Models
             get { return File.Data.ShaderGroup.TextureDictionary; }
         }
 
-        public ModelNode GetModel(TextureFile textures)
+        public ModelNode GetModel(TextureFile[] textures)
         {
             return ModelGenerator.GenerateModel(File.Data, textures);
         }
