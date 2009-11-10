@@ -54,7 +54,7 @@ namespace SparkIV
             InitializeComponent();
 
             Version ver = Assembly.GetExecutingAssembly().GetName().Version;
-            tslAbout.Text = "Spark IV " + ver.Major + "." + ver.Minor + "." + ver.Build + "." + ver.Revision +
+            tslAbout.Text = "SparkIV " + ver.Major + "." + ver.Minor + "." + ver.Build + "." + ver.Revision + "\n" +
                             "(C)2008-2009, Aru";
 
             SetInitialUIState();
@@ -732,6 +732,11 @@ namespace SparkIV
         #endregion
 
         private void tslAbout_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
         {
 
         }

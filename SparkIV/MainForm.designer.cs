@@ -97,11 +97,11 @@ namespace SparkIV
             // tsContainer.ContentPanel
             // 
             this.tsContainer.ContentPanel.Controls.Add(this.splitContainer);
-            this.tsContainer.ContentPanel.Size = new System.Drawing.Size(732, 458);
+            this.tsContainer.ContentPanel.Size = new System.Drawing.Size(651, 458);
             this.tsContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tsContainer.Location = new System.Drawing.Point(0, 0);
             this.tsContainer.Name = "tsContainer";
-            this.tsContainer.Size = new System.Drawing.Size(732, 504);
+            this.tsContainer.Size = new System.Drawing.Size(651, 504);
             this.tsContainer.TabIndex = 1;
             this.tsContainer.Text = "toolStripContainer1";
             // 
@@ -123,7 +123,7 @@ namespace SparkIV
             // splitContainer.Panel2
             // 
             this.splitContainer.Panel2.Controls.Add(this.lvFiles);
-            this.splitContainer.Size = new System.Drawing.Size(732, 458);
+            this.splitContainer.Size = new System.Drawing.Size(651, 458);
             this.splitContainer.SplitterDistance = 192;
             this.splitContainer.TabIndex = 2;
             // 
@@ -138,7 +138,7 @@ namespace SparkIV
             this.lvFiles.HideSelection = false;
             this.lvFiles.Location = new System.Drawing.Point(0, 0);
             this.lvFiles.Name = "lvFiles";
-            this.lvFiles.Size = new System.Drawing.Size(732, 458);
+            this.lvFiles.Size = new System.Drawing.Size(651, 458);
             this.lvFiles.TabIndex = 1;
             this.lvFiles.UseCompatibleStateImageBehavior = false;
             this.lvFiles.View = System.Windows.Forms.View.Details;
@@ -186,7 +186,7 @@ namespace SparkIV
             this.tsToolbar.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.tsToolbar.Location = new System.Drawing.Point(0, 0);
             this.tsToolbar.Name = "tsToolbar";
-            this.tsToolbar.Size = new System.Drawing.Size(732, 46);
+            this.tsToolbar.Size = new System.Drawing.Size(651, 46);
             this.tsToolbar.Stretch = true;
             this.tsToolbar.TabIndex = 0;
             // 
@@ -330,12 +330,13 @@ namespace SparkIV
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(732, 504);
+            this.ClientSize = new System.Drawing.Size(651, 504);
             this.Controls.Add(this.tsContainer);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Spark IV";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.tsContainer.ContentPanel.ResumeLayout(false);
             this.tsContainer.TopToolStripPanel.ResumeLayout(false);
