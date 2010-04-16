@@ -73,6 +73,7 @@ namespace RageLib.Common
 				                       0xB8C38C /* 1.0.2.2 */,
                                        //Worldwide
                                        0xBE1370 /* 1.0.4r2 */,
+									   0xBE6540 /* 1.0.6 */,
                                    };
             const string validHash = "DEA375EF1E6EF2223A1221C2C575C47BF17EFA5E";
             byte[] key = null;
