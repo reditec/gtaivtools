@@ -57,23 +57,24 @@ namespace RageLib.Common
             var gtaExe = Path.Combine(gtaPath, "gtaiv.exe");
 
             uint[] searchOffsets = {
-                                       //Old EFIGS EXEs
+                                       //EFIGS EXEs
                                        0xA94204 /* 1.0 */, 
                                        0xB607C4 /* 1.0.1 */, 
                                        0xB56BC4 /* 1.0.2 */,
                                        0xB75C9C /* 1.0.3 */,
                                        0xB7AEF4 /* 1.0.4 */,
-                                       //Old Russian EXEs
+									   0xBE1370 /* 1.0.4r2 */,
+									   0xBE6540 /* 1.0.6 */,
+                                       0xBE7540 /* 1.0.7 */,
+                                       //Russian EXEs
                                        0xB5B65C /* 1.0.0.1 */,
                                        0xB569F4 /* 1.0.1.1 */,
                                        0xB76CB4 /* 1.0.2.1 */,
                                        0xB7AEFC /* 1.0.3.1 */,
-                                       //Old Japan EXEs
+                                       //Japan EXEs
 				                       0xB8813C /* 1.0.1.2 */,
 				                       0xB8C38C /* 1.0.2.2 */,
-                                       //Worldwide
-                                       0xBE1370 /* 1.0.4r2 */,
-									   0xBE6540 /* 1.0.6 */,
+									   0xBE6510 /* 1.0.5.2 */,
                                    };
             const string validHash = "DEA375EF1E6EF2223A1221C2C575C47BF17EFA5E";
             byte[] key = null;
