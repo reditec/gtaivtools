@@ -280,6 +280,7 @@ namespace SparkIV
             this.tslAbout.Name = "tslAbout";
             this.tslAbout.Size = new System.Drawing.Size(49, 43);
             this.tslAbout.Text = "Spark IV";
+            this.tslAbout.ToolTipText = "Click to check for new updates.";
             this.tslAbout.Click += new System.EventHandler(this.tslAbout_Click);
             // 
             // tss2
@@ -324,6 +325,7 @@ namespace SparkIV
             // 
             this.tstFilterBox.Name = "tstFilterBox";
             this.tstFilterBox.Size = new System.Drawing.Size(100, 46);
+            this.tstFilterBox.ToolTipText = "Type all or part of a file name.\r\nSearch is case-sensitive.";
             this.tstFilterBox.TextChanged += new System.EventHandler(this.tstFilterBox_TextChanged);
             // 
             // MainForm
