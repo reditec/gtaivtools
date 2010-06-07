@@ -855,7 +855,7 @@ catch (Exception ex)
             }
             else
             {
-                DialogResult result = MessageBox.Show(String.Format("There is no update available at this time."), "No update available", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                DialogResult result = MessageBox.Show(String.Format("There are no updates available at this time."), "No update available", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 

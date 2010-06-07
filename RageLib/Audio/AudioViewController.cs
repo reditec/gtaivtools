@@ -41,7 +41,7 @@ namespace RageLib.Audio
             _view.ExportMultichannelWAVClicked += View_ExportMultichannelWAVClicked;
             _view.SelectedWaveChanged += View_SelectedBlockChanged;
             _view.Disposed += View_Disposed;
-            
+
             _player = new AudioPlayer();
         }
 
@@ -49,7 +49,18 @@ namespace RageLib.Audio
         {
             if (_view.SelectedWave != null)
             {
-                _player.Play(_view.PlayLooped);
+                try
+                {
+                    _player.Stop();
+                    int pauseTime = 90;
+                    System.Threading.Thread.Sleep(pauseTime);
+                    _player.Play(_view.PlayLooped);
+                }
+                catch
+                {
+                    MessageBox.Show("Audio play error.",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -128,7 +139,7 @@ namespace RageLib.Audio
                     MessageBox.Show("Audio exported.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
-            
+
         }
 
         private void View_ExportMultichannelWAVClicked(object sender, EventArgs e)
@@ -159,13 +170,23 @@ namespace RageLib.Audio
         private void View_SelectedBlockChanged(object sender, EventArgs e)
         {
             _player.Stop();
-            if(_view.SelectedWave != null)
+            if (_view.SelectedWave != null)
             {
                 _player.Initialize(_file, _view.SelectedWave);
 
                 if (_view.AutoPlay)
                 {
-                    _player.Play(_view.PlayLooped);
+                    try
+                    {
+                        int pauseTime = 90;
+                        System.Threading.Thread.Sleep(pauseTime);
+                        _player.Play(_view.PlayLooped);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Audio play error.",
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
         }

@@ -86,8 +86,7 @@
     <Compile Include="Player\WaveOut.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SoundBank\Hashes\NamesMono.txt" />
-    <EmbeddedResource Include="SoundBank\Hashes\NamesMultiChannel.txt" />
+    <EmbeddedResource Include="SoundBank\Hashes\Names.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

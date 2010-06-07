@@ -18,6 +18,7 @@
 
 \**********************************************************************/
 
+using SparkIV.Properties;
 using System;
 using System.IO;
 using System.Windows.Forms;

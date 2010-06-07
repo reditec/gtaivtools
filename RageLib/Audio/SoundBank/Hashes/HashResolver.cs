@@ -33,8 +33,7 @@ namespace RageLib.Audio.SoundBank.Hashes
         {
             _knownNames = new Dictionary<uint, string>();
 
-            LoadFromResource("NamesMono.txt");
-            LoadFromResource("NamesMultiChannel.txt");
+            LoadFromResource("Names.txt");
         }
 
         private static void LoadFromResource(string filename)
