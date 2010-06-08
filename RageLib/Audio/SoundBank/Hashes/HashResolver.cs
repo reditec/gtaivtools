@@ -32,7 +32,6 @@ namespace RageLib.Audio.SoundBank.Hashes
         static HashResolver()
         {
             _knownNames = new Dictionary<uint, string>();
-
             LoadFromResource("Names.txt");
         }
 
