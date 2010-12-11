@@ -12,7 +12,7 @@
     <AssemblyName>SparkIV</AssemblyName>
     <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ApplicationIcon>..\GTAIV.ico</ApplicationIcon>
+    <ApplicationIcon>GTAIV.ico</ApplicationIcon>
     <ApplicationManifest>..\SparkIV\Properties\SparkIV.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -180,6 +180,8 @@
     <EmbeddedResource Include="Viewer\Xml\defaultss.xslt" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="EFLC.ico" />
+    <Content Include="GTAIV.ico" />
     <Content Include="SparkIV.Config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

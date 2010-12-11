@@ -57,7 +57,8 @@ namespace SparkIV
             this.lvcSize = new System.Windows.Forms.ColumnHeader();
             this.lvcResource = new System.Windows.Forms.ColumnHeader();
             this.tsToolbar = new System.Windows.Forms.ToolStrip();
-            this.tsbBrowseGame = new System.Windows.Forms.ToolStripButton();
+            this.toolStripGTAIV = new System.Windows.Forms.ToolStripButton();
+            this.toolStripEFLC = new System.Windows.Forms.ToolStripButton();
             this.tsbOpen = new System.Windows.Forms.ToolStripButton();
             this.tsbSave = new System.Windows.Forms.ToolStripButton();
             this.tsbRebuild = new System.Windows.Forms.ToolStripButton();
@@ -97,11 +98,11 @@ namespace SparkIV
             // tsContainer.ContentPanel
             // 
             this.tsContainer.ContentPanel.Controls.Add(this.splitContainer);
-            this.tsContainer.ContentPanel.Size = new System.Drawing.Size(651, 458);
+            this.tsContainer.ContentPanel.Size = new System.Drawing.Size(700, 471);
             this.tsContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tsContainer.Location = new System.Drawing.Point(0, 0);
             this.tsContainer.Name = "tsContainer";
-            this.tsContainer.Size = new System.Drawing.Size(651, 504);
+            this.tsContainer.Size = new System.Drawing.Size(700, 517);
             this.tsContainer.TabIndex = 1;
             this.tsContainer.Text = "toolStripContainer1";
             // 
@@ -123,7 +124,7 @@ namespace SparkIV
             // splitContainer.Panel2
             // 
             this.splitContainer.Panel2.Controls.Add(this.lvFiles);
-            this.splitContainer.Size = new System.Drawing.Size(651, 458);
+            this.splitContainer.Size = new System.Drawing.Size(700, 471);
             this.splitContainer.SplitterDistance = 192;
             this.splitContainer.TabIndex = 2;
             // 
@@ -138,7 +139,7 @@ namespace SparkIV
             this.lvFiles.HideSelection = false;
             this.lvFiles.Location = new System.Drawing.Point(0, 0);
             this.lvFiles.Name = "lvFiles";
-            this.lvFiles.Size = new System.Drawing.Size(651, 458);
+            this.lvFiles.Size = new System.Drawing.Size(700, 471);
             this.lvFiles.TabIndex = 1;
             this.lvFiles.UseCompatibleStateImageBehavior = false;
             this.lvFiles.View = System.Windows.Forms.View.Details;
@@ -168,7 +169,8 @@ namespace SparkIV
             this.tsToolbar.Dock = System.Windows.Forms.DockStyle.None;
             this.tsToolbar.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.tsToolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbBrowseGame,
+            this.toolStripGTAIV,
+            this.toolStripEFLC,
             this.tsbOpen,
             this.tsbSave,
             this.tsbRebuild,
@@ -186,20 +188,31 @@ namespace SparkIV
             this.tsToolbar.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.tsToolbar.Location = new System.Drawing.Point(0, 0);
             this.tsToolbar.Name = "tsToolbar";
-            this.tsToolbar.Size = new System.Drawing.Size(651, 46);
+            this.tsToolbar.Size = new System.Drawing.Size(700, 46);
             this.tsToolbar.Stretch = true;
             this.tsToolbar.TabIndex = 0;
             // 
-            // tsbBrowseGame
+            // toolStripGTAIV
             // 
-            this.tsbBrowseGame.Image = ((System.Drawing.Image)(resources.GetObject("tsbBrowseGame.Image")));
-            this.tsbBrowseGame.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tsbBrowseGame.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbBrowseGame.Name = "tsbBrowseGame";
-            this.tsbBrowseGame.Size = new System.Drawing.Size(49, 43);
-            this.tsbBrowseGame.Text = "&Browse";
-            this.tsbBrowseGame.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbBrowseGame.Click += new System.EventHandler(this.tsbBrowseGame_Click);
+            this.toolStripGTAIV.Image = ((System.Drawing.Image)(resources.GetObject("toolStripGTAIV.Image")));
+            this.toolStripGTAIV.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripGTAIV.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripGTAIV.Name = "toolStripGTAIV";
+            this.toolStripGTAIV.Size = new System.Drawing.Size(44, 43);
+            this.toolStripGTAIV.Text = "&GTAIV";
+            this.toolStripGTAIV.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.toolStripGTAIV.Click += new System.EventHandler(this.toolStripGTAIV_Click);
+            // 
+            // toolStripEFLC
+            // 
+            this.toolStripEFLC.Image = ((System.Drawing.Image)(resources.GetObject("toolStripEFLC.Image")));
+            this.toolStripEFLC.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripEFLC.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripEFLC.Name = "toolStripEFLC";
+            this.toolStripEFLC.Size = new System.Drawing.Size(39, 43);
+            this.toolStripEFLC.Text = "E&FLC";
+            this.toolStripEFLC.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.toolStripEFLC.Click += new System.EventHandler(this.toolStripEFLC_Click);
             // 
             // tsbOpen
             // 
@@ -332,12 +345,12 @@ namespace SparkIV
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(651, 504);
+            this.ClientSize = new System.Drawing.Size(700, 517);
             this.Controls.Add(this.tsContainer);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Spark IV";
+            this.Text = "Spark IV (Beta)";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.tsContainer.ContentPanel.ResumeLayout(false);
@@ -375,9 +388,10 @@ namespace SparkIV
         private System.Windows.Forms.ToolStripSeparator tss2;
         private System.Windows.Forms.ToolStripTextBox tstFilterBox;
         private System.Windows.Forms.ToolStripLabel tslFilter;
-        private System.Windows.Forms.ToolStripButton tsbBrowseGame;
+        private System.Windows.Forms.ToolStripButton toolStripGTAIV;
         private System.Windows.Forms.ToolStripButton tsbPreview;
         private System.Windows.Forms.ToolStripButton tsbEdit;
         private System.Windows.Forms.ToolStripSeparator tss3;
+        private System.Windows.Forms.ToolStripButton toolStripEFLC;
     }
 }

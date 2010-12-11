@@ -25,10 +25,10 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SparkIV")]
-[assembly: AssemblyDescription("IMG/RPF Archive Viewer/Editor for GTAIV")]
+[assembly: AssemblyDescription("IMG/RPF Archive Viewer/Editor for GTA IV & EFLC")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Aru")]
-[assembly: AssemblyProduct("SparkIV")]
+[assembly: AssemblyProduct("SparkIV Beta")]
 [assembly: AssemblyCopyright("2008-2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

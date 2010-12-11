@@ -22,6 +22,7 @@ using System;
 using System.IO;
 using RageLib.Audio.SoundBank;
 using WaveLib;
+using System.Windows.Forms;
 
 namespace RageLib.Audio
 {
@@ -117,13 +118,21 @@ namespace RageLib.Audio
 
         public void Play(bool looped)
         {
-            Stop();
+            try
+            {
+                Stop();
 
-            _looped = looped;
-            _lastBlock = -1;
-            _state = new DviAdpcmDecoder.AdpcmState();
-            _player = new WaveOutPlayer(-1, _format, _wave.BlockSize * 4, 3, Filler);
-            _leftOverBuffer = null;
+                _looped = looped;
+                _lastBlock = -1;
+                _state = new DviAdpcmDecoder.AdpcmState();
+                _player = new WaveOutPlayer(-1, _format, _wave.BlockSize * 4, 3, Filler);
+                _leftOverBuffer = null;
+            }
+            catch
+            {
+                MessageBox.Show("Audio play error.",
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         public void Stop()

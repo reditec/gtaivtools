@@ -30,7 +30,7 @@ namespace RageLib.Common
         static KeyStore()
         {
             // Default Key Loader
-            SetKeyLoader( () => KeyUtil.FindKey( KeyUtil.FindGTADirectory() ) );
+            SetKeyLoader( () => KeyUtilGTAIV.FindKey( KeyUtilGTAIV.FindGTADirectory() ) );
         }
 
         public static void SetKeyLoader(KeyLoader loader)

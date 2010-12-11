@@ -65,10 +65,11 @@
     </Compile>
     <Compile Include="BigEndianBinaryReader.cs" />
     <Compile Include="Compression\CompressionCodecFactory.cs" />
+    <Compile Include="KeyUtilEFLC.cs" />
     <Compile Include="DataUtil.cs" />
     <Compile Include="Hasher.cs" />
     <Compile Include="IFileAccess.cs" />
-    <Compile Include="KeyUtil.cs" />
+    <Compile Include="KeyUtilGTAIV.cs" />
     <Compile Include="KeyStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Compression\ICompressionCodec.cs" />

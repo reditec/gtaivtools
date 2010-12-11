@@ -51,7 +51,7 @@ namespace Scruff
             while (gtaPath == null)
             {
                 Console.Error.WriteLine("ERROR");
-                Console.Error.WriteLine("Could not find GTAIV directory. Please install GTAIV or copy GTAIV.exe\n" +
+                Console.Error.WriteLine("Could not find GTAIV directory. Please install GTAIV or copy EFLC.exe\n" +
                                     "to the same path as Scruff.");
                 return 1;
             }
@@ -60,9 +60,9 @@ namespace Scruff
             if (key == null)
             {
                 Console.Error.WriteLine("ERROR");
-                Console.Error.WriteLine("Your GTAIV.exe seems to be modified or is a newer version than this tool\n" +
+                Console.Error.WriteLine("Your EFLC.exe seems to be modified or is a newer version than this tool\n" +
                                         "supports. If it is a newer version, please check for an update of Scruff.\n" +
-                                        "Scruff can not run without a supported GTAIV.exe file.");
+                                        "Scruff can not run without a supported EFLC.exe file.");
                 return 1;
             }
 
