@@ -18,75 +18,39 @@
 
 \**********************************************************************/
 
-using System;
-using System.IO;
-using System.Security.Cryptography;
-using Microsoft.Win32;
-
 namespace RageLib.Common
 {
-    public static class KeyUtilEFLC
+    public class KeyUtilEFLC : KeyUtil
     {
-        public static string FindGTADirectory()
+        public override string ExecutableName
         {
-            string dir = null;
-
-            if (File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "EFLC.exe")))
-            {
-                dir = Directory.GetCurrentDirectory();
-            }
-            else
-            {
-                const string Key32 = @"SOFTWARE\Rockstar Games\EFLC";
-                const string Key64 = @"SOFTWARE\Wow6432Node\Rockstar Games\EFLC";
-                const string ValueName = "InstallFolder";
-
-                RegistryKey key;
-                if ((key = Registry.LocalMachine.OpenSubKey(Key32)) != null ||
-                    (key = Registry.LocalMachine.OpenSubKey(Key64)) != null)
-                {
-                    dir = key.GetValue(ValueName).ToString();
-                }
-            }
-
-            return dir;
+            get { return "EFLC.exe"; }
         }
 
-        public static byte[] FindKey(string gtaPath)
+        protected override string[] PathRegistryKeys
         {
-            var gtaExe = Path.Combine(gtaPath, "EFLC.exe");
-
-            uint[] searchOffsets = {
-                                       //EFLC
-                                       0xBEF028 /* 1.1.2 */,
-                                       0xC705E0 /* 1.1.1 */,
-                                       0xC6DEEC /* 1.1.0 */,
-                                   };
-            const string validHash = "DEA375EF1E6EF2223A1221C2C575C47BF17EFA5E";
-            byte[] key = null;
-
-            var fs = new FileStream(gtaExe, FileMode.Open, FileAccess.Read);
-
-            foreach (var u in searchOffsets)
+            get
             {
-                if (u <= fs.Length - 32)
-                {
-                    var tempKey = new byte[32];
-                    fs.Seek(u, SeekOrigin.Begin);
-                    fs.Read(tempKey, 0, 32);
-
-                    var hash = BitConverter.ToString(SHA1.Create().ComputeHash(tempKey)).Replace("-", "");
-                    if (hash == validHash)
-                    {
-                        key = tempKey;
-                        break;
-                    }
-                }
+                return new[]
+                           {
+                               @"SOFTWARE\Rockstar Games\EFLC",
+                               @"SOFTWARE\Wow6432Node\Rockstar Games\EFLC"
+                           };
             }
+        }
 
-            fs.Close();
-
-            return key;
+        protected override uint[] SearchOffsets
+        {
+            get
+            {
+                return new uint[]
+                           {
+                               //EFLC
+                               0xBEF028 /* 1.1.2 */,
+                               0xC705E0 /* 1.1.1 */,
+                               0xC6DEEC /* 1.1.0 */,
+                           };
+            }
         }
     }
 }

@@ -19,7 +19,6 @@
 \**********************************************************************/
 
 using System;
-using System.Net;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -51,9 +50,6 @@ namespace SparkIV
         private string _lastImportExportPath;
 
         private Directory _selectedDir;
-
-        public static string GTAPathEFLC { get; private set; }
-        public static string GTAPathIV { get; private set; }
 
         public MainForm()
         {
@@ -374,145 +370,83 @@ namespace SparkIV
             }
         }
 
+        private void LoadGameDirectory( KeyUtil keyUtil, string gameName )
+        {
+            using (new WaitCursor(this))
+            {
+                FileSystem fs = new RealFileSystem();
+
+                string gamePath = keyUtil.FindGameDirectory();
+                while (gamePath == null)
+                {
+                    var fbd = new FolderBrowserDialog
+                    {
+                        Description =
+                            "Could not find the " + gameName + " game directory. Please select the directory containing " + keyUtil.ExecutableName,
+                        ShowNewFolderButton = false
+                    };
+
+                    if (fbd.ShowDialog() == DialogResult.Cancel)
+                    {
+                        MessageBox.Show(
+                            keyUtil.ExecutableName +
+                            " is required to extract cryptographic keys for this program to function. " +
+                            "SparkIV can not run without this file.", "Error", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                        return;
+                    }
+                    if (System.IO.File.Exists(Path.Combine(fbd.SelectedPath, keyUtil.ExecutableName)))
+                    {
+                        gamePath = fbd.SelectedPath;
+                    }
+                }
+
+                byte[] key = keyUtil.FindKey( gamePath );
+
+                if (key == null)
+                {
+                    string message = "Your " + keyUtil.ExecutableName + " seems to be modified or is a newer version than this tool supports. " +
+                                    "SparkIV can not run without a supported " + keyUtil.ExecutableName + " file." + "\n" + "Would you like to check for updates?";
+                    string caption = "Newer or Modified " + keyUtil.ExecutableName;
+
+                    if (MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
+                    {
+                        Updater.CheckForUpdate();
+                    }
+
+                    return;
+                }
+
+
+                KeyStore.SetKeyLoader(() => key);
+
+                fs.Open(gamePath);
+
+                if (_fs != null)
+                {
+                    _fs.Close();
+                }
+                _fs = fs;
+
+                Text = Application.ProductName + " - Browse Game Directory";
+
+                PopulateUI();
+            }
+        }
+
         #endregion
 
         #region Toolbar Handlers
 
         private void toolStripEFLC_Click(object sender, EventArgs e)
         {
-            FileSystem fs = new RealFileSystem();
-            using (new WaitCursor(this))
-            {
-                string gtaPath = KeyUtilEFLC.FindGTADirectory();
-                while (gtaPath == null)
-                {
-                    var fbd = new FolderBrowserDialog
-                    {
-                        Description =
-                            "Could not find the EFLC game directory. Please select the directory containing EFLC.exe",
-                        ShowNewFolderButton = false
-                    };
-
-                    if (fbd.ShowDialog() == DialogResult.Cancel)
-                    {
-                        MessageBox.Show(
-                            "EFLC.exe is required to extract cryptographic keys for this program to function. " +
-                            "SparkIV can not run without this file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-                    if (System.IO.File.Exists(Path.Combine(fbd.SelectedPath, "EFLC.exe")))
-                    {
-                        gtaPath = fbd.SelectedPath;
-                    }
-                }
-
-                byte[] key = KeyUtilEFLC.FindKey(gtaPath);
-                if (key == null)
-                {
-                    string message = "Your EFLC.exe seems to be modified or is a newer version than this tool supports. " +
-                                    "SparkIV can not run without a supported EFLC.exe file." + "\n" + "Would you like to check for updates?";
-                    string caption = "Newer or Modified EFLC.exe";
-                    MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-                    DialogResult result;
-
-                    result = MessageBox.Show(message, caption, buttons, MessageBoxIcon.Error);
-
-                    if (result == DialogResult.Yes)
-                    {
-                        Updater.CheckForUpdate();
-                    }
-
-                    return;
-                }
-
-                KeyStore.SetKeyLoader(() => key);
-
-                GTAPathEFLC = gtaPath;
-
-                fs.Open(GTAPathEFLC);
-
-                if (_fs != null)
-                {
-                    _fs.Close();
-                }
-                _fs = fs;
-
-                Text = Application.ProductName + " - Browse Game Directory";
-
-
-            }
-
-            PopulateUI();
+            LoadGameDirectory(new KeyUtilEFLC(), "EFLC");
         }
-
 
         private void toolStripGTAIV_Click(object sender, EventArgs e)
         {
-            FileSystem fs = new RealFileSystem();
-            using (new WaitCursor(this))
-            {
-                string gtaPath = KeyUtilGTAIV.FindGTADirectory();
-                while (gtaPath == null)
-                {
-                    var fbd = new FolderBrowserDialog
-                    {
-                        Description =
-                            "Could not find the GTAIV game directory. Please select the directory containing GTAIV.exe",
-                        ShowNewFolderButton = false
-                    };
-
-                    if (fbd.ShowDialog() == DialogResult.Cancel)
-                    {
-                        MessageBox.Show(
-                            "GTAIV.exe is required to extract cryptographic keys for this program to function. " +
-                            "SparkIV can not run without this file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-                    if (System.IO.File.Exists(Path.Combine(fbd.SelectedPath, "gtaiv.exe")))
-                    {
-                        gtaPath = fbd.SelectedPath;
-                    }
-                }
-
-                byte[] key = KeyUtilGTAIV.FindKey(gtaPath);
-                if (key == null)
-                {
-                    string message = "Your GTAIV.exe seems to be modified or is a newer version than this tool supports. " +
-                                    "SparkIV can not run without a supported GTAIV.exe file." + "\n" + "Would you like to check for updates?";
-                    string caption = "Newer or Modified GTAIV.exe";
-                    MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-                    DialogResult result;
-
-                    result = MessageBox.Show(message, caption, buttons, MessageBoxIcon.Error);
-
-                    if (result == DialogResult.Yes)
-                    {
-                        Updater.CheckForUpdate();
-                    }
-
-                    return;
-
-                }
-
-                KeyStore.SetKeyLoader(() => key);
-
-                GTAPathIV = gtaPath;
-
-                fs.Open(GTAPathIV);
-
-                if (_fs != null)
-                {
-                    _fs.Close();
-                }
-                _fs = fs;
-
-                Text = Application.ProductName + " - Browse Game Directory";
-            }
-
-            PopulateUI();
+            LoadGameDirectory( new KeyUtilGTAIV(), "GTAIV" );
         }
-        //End Games
-
 
         private void tsbOpen_Click(object sender, EventArgs e)
         {

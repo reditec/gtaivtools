@@ -88,6 +88,7 @@
     </Compile>
     <Compile Include="BigEndianBinaryReader.cs" />
     <Compile Include="Compression\CompressionCodecFactory.cs" />
+    <Compile Include="KeyUtil.cs" />
     <Compile Include="KeyUtilEFLC.cs" />
     <Compile Include="DataUtil.cs" />
     <Compile Include="Hasher.cs" />
