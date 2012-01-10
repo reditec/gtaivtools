@@ -52,6 +52,9 @@ namespace SparkIV
 
         private Directory _selectedDir;
 
+        public static string GTAPathEFLC { get; private set; }
+        public static string GTAPathIV { get; private set; }
+
         public MainForm()
         {
             InitializeComponent();
@@ -375,8 +378,6 @@ namespace SparkIV
 
         #region Toolbar Handlers
 
-        //Begin Games
-        public static string GTAPathEFLC { get; private set; }
         private void toolStripEFLC_Click(object sender, EventArgs e)
         {
             FileSystem fs = new RealFileSystem();
@@ -416,146 +417,19 @@ namespace SparkIV
 
                     result = MessageBox.Show(message, caption, buttons, MessageBoxIcon.Error);
 
-                    if (result == System.Windows.Forms.DialogResult.Yes)
+                    if (result == DialogResult.Yes)
                     {
-                        {
-                            try
-                            {
-                                //Updater adapted heavily from http://digitalformula.net/technical/c-self-updating-application-without-clickonce/
-                                System.Net.WebClient client = new System.Net.WebClient();
-                                client.DownloadFile("http://www.gzwn.net/sparkiv/version.txt", "version.txt");
-                            }
-                            catch (Exception ex)
-                            {
-                                string errorDetails10 = String.Empty;
-                                MessageBoxIcon iconsToShow10 = MessageBoxIcon.Information;
-                                if (ex.Message.Contains("could not be resolved"))
-                                {
-                                    errorDetails10 = String.Format("The update check server could not be resolved.\nPlease check your internet connection and try again.");
-                                    iconsToShow10 = MessageBoxIcon.Error;
-                                }
-                                else if (ex.Message.Contains("404"))
-                                {
-                                    errorDetails10 = "The update check server is currently down. Please try again later.";
-                                    iconsToShow10 = MessageBoxIcon.Information;
-                                }
-                                DialogResult result10 = MessageBox.Show(String.Format("{0}", errorDetails10), "Update check error", MessageBoxButtons.OK, iconsToShow10);
-                                return;
-                            }
-                            TextReader tr = new StreamReader("version.txt");
-                            string tempStr = tr.ReadLine();
-                            tr.Close();
-                            if (tempStr == null)
-                            {
-                                string message3 = "An error has occurred. Please manually check the Google Code project page for updates.";
-                                string caption3 = "Error";
-                                MessageBoxButtons buttons3 = MessageBoxButtons.YesNo;
-                                DialogResult result3;
-
-                                result3 = MessageBox.Show(message3, caption3, buttons3, MessageBoxIcon.Error);
-
-                                if (result3 == System.Windows.Forms.DialogResult.Yes)
-                                {
-                                    System.Diagnostics.Process.Start("http://code.google.com/p/gtaivtools/downloads/list");
-                                    return;
-                                }
-
-                                if (result3 == System.Windows.Forms.DialogResult.No)
-                                {
-                                    return;
-                                }
-                            }
-                            string longVersionFromFile = tempStr;
-                            string shortVersionFromFile = tempStr.Replace(".", String.Empty);
-                            Version vrs = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-                            string longVersionFromVrs = String.Format("{0}.{1}.{2}", vrs.Major, vrs.Minor, vrs.Build);
-                            string shortVersionFromVrs = String.Format("{0}{1}{2}", vrs.Major, vrs.Minor, vrs.Build);
-                            if (Convert.ToInt32(shortVersionFromVrs) < Convert.ToInt32(shortVersionFromFile))
-                            {
-                                string message4 = "There is a new version of SparkIV EFLC available! Would you like to go to the Google Project page to download the newest version?" + "\n" + "\n" + "This version is:  " + vrs.Major + "." + vrs.Minor + "." + vrs.Build + "\n"
-                                    + "New Version is: " + longVersionFromFile;
-                                string caption4 = "New Update!";
-                                MessageBoxButtons buttons4 = MessageBoxButtons.YesNo;
-                                DialogResult result4;
-
-                                result4 = MessageBox.Show(message4, caption4, buttons4, MessageBoxIcon.Information);
-
-                                if (result4 == System.Windows.Forms.DialogResult.Yes)
-                                {
-                                    try
-                                    {
-                                        System.Net.WebClient client = new System.Net.WebClient();
-                                        client.DownloadFile("http://www.gzwn.net/sparkiv/updateurl.txt", "updateurl.txt");
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        string errorDetails8 = String.Empty;
-                                        MessageBoxIcon iconsToShow8 = MessageBoxIcon.Information;
-                                        if (ex.Message.Contains("could not be resolved"))
-                                        {
-                                            errorDetails8 = String.Format("The update check server could not be resolved.\nPlease check your internet connection and try again.");
-                                            iconsToShow8 = MessageBoxIcon.Error;
-                                        }
-                                        else if (ex.Message.Contains("404"))
-                                        {
-                                            errorDetails8 = "The update check server is currently down. Please try again later.";
-                                            iconsToShow8 = MessageBoxIcon.Information;
-                                        }
-                                        DialogResult result8 = MessageBox.Show(String.Format("{0}", errorDetails8), "Update check server down", MessageBoxButtons.OK, iconsToShow8);
-                                        return;
-                                    }
-                                    TextReader tr1 = new StreamReader("updateurleflc.txt");
-                                    string updateURL = tr1.ReadLine();
-                                    tr.Close();
-                                    if (updateURL == null)
-                                    {
-                                        string message7 = "An error has occurred. Would you like to check the Google Code project page for updates.";
-                                        string caption7 = "Error";
-                                        MessageBoxButtons buttons7 = MessageBoxButtons.YesNo;
-                                        DialogResult result7;
-
-                                        result7 = MessageBox.Show(message7, caption7, buttons7, MessageBoxIcon.Error);
-
-                                        if (result7 == System.Windows.Forms.DialogResult.Yes)
-                                        {
-                                            System.Diagnostics.Process.Start("http://code.google.com/p/gtaivtools/downloads/list");
-                                            Application.Exit();
-                                        }
-
-                                        if (result7 == System.Windows.Forms.DialogResult.No)
-                                        {
-                                            Application.Exit();
-                                        }
-                                    }
-                                    System.Diagnostics.Process.Start(updateURL);
-                                    Application.Exit();
-                                }
-
-                                if (result4 == System.Windows.Forms.DialogResult.No)
-                                {
-                                    Application.Exit();
-                                }
-                            }
-                            else
-                            {
-                                DialogResult result5 = MessageBox.Show(String.Format("There is no update available at this time."), "No update available", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            }
-                        }
-                        return;
+                        Updater.CheckForUpdate();
                     }
 
-                    if (result == System.Windows.Forms.DialogResult.No)
-                    {
-                        return;
-                    }
-
+                    return;
                 }
 
                 KeyStore.SetKeyLoader(() => key);
 
                 GTAPathEFLC = gtaPath;
 
-                fs.Open(MainForm.GTAPathEFLC);
+                fs.Open(GTAPathEFLC);
 
                 if (_fs != null)
                 {
@@ -572,7 +446,6 @@ namespace SparkIV
         }
 
 
-        public static string GTAPathIV { get; private set; }
         private void toolStripGTAIV_Click(object sender, EventArgs e)
         {
             FileSystem fs = new RealFileSystem();
@@ -612,138 +485,12 @@ namespace SparkIV
 
                     result = MessageBox.Show(message, caption, buttons, MessageBoxIcon.Error);
 
-                    if (result == System.Windows.Forms.DialogResult.Yes)
+                    if (result == DialogResult.Yes)
                     {
-                        {
-                            try
-                            {
-                                //Updater adapted heavily from http://digitalformula.net/technical/c-self-updating-application-without-clickonce/
-                                System.Net.WebClient client = new System.Net.WebClient();
-                                client.DownloadFile("http://www.gzwn.net/sparkiv/version.txt", "version.txt");
-                            }
-                            catch (Exception ex)
-                            {
-                                string errorDetails10 = String.Empty;
-                                MessageBoxIcon iconsToShow10 = MessageBoxIcon.Information;
-                                if (ex.Message.Contains("could not be resolved"))
-                                {
-                                    errorDetails10 = String.Format("The update check server could not be resolved.\nPlease check your internet connection and try again.");
-                                    iconsToShow10 = MessageBoxIcon.Error;
-                                }
-                                else if (ex.Message.Contains("404"))
-                                {
-                                    errorDetails10 = "The update check server is currently down. Please try again later.";
-                                    iconsToShow10 = MessageBoxIcon.Information;
-                                }
-                                DialogResult result10 = MessageBox.Show(String.Format("{0}", errorDetails10), "Update check error", MessageBoxButtons.OK, iconsToShow10);
-                                return;
-                            }
-                            TextReader tr = new StreamReader("version.txt");
-                            string tempStr = tr.ReadLine();
-                            tr.Close();
-                            if (tempStr == null)
-                            {
-                                string message3 = "An error has occurred. Please manually check the Google Code project page for updates.";
-                                string caption3 = "Error";
-                                MessageBoxButtons buttons3 = MessageBoxButtons.YesNo;
-                                DialogResult result3;
-
-                                result3 = MessageBox.Show(message3, caption3, buttons3, MessageBoxIcon.Error);
-
-                                if (result3 == System.Windows.Forms.DialogResult.Yes)
-                                {
-                                    System.Diagnostics.Process.Start("http://code.google.com/p/gtaivtools/downloads/list");
-                                    return;
-                                }
-
-                                if (result3 == System.Windows.Forms.DialogResult.No)
-                                {
-                                    return;
-                                }
-                            }
-                            string longVersionFromFile = tempStr;
-                            string shortVersionFromFile = tempStr.Replace(".", String.Empty);
-                            Version vrs = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-                            string longVersionFromVrs = String.Format("{0}.{1}.{2}", vrs.Major, vrs.Minor, vrs.Build);
-                            string shortVersionFromVrs = String.Format("{0}{1}{2}", vrs.Major, vrs.Minor, vrs.Build);
-                            if (Convert.ToInt32(shortVersionFromVrs) < Convert.ToInt32(shortVersionFromFile))
-                            {
-                                string message4 = "There is a new version of SparkIV GTAIV available! Would you like to go to the Google Project page to download the newest version?" + "\n" + "\n" + "This version is:  " + vrs.Major + "." + vrs.Minor + "." + vrs.Build + "\n"
-                                    + "New Version is: " + longVersionFromFile;
-                                string caption4 = "New Update!";
-                                MessageBoxButtons buttons4 = MessageBoxButtons.YesNo;
-                                DialogResult result4;
-
-                                result4 = MessageBox.Show(message4, caption4, buttons4, MessageBoxIcon.Information);
-
-                                if (result4 == System.Windows.Forms.DialogResult.Yes)
-                                {
-                                    try
-                                    {
-                                        System.Net.WebClient client = new System.Net.WebClient();
-                                        client.DownloadFile("http://www.gzwn.net/sparkiv/updateurl.txt", "updateurl.txt");
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        string errorDetails8 = String.Empty;
-                                        MessageBoxIcon iconsToShow8 = MessageBoxIcon.Information;
-                                        if (ex.Message.Contains("could not be resolved"))
-                                        {
-                                            errorDetails8 = String.Format("The update check server could not be resolved.\nPlease check your internet connection and try again.");
-                                            iconsToShow8 = MessageBoxIcon.Error;
-                                        }
-                                        else if (ex.Message.Contains("404"))
-                                        {
-                                            errorDetails8 = "The update check server is currently down. Please try again later.";
-                                            iconsToShow8 = MessageBoxIcon.Information;
-                                        }
-                                        DialogResult result8 = MessageBox.Show(String.Format("{0}", errorDetails8), "Update check server down", MessageBoxButtons.OK, iconsToShow8);
-                                        return;
-                                    }
-                                    TextReader tr1 = new StreamReader("updateurleflc.txt");
-                                    string updateURL = tr1.ReadLine();
-                                    tr.Close();
-                                    if (updateURL == null)
-                                    {
-                                        string message7 = "An error has occurred. Would you like to check the Google Code project page for updates.";
-                                        string caption7 = "Error";
-                                        MessageBoxButtons buttons7 = MessageBoxButtons.YesNo;
-                                        DialogResult result7;
-
-                                        result7 = MessageBox.Show(message7, caption7, buttons7, MessageBoxIcon.Error);
-
-                                        if (result7 == System.Windows.Forms.DialogResult.Yes)
-                                        {
-                                            System.Diagnostics.Process.Start("http://code.google.com/p/gtaivtools/downloads/list");
-                                            Application.Exit();
-                                        }
-
-                                        if (result7 == System.Windows.Forms.DialogResult.No)
-                                        {
-                                            Application.Exit();
-                                        }
-                                    }
-                                    System.Diagnostics.Process.Start(updateURL);
-                                    Application.Exit();
-                                }
-
-                                if (result4 == System.Windows.Forms.DialogResult.No)
-                                {
-                                    Application.Exit();
-                                }
-                            }
-                            else
-                            {
-                                DialogResult result5 = MessageBox.Show(String.Format("There is no update available at this time."), "No update available", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            }
-                        }
-                        return;
+                        Updater.CheckForUpdate();
                     }
 
-                    if (result == System.Windows.Forms.DialogResult.No)
-                    {
-                        return;
-                    }
+                    return;
 
                 }
 
@@ -751,7 +498,7 @@ namespace SparkIV
 
                 GTAPathIV = gtaPath;
 
-                fs.Open(MainForm.GTAPathIV);
+                fs.Open(GTAPathIV);
 
                 if (_fs != null)
                 {
@@ -760,8 +507,6 @@ namespace SparkIV
                 _fs = fs;
 
                 Text = Application.ProductName + " - Browse Game Directory";
-
-
             }
 
             PopulateUI();
@@ -1108,139 +853,11 @@ namespace SparkIV
             }
         }
 
-        #endregion
-
         private void tslAbout_Click(object sender, EventArgs e)
         {
-            try
-            {
-                System.Net.WebClient client = new System.Net.WebClient();
-                client.DownloadFile("http://www.gzwn.net/sparkiv/version.txt", "version.txt");
-            }
-            catch (Exception ex)
-            {
-                string errorDetails = String.Empty;
-                MessageBoxIcon iconsToShow = MessageBoxIcon.Information;
-                if (ex.Message.Contains("could not be resolved"))
-                {
-                    errorDetails = String.Format("The update check server could not be resolved.\nPlease check your internet connection and try again.");
-                    iconsToShow = MessageBoxIcon.Error;
-                }
-                else if (ex.Message.Contains("404"))
-                {
-                    errorDetails = "The update check server is currently down. Please try again later.";
-                    iconsToShow = MessageBoxIcon.Information;
-                }
-                DialogResult result = MessageBox.Show(String.Format("{0}", errorDetails), "Update check server down", MessageBoxButtons.OK, iconsToShow);
-                return;
-            }
-            TextReader tr = new StreamReader("version.txt");
-            string tempStr = tr.ReadLine();
-            tr.Close();
-            if (tempStr == null)
-            {
-                string message = "An error has occurred. Please manually check the Google Code project page for updates.";
-                string caption = "Error";
-                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-                DialogResult result;
-
-                result = MessageBox.Show(message, caption, buttons, MessageBoxIcon.Error);
-
-                if (result == System.Windows.Forms.DialogResult.Yes)
-                {
-                    System.Diagnostics.Process.Start("http://code.google.com/p/gtaivtools/downloads/list");
-                    return;
-                }
-
-                if (result == System.Windows.Forms.DialogResult.No)
-                {
-                    return;
-                }
-            }
-            string longVersionFromFile = tempStr;
-            string shortVersionFromFile = tempStr.Replace(".", String.Empty);
-            Version vrs = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            string longVersionFromVrs = String.Format("{0}.{1}.{2}", vrs.Major, vrs.Minor, vrs.Build);
-            string shortVersionFromVrs = String.Format("{0}{1}{2}", vrs.Major, vrs.Minor, vrs.Build);
-            if (Convert.ToInt32(shortVersionFromVrs) < Convert.ToInt32(shortVersionFromFile))
-            {
-                string message = "There is a new version of SparkIV available! Would you like to download the newest version?" + "\n" + "\n" + "This version is:  " + vrs.Major + "." + vrs.Minor + "." + vrs.Build + "\n"
-                    + "New Version is: " + longVersionFromFile;
-                string caption = "New Update!";
-                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-                DialogResult result;
-
-                result = MessageBox.Show(message, caption, buttons, MessageBoxIcon.Information);
-
-                if (result == System.Windows.Forms.DialogResult.Yes)
-                {
-                    {
-                        try
-                        {
-                            System.Net.WebClient client = new System.Net.WebClient();
-                            client.DownloadFile("http://www.gzwn.net/sparkiv/updateurl.txt", "updateurl.txt");
-                        }
-                        catch (Exception ex)
-                        {
-                            string errorDetails8 = String.Empty;
-                            MessageBoxIcon iconsToShow8 = MessageBoxIcon.Information;
-                            if (ex.Message.Contains("could not be resolved"))
-                            {
-                                errorDetails8 = String.Format("The update check server could not be resolved.\nPlease check your internet connection and try again.");
-                                iconsToShow8 = MessageBoxIcon.Error;
-                            }
-                            else if (ex.Message.Contains("404"))
-                            {
-                                errorDetails8 = "The update check server is currently down. Please try again later.";
-                                iconsToShow8 = MessageBoxIcon.Information;
-                            }
-                            DialogResult result8 = MessageBox.Show(String.Format("{0}", errorDetails8), "Update check server down", MessageBoxButtons.OK, iconsToShow8);
-                            return;
-                        }
-                        TextReader tr1 = new StreamReader("updateurl.txt");
-                        string updateURL = tr1.ReadLine();
-                        tr.Close();
-                        if (updateURL == null)
-                        {
-                            string message7 = "An error has occurred. Would you like to check the Google Code project page for updates?";
-                            string caption7 = "Error";
-                            MessageBoxButtons buttons7 = MessageBoxButtons.YesNo;
-                            DialogResult result7;
-
-                            result7 = MessageBox.Show(message7, caption7, buttons7, MessageBoxIcon.Error);
-
-                            if (result7 == System.Windows.Forms.DialogResult.Yes)
-                            {
-                                System.Diagnostics.Process.Start("http://code.google.com/p/gtaivtools/downloads/list");
-                                Application.Exit();
-                            }
-
-                            if (result7 == System.Windows.Forms.DialogResult.No)
-                            {
-                                Application.Exit();
-                            }
-                        }
-                        System.Diagnostics.Process.Start(updateURL);
-                        Application.Exit();
-                    }
-                }
-
-                if (result == System.Windows.Forms.DialogResult.No)
-                {
-                    return;
-                }
-
-            }
-            else
-            {
-                DialogResult result = MessageBox.Show(String.Format("There is no update available at this time."), "No update available", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+            Updater.CheckForUpdate();
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-
-        }
-
+        #endregion
     }
 }
