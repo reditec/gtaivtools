@@ -27,7 +27,6 @@ using System.Text;
 using System.Windows.Forms;
 using RageLib.FileSystem;
 using RageLib.FileSystem.Common;
-using SparkIV.Properties;
 using SparkIV.Editor;
 using SparkIV.Viewer;
 using RageLib.Common;

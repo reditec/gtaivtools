@@ -20,13 +20,14 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using RageLib.Common;
 
 namespace RageLib.Scripting.Script
 {
-    internal static class Natives
+    public static class Natives
     {
         static Natives()
         {
@@ -38,7 +39,26 @@ namespace RageLib.Scripting.Script
                 string item;
                 while((item = sw.ReadLine()) != null)
                 {
-                    uint hash = Hasher.Hash(item);
+                    uint hash;
+
+                    item = item.Trim();
+                    
+                    if ( item == "" || item.StartsWith("#") )
+                    {
+                        continue;
+                    }
+                    
+                    if (item.StartsWith("0x"))
+                    {
+                        var split = item.Split(new[] {'='}, 2);
+                        hash = uint.Parse(split[0].Substring(2), NumberStyles.HexNumber);
+                        item = split[1].Trim();
+                    }
+                    else
+                    {
+                        hash = Hasher.Hash(item);
+                    }
+
                     try
                     {
                         HashToNative.Add(hash, item);
