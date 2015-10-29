@@ -27,9 +27,9 @@ namespace SparkIV
 {
     public class Updater
     {
-        private const string VersionUrl = "http://gtaivtools.googlecode.com/svn/updates/version.txt";
-        private const string UpdateUrl = "http://gtaivtools.googlecode.com/svn/updates/url.txt";
-        private const string DownloadListUrl = "http://code.google.com/p/gtaivtools/downloads/list";
+        private const string VersionUrl = "https://raw.githubusercontent.com/reditec/gtaivtools/master/update/ver.txt";
+        private const string UpdateUrl = "https://raw.githubusercontent.com/reditec/gtaivtools/master/update/url.txt";
+        private const string DownloadListUrl = "https://raw.githubusercontent.com/reditec/gtaivtools/master/update/list.txt";
 
         public static void CheckForUpdate()
         {
@@ -39,7 +39,7 @@ namespace SparkIV
             {
                 DialogResult result =
                     MessageBox.Show(
-                        "An error has occurred. Please manually check the Google Code project page for updates.",
+                        "An error has occurred. Please manually check the GitHub page for updates.",
                         "Error", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
 
                 if (result == DialogResult.Yes)
@@ -77,7 +77,7 @@ namespace SparkIV
                         {
                             result =
                                 MessageBox.Show(
-                                    "An error has occurred. Would you like to check the Google Code project page for updates?",
+                                    "An error has occurred. Would you like to check the GitHub page for updates?",
                                     "Error", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
 
                             if (result == DialogResult.Yes)

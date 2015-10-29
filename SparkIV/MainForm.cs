@@ -795,8 +795,12 @@ namespace SparkIV
             Updater.CheckForUpdate();
         }
 
+
         #endregion
 
-        
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            Updater.CheckForUpdate();
+        }
     }
 }
