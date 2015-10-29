@@ -1,1 +1,1 @@
-https://github.com/reditec/gtaivtools
+https://github.com/reditec/gtaivtools/releases/download/0.7.9/SparkIV0.8.0.msi
