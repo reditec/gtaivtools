@@ -1,0 +1,14 @@
+C:\Users\redit\Documents\gtaivtools\RageLib\Textures\bin\Debug\ragezip.dll
+C:\Users\redit\Documents\gtaivtools\RageLib\Textures\bin\Debug\libsquish.dll
+C:\Users\redit\Documents\gtaivtools\RageLib\Textures\bin\Debug\RageLib.Textures.dll
+C:\Users\redit\Documents\gtaivtools\RageLib\Textures\bin\Debug\RageLib.Textures.pdb
+C:\Users\redit\Documents\gtaivtools\RageLib\Textures\bin\Debug\RageLib.Common.dll
+C:\Users\redit\Documents\gtaivtools\RageLib\Textures\bin\Debug\ICSharpCode.SharpZipLib.dll
+C:\Users\redit\Documents\gtaivtools\RageLib\Textures\bin\Debug\RageLib.Common.pdb
+C:\Users\redit\Documents\gtaivtools\RageLib\Textures\obj\Debug\Textures.csprojResolveAssemblyReference.cache
+C:\Users\redit\Documents\gtaivtools\RageLib\Textures\obj\Debug\RageLib.Textures.TextureEditView.resources
+C:\Users\redit\Documents\gtaivtools\RageLib\Textures\obj\Debug\RageLib.Textures.TexturePreviewView.resources
+C:\Users\redit\Documents\gtaivtools\RageLib\Textures\obj\Debug\RageLib.Textures.TextureView.resources
+C:\Users\redit\Documents\gtaivtools\RageLib\Textures\obj\Debug\Textures.csproj.GenerateResource.Cache
+C:\Users\redit\Documents\gtaivtools\RageLib\Textures\obj\Debug\RageLib.Textures.dll
+C:\Users\redit\Documents\gtaivtools\RageLib\Textures\obj\Debug\RageLib.Textures.pdb

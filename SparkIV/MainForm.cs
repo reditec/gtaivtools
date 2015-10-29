@@ -56,7 +56,7 @@ namespace SparkIV
 
             Version ver = Assembly.GetExecutingAssembly().GetName().Version;
             tslAbout.Text = "SparkIV " + ver.Major + "." + ver.Minor + "." + ver.Build + " (Beta)" + "\n" +
-                            "(C)2008-2010, Aru";
+                            "(C)2008-2015, Aru";
 
             SetInitialUIState();
         }
@@ -400,7 +400,7 @@ namespace SparkIV
                     }
                 }
 
-                byte[] key = keyUtil.FindKey( gamePath );
+                byte[] key = keyUtil.FindKey( gamePath, gameName );
 
                 if (key == null)
                 {
@@ -436,6 +436,10 @@ namespace SparkIV
         #endregion
 
         #region Toolbar Handlers
+        private void toolStripRDR_Click(object sender, EventArgs e)
+        {
+            LoadGameDirectory(new KeyUtilRDR(), "RDR");
+        }
 
         private void toolStripEFLC_Click(object sender, EventArgs e)
         {
@@ -792,5 +796,7 @@ namespace SparkIV
         }
 
         #endregion
+
+        
     }
 }

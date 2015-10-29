@@ -1,0 +1,7 @@
+C:\Users\redit\Documents\gtaivtools\RageLib\Common\bin\Debug\ragezip.dll
+C:\Users\redit\Documents\gtaivtools\RageLib\Common\bin\Debug\RageLib.Common.dll
+C:\Users\redit\Documents\gtaivtools\RageLib\Common\bin\Debug\RageLib.Common.pdb
+C:\Users\redit\Documents\gtaivtools\RageLib\Common\bin\Debug\ICSharpCode.SharpZipLib.dll
+C:\Users\redit\Documents\gtaivtools\RageLib\Common\obj\Debug\Common.csprojResolveAssemblyReference.cache
+C:\Users\redit\Documents\gtaivtools\RageLib\Common\obj\Debug\RageLib.Common.dll
+C:\Users\redit\Documents\gtaivtools\RageLib\Common\obj\Debug\RageLib.Common.pdb

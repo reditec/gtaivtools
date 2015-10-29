@@ -1,0 +1,12 @@
+C:\Users\redit\Documents\gtaivtools\RageLib\HyperText\bin\Debug\ragezip.dll
+C:\Users\redit\Documents\gtaivtools\RageLib\HyperText\bin\Debug\libsquish.dll
+C:\Users\redit\Documents\gtaivtools\RageLib\HyperText\bin\Debug\RageLib.HyperText.dll
+C:\Users\redit\Documents\gtaivtools\RageLib\HyperText\bin\Debug\RageLib.HyperText.pdb
+C:\Users\redit\Documents\gtaivtools\RageLib\HyperText\bin\Debug\RageLib.Common.dll
+C:\Users\redit\Documents\gtaivtools\RageLib\HyperText\bin\Debug\RageLib.Textures.dll
+C:\Users\redit\Documents\gtaivtools\RageLib\HyperText\bin\Debug\ICSharpCode.SharpZipLib.dll
+C:\Users\redit\Documents\gtaivtools\RageLib\HyperText\bin\Debug\RageLib.Common.pdb
+C:\Users\redit\Documents\gtaivtools\RageLib\HyperText\bin\Debug\RageLib.Textures.pdb
+C:\Users\redit\Documents\gtaivtools\RageLib\HyperText\obj\Debug\HyperText.csprojResolveAssemblyReference.cache
+C:\Users\redit\Documents\gtaivtools\RageLib\HyperText\obj\Debug\RageLib.HyperText.dll
+C:\Users\redit\Documents\gtaivtools\RageLib\HyperText\obj\Debug\RageLib.HyperText.pdb

@@ -22,6 +22,7 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using Microsoft.Win32;
+using System.Diagnostics;
 
 namespace RageLib.Common
 {
@@ -46,11 +47,14 @@ namespace RageLib.Common
                 foreach (var s in keys)
                 {
                     RegistryKey key;
+                    if(s != "")
+                    { 
                     if ((key = Registry.LocalMachine.OpenSubKey(s)) != null)
                     {
                         dir = key.GetValue("InstallFolder").ToString();
                         key.Close();
                         break;
+                    }
                     }
                 }
             }
@@ -58,33 +62,67 @@ namespace RageLib.Common
             return dir;
         }
 
-        public byte[] FindKey( string gamePath )
+        public byte[] FindKey( string gamePath, string gameName )
         {
             var gameExe = Path.Combine(gamePath, ExecutableName);
 
-            const string validHash = "DEA375EF1E6EF2223A1221C2C575C47BF17EFA5E";
+            const string validIVHash = "DEA375EF1E6EF2223A1221C2C575C47BF17EFA5E";
+            const string validRDRHash ="87862497EE46855372B51C7A324A2BB5CD66F4AF";
             byte[] key = null;
 
-            var fs = new FileStream(gameExe, FileMode.Open, FileAccess.Read);
-
-            foreach (var u in SearchOffsets)
+            
+            
+            if(gameName == "RDR")
             {
-                if (u <= fs.Length - 32)
+                ProcessStartInfo startInfo = new ProcessStartInfo("xextool.exe");
+                startInfo.Arguments = "-b base.bin " + "\"" + gameExe + "\"";
+                startInfo.UseShellExecute = false;
+                startInfo.CreateNoWindow = true;
+                Process BINextractor = Process.Start(startInfo);
+                BINextractor.WaitForExit();
+                var fs = new FileStream("base.bin", FileMode.Open, FileAccess.Read);
+                foreach (var u in SearchOffsets)
                 {
-                    var tempKey = new byte[32];
-                    fs.Seek(u, SeekOrigin.Begin);
-                    fs.Read(tempKey, 0, 32);
-
-                    var hash = BitConverter.ToString(SHA1.Create().ComputeHash(tempKey)).Replace("-", "");
-                    if (hash == validHash)
+                    if (u <= fs.Length - 32)
                     {
-                        key = tempKey;
-                        break;
+                        var tempKey = new byte[32];
+                        fs.Seek(u, SeekOrigin.Begin);
+                        fs.Read(tempKey, 0, 32);
+
+                        var hash = BitConverter.ToString(SHA1.Create().ComputeHash(tempKey)).Replace("-", "");
+                        if (hash == validRDRHash)
+                        {
+                            key = tempKey;
+                            break;
+                        }
                     }
                 }
+                fs.Close();
             }
+            else
+            {
+                var fs = new FileStream(gameExe, FileMode.Open, FileAccess.Read);
+                foreach (var u in SearchOffsets)
+                {
+                    if (u <= fs.Length - 32)
+                    {
+                        var tempKey = new byte[32];
+                        fs.Seek(u, SeekOrigin.Begin);
+                        fs.Read(tempKey, 0, 32);
 
-            fs.Close();
+                        var hash = BitConverter.ToString(SHA1.Create().ComputeHash(tempKey)).Replace("-", "");
+                        if (hash == validIVHash)
+                        {
+                            key = tempKey;
+                            break;
+                        }
+                    }
+                }
+                fs.Close();
+            }
+            
+
+            
 
             return key;
         }

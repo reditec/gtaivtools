@@ -1,0 +1,11 @@
+C:\Users\redit\Documents\gtaivtools\Resoursaur\bin\Debug\ragezip.dll
+C:\Users\redit\Documents\gtaivtools\Resoursaur\bin\Debug\Resoursaur.exe
+C:\Users\redit\Documents\gtaivtools\Resoursaur\bin\Debug\Resoursaur.pdb
+C:\Users\redit\Documents\gtaivtools\Resoursaur\bin\Debug\RageLib.Common.dll
+C:\Users\redit\Documents\gtaivtools\Resoursaur\bin\Debug\ICSharpCode.SharpZipLib.dll
+C:\Users\redit\Documents\gtaivtools\Resoursaur\bin\Debug\RageLib.Common.pdb
+C:\Users\redit\Documents\gtaivtools\Resoursaur\obj\Debug\Resoursaur.csprojResolveAssemblyReference.cache
+C:\Users\redit\Documents\gtaivtools\Resoursaur\obj\Debug\Resoursaur.MainForm.resources
+C:\Users\redit\Documents\gtaivtools\Resoursaur\obj\Debug\Resoursaur.csproj.GenerateResource.Cache
+C:\Users\redit\Documents\gtaivtools\Resoursaur\obj\Debug\Resoursaur.exe
+C:\Users\redit\Documents\gtaivtools\Resoursaur\obj\Debug\Resoursaur.pdb

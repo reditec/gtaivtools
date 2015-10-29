@@ -53,12 +53,12 @@ namespace SparkIV
             this.tsContainer = new System.Windows.Forms.ToolStripContainer();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.lvFiles = new System.Windows.Forms.ListView();
-            this.lvcName = new System.Windows.Forms.ColumnHeader();
-            this.lvcSize = new System.Windows.Forms.ColumnHeader();
-            this.lvcResource = new System.Windows.Forms.ColumnHeader();
+            this.lvcName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lvcSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lvcResource = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tsToolbar = new System.Windows.Forms.ToolStrip();
             this.toolStripGTAIV = new System.Windows.Forms.ToolStripButton();
-            this.toolStripEFLC = new System.Windows.Forms.ToolStripButton();
+            this.toolStripRDR = new System.Windows.Forms.ToolStripButton();
             this.tsbOpen = new System.Windows.Forms.ToolStripButton();
             this.tsbSave = new System.Windows.Forms.ToolStripButton();
             this.tsbRebuild = new System.Windows.Forms.ToolStripButton();
@@ -73,6 +73,7 @@ namespace SparkIV
             this.tss3 = new System.Windows.Forms.ToolStripSeparator();
             this.tslFilter = new System.Windows.Forms.ToolStripLabel();
             this.tstFilterBox = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripEFLC = new System.Windows.Forms.ToolStripButton();
             this.tsContainer.ContentPanel.SuspendLayout();
             this.tsContainer.TopToolStripPanel.SuspendLayout();
             this.tsContainer.SuspendLayout();
@@ -88,7 +89,7 @@ namespace SparkIV
             this.tvDir.HideSelection = false;
             this.tvDir.Location = new System.Drawing.Point(0, 0);
             this.tvDir.Name = "tvDir";
-            this.tvDir.Size = new System.Drawing.Size(192, 100);
+            this.tvDir.Size = new System.Drawing.Size(0, 0);
             this.tvDir.TabIndex = 0;
             this.tvDir.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvDir_AfterSelect);
             // 
@@ -143,10 +144,10 @@ namespace SparkIV
             this.lvFiles.TabIndex = 1;
             this.lvFiles.UseCompatibleStateImageBehavior = false;
             this.lvFiles.View = System.Windows.Forms.View.Details;
-            this.lvFiles.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lvFiles_MouseDoubleClick);
-            this.lvFiles.SelectedIndexChanged += new System.EventHandler(this.lvFiles_SelectedIndexChanged);
             this.lvFiles.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvFiles_ColumnClick);
+            this.lvFiles.SelectedIndexChanged += new System.EventHandler(this.lvFiles_SelectedIndexChanged);
             this.lvFiles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvFiles_KeyDown);
+            this.lvFiles.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lvFiles_MouseDoubleClick);
             // 
             // lvcName
             // 
@@ -171,6 +172,7 @@ namespace SparkIV
             this.tsToolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripGTAIV,
             this.toolStripEFLC,
+            this.toolStripRDR,
             this.tsbOpen,
             this.tsbSave,
             this.tsbRebuild,
@@ -198,21 +200,22 @@ namespace SparkIV
             this.toolStripGTAIV.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripGTAIV.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripGTAIV.Name = "toolStripGTAIV";
-            this.toolStripGTAIV.Size = new System.Drawing.Size(44, 43);
+            this.toolStripGTAIV.Size = new System.Drawing.Size(43, 43);
             this.toolStripGTAIV.Text = "&GTAIV";
             this.toolStripGTAIV.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolStripGTAIV.Click += new System.EventHandler(this.toolStripGTAIV_Click);
             // 
-            // toolStripEFLC
+            // toolStripRDR
             // 
-            this.toolStripEFLC.Image = ((System.Drawing.Image)(resources.GetObject("toolStripEFLC.Image")));
-            this.toolStripEFLC.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripEFLC.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripEFLC.Name = "toolStripEFLC";
-            this.toolStripEFLC.Size = new System.Drawing.Size(39, 43);
-            this.toolStripEFLC.Text = "E&FLC";
-            this.toolStripEFLC.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.toolStripEFLC.Click += new System.EventHandler(this.toolStripEFLC_Click);
+            this.toolStripRDR.AutoSize = false;
+            this.toolStripRDR.Image = ((System.Drawing.Image)(resources.GetObject("toolStripRDR.Image")));
+            this.toolStripRDR.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripRDR.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripRDR.Name = "toolStripRDR";
+            this.toolStripRDR.Size = new System.Drawing.Size(39, 42);
+            this.toolStripRDR.Text = "R&DR";
+            this.toolStripRDR.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.toolStripRDR.Click += new System.EventHandler(this.toolStripRDR_Click);
             // 
             // tsbOpen
             // 
@@ -341,6 +344,17 @@ namespace SparkIV
             this.tstFilterBox.ToolTipText = "Type all or part of a file name.\r\nSearch is case-sensitive.";
             this.tstFilterBox.TextChanged += new System.EventHandler(this.tstFilterBox_TextChanged);
             // 
+            // toolStripEFLC
+            // 
+            this.toolStripEFLC.Image = ((System.Drawing.Image)(resources.GetObject("toolStripEFLC.Image")));
+            this.toolStripEFLC.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripEFLC.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripEFLC.Name = "toolStripEFLC";
+            this.toolStripEFLC.Size = new System.Drawing.Size(39, 43);
+            this.toolStripEFLC.Text = "E&FLC";
+            this.toolStripEFLC.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.toolStripEFLC.Click += new System.EventHandler(this.toolStripEFLC_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -391,6 +405,7 @@ namespace SparkIV
         private System.Windows.Forms.ToolStripButton tsbPreview;
         private System.Windows.Forms.ToolStripButton tsbEdit;
         private System.Windows.Forms.ToolStripSeparator tss3;
+        private System.Windows.Forms.ToolStripButton toolStripRDR;
         private System.Windows.Forms.ToolStripButton toolStripEFLC;
     }
 }

@@ -33,7 +33,7 @@ namespace RageLib.Common
             SetKeyLoader( () =>
                               {
                                   var util = new KeyUtilGTAIV();
-                                  return util.FindKey(util.FindGameDirectory());
+                                  return util.FindKey(util.FindGameDirectory(),"GTAIV");
                               } );
         }
 
